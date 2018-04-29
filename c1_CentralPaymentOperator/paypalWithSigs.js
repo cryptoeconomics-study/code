@@ -1,4 +1,4 @@
-var EthCrypto = require('eth-crypto');
+var EthCrypto = require('eth-crypto')
 
 var initialState = {}
 
@@ -17,7 +17,7 @@ tx = {
 var accounts = {
   'paypal': EthCrypto.createIdentity(),
   'aparna': EthCrypto.createIdentity(),
-  'jing': EthCrypto.createIdentity(),
+  'jing': EthCrypto.createIdentity()
 }
 
 var unsignedTxs = [
@@ -41,87 +41,83 @@ var unsignedTxs = [
     from: accounts.aparna.address,
     to: accounts.jing.address,
     nonce: 0
-  },
+  }
 ]
 
-function getTxHash(tx) {
+function getTxHash (tx) {
   return EthCrypto.hash.keccak256(JSON.stringify(tx))
 }
 
 var signedTxs = [
- {
-   contents: unsignedTxs[0],
-   sig: EthCrypto.sign(accounts.paypal.privateKey, getTxHash(unsignedTxs[0]))
- },
- {
-   contents: unsignedTxs[1],
-   sig: EthCrypto.sign(accounts.paypal.privateKey, getTxHash(unsignedTxs[1]))
- },
- {
-   contents: unsignedTxs[2],
-   sig: EthCrypto.sign(accounts.aparna.privateKey, getTxHash(unsignedTxs[2]))
- }
+  {
+    contents: unsignedTxs[0],
+    sig: EthCrypto.sign(accounts.paypal.privateKey, getTxHash(unsignedTxs[0]))
+  },
+  {
+    contents: unsignedTxs[1],
+    sig: EthCrypto.sign(accounts.paypal.privateKey, getTxHash(unsignedTxs[1]))
+  },
+  {
+    contents: unsignedTxs[2],
+    sig: EthCrypto.sign(accounts.aparna.privateKey, getTxHash(unsignedTxs[2]))
+  }
 ]
 
-function applyTransaction(state, tx) {
+function applyTransaction (state, tx) {
   // Check the from address matches the signature
-  const signer = EthCrypto.recover(tx.sig, getTxHash(tx.contents));
+  const signer = EthCrypto.recover(tx.sig, getTxHash(tx.contents))
   if (signer !== tx.contents.from) {
-    throw 'Invalid signature!'
+    throw new Error('Invalid signature!')
   }
   // If we don't have a record for this address, create one
   if (!(tx.contents.to in state)) {
-    state[[tx.contents.to]] = { 
+    state[[tx.contents.to]] = {
       balance: 0,
       nonce: -1
-    };
+    }
   }
   // Check that the nonce is correct for replay protection
-  if (tx.contents.nonce !== state[[tx.contents.from]].nonce+1) { 
-    throw 'Invalid nonce!';
+  if (tx.contents.nonce !== state[[tx.contents.from]].nonce + 1) {
+    throw new Error('Invalid nonce!')
   }
   // Mint coins **only if identity is PayPal**
   if (tx.contents.type === 'mint' && tx.contents.from === accounts.paypal.address) {
-    state[[tx.contents.to]].balance += tx.contents.amount;
-  }
-  // Send coins
-  else if (tx.contents.type === 'send') {
+    state[[tx.contents.to]].balance += tx.contents.amount
+  } else if (tx.contents.type === 'send') { // Send coins
     if (state[[tx.contents.from]].balance - tx.contents.amount < 0) {
-      throw 'Not enough money!'
+      throw new Error('Not enough money!')
     }
     state[[tx.contents.from]].balance -= tx.contents.amount
     state[[tx.contents.to]].balance += tx.contents.amount
   }
-  state[[tx.contents.from]].nonce += 1;
+  state[[tx.contents.from]].nonce += 1
   return state
 }
 
 // Apply all transactions and print out all intermediate state
-state = initialState
-for(let i = 0; i < signedTxs.length; i++) {
+let state = initialState
+for (let i = 0; i < signedTxs.length; i++) {
   state = applyTransaction(state, signedTxs[i])
   console.log(('State at time ' + i), state)
 }
 
 // Just for fun, let's try signing aparna's transaction with jing's privatekey and see if we catch it
-invalidSigTx = {
-  contents: unsignedTxs[2],  // aparna sending jing 10
+const invalidSigTx = {
+  contents: unsignedTxs[2], // aparna sending jing 10
   sig: EthCrypto.sign(accounts.jing.privateKey, getTxHash(unsignedTxs[2]))
 }
 
 try {
   applyTransaction(state, invalidSigTx)
-}
-catch(err) {
+} catch (err) {
   console.log('We caught the error!', err)
 }
 
 // Now let's try replaying a tx and see if we catch it
 try {
   applyTransaction(state, signedTxs[2])
-}
-catch(err) {
+} catch (err) {
   console.log('We caught the error!', err)
 }
 // Woot!
-console.log('Success!');
+console.log('Success!')
