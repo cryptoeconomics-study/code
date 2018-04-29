@@ -1,0 +1,23 @@
+{
+  "name": "cryptoeconomics-an-introduction",
+  "version": "1.0.0",
+  "description": "Code for the course!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+    "chapter1": "node c1_CentralPaymentOperator/paypalWithSigs.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/cryptoeconomics-study/code.git"
+  },
+  "keywords": [
+    "cryptoeconomics"
+  ],
+  "author": "Cryptoeconomics Study Team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cryptoeconomics-study/code/issues"
+  },
+  "homepage": "https://github.com/cryptoeconomics-study/code#readme"
+}
