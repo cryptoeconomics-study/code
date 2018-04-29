@@ -83,18 +83,16 @@ function applyTransaction(state, tx) {
   // Mint coins **only if identity is PayPal**
   if (tx.contents.type === 'mint' && tx.contents.from === accounts.paypal.address) {
     state[[tx.contents.to]].balance += tx.contents.amount;
-    state[[tx.contents.from]].nonce += 1;
   }
   // Send coins
-  if (tx.contents.type === 'send') {
+  else if (tx.contents.type === 'send') {
     if (state[[tx.contents.from]].balance - tx.contents.amount < 0) {
       throw 'Not enough money!'
     }
     state[[tx.contents.from]].balance -= tx.contents.amount
     state[[tx.contents.to]].balance += tx.contents.amount
-    // Increment nonce
-    state[[tx.contents.from]].nonce += 1;
   }
+  state[[tx.contents.from]].nonce += 1;
   return state
 }
 
