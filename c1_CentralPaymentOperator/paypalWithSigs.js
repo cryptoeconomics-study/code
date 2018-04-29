@@ -20,30 +20,27 @@ var accounts = {
   'jing': EthCrypto.createIdentity(),
 }
 
-// TODO: Add nonces for replay protection
-// To do this, simply add a nonce: int, and then store for each account
-// both the balance and the current nonce. Then when transactions are
-// added using `applyTransaction()`, add an additional check
-// if (tx.contents.nonce !== state[[tx.contents.to]].nonce+1) { throw 'Invalid nonce!' }
-// Note this requires changing the state object to look like { address: {balance: x, nonce: y} }
 var unsignedTxs = [
   {
     type: 'mint',
     amount: 100,
     from: accounts.paypal.address,
-    to: accounts.paypal.address
+    to: accounts.paypal.address,
+    nonce: 0
   },
   {
     type: 'send',
     amount: 65,
     from: accounts.paypal.address,
-    to: accounts.aparna.address
+    to: accounts.aparna.address,
+    nonce: 1
   },
   {
     type: 'send',
     amount: 10,
     from: accounts.aparna.address,
-    to: accounts.jing.address
+    to: accounts.jing.address,
+    nonce: 0
   },
 ]
 
@@ -74,19 +71,29 @@ function applyTransaction(state, tx) {
   }
   // If we don't have a record for this address, create one
   if (!(tx.contents.to in state)) {
-    state[[tx.contents.to]] = 0
+    state[[tx.contents.to]] = { 
+      balance: 0,
+      nonce: -1
+    };
+  }
+  // Check that the nonce is correct for replay protection
+  if (tx.contents.nonce !== state[[tx.contents.from]].nonce+1) { 
+    throw 'Invalid nonce!';
   }
   // Mint coins **only if identity is PayPal**
   if (tx.contents.type === 'mint' && tx.contents.from === accounts.paypal.address) {
-    state[[tx.contents.to]] += tx.contents.amount
+    state[[tx.contents.to]].balance += tx.contents.amount;
+    state[[tx.contents.from]].nonce += 1;
   }
   // Send coins
   if (tx.contents.type === 'send') {
-    if (state[[tx.contents.from]] - tx.contents.amount < 0) {
+    if (state[[tx.contents.from]].balance - tx.contents.amount < 0) {
       throw 'Not enough money!'
     }
-    state[[tx.contents.from]] -= tx.contents.amount
-    state[[tx.contents.to]] += tx.contents.amount
+    state[[tx.contents.from]].balance -= tx.contents.amount
+    state[[tx.contents.to]].balance += tx.contents.amount
+    // Increment nonce
+    state[[tx.contents.from]].nonce += 1;
   }
   return state
 }
@@ -99,15 +106,24 @@ for(let i = 0; i < signedTxs.length; i++) {
 }
 
 // Just for fun, let's try signing aparna's transaction with jing's privatekey and see if we catch it
-invalidTx = {
+invalidSigTx = {
   contents: unsignedTxs[2],  // aparna sending jing 10
   sig: EthCrypto.sign(accounts.jing.privateKey, getTxHash(unsignedTxs[2]))
 }
 
 try {
-  applyTransaction(state, invalidTx)
+  applyTransaction(state, invalidSigTx)
+}
+catch(err) {
+  console.log('We caught the error!', err)
+}
+
+// Now let's try replaying a tx and see if we catch it
+try {
+  applyTransaction(state, signedTxs[2])
 }
 catch(err) {
   console.log('We caught the error!', err)
 }
 // Woot!
+console.log('Success!');
