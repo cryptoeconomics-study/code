@@ -1,3 +1,5 @@
+var EthCrypto = require('eth-crypto');
+
 var initialState = {}
 
 /* Signed transaction format
