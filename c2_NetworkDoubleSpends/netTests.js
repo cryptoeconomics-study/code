@@ -1,25 +1,40 @@
-var topology = [
-  {src: 'node1', dst: 'node2'},
-  {src: 'node2', dst: 'node3', packetLoss: 0.5},
-  {src: 'node3', dst: 'node4', latencyMean: 100, latencySigma: 7},
-  {src: 'node1', dst: 'node4', packetLoss: 0.4, latencyMean: 100, latencySigma: 0}
-]
-
-var NetSim = require('netsim')
-var netsim = new NetSim(topology)
-
-netsim.addNode({uuid: 'node1',
-  onStart: function () {
-    this.sendMessage('node4', 'Marco!')
+var network = require('./networksim')()
+const testAgents = [
+  {
+    pid: 'karl',
+    onReceive: function (message) { console.log(this.pid, 'got', message) },
+    tick: function () {}
   },
-  onMessageReceived: function (id, msg) {
-    console.log(this.uuid + ' received msg: ' + msg)
-  } })
-
-netsim.addNode({uuid: 'node4',
-  onMessageReceived: function (id, msg) {
-    console.log(this.uuid + ' received msg: ' + msg)
-    this.sendMessage('node1', 'Polo!')
-  } })
-
-netsim.simulate()
+  {
+    pid: 'aparna',
+    onReceive: function (message) { console.log(this.pid, 'got', message) },
+    tick: function () {}
+  },
+  {
+    pid: 'jing',
+    onReceive: function (message) { console.log(this.pid, 'got', message) },
+    tick: function () {}
+  },
+  {
+    pid: 'bob',
+    onReceive: function (message) { console.log(this.pid, 'got', message) },
+    tick: function () {}
+  },
+  {
+    pid: 'phil',
+    onReceive: function (message) { console.log(this.pid, 'got', message) },
+    tick: function () {}
+  },
+  {
+    pid: 'vitalik',
+    onReceive: function (message) { console.log(this.pid, 'got', message) },
+    tick: function () {}
+  }
+]
+for (let a of testAgents) {
+  network.connectPeer(a, 1)
+}
+network.broadcast('karl', 'testing!')
+network.broadcast('aparna', 'besting!')
+console.log(network)
+network.run(50)
