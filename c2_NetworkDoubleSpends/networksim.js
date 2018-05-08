@@ -13,65 +13,51 @@ class NetworkSimulator {
     this.packetLoss = packetLoss
   }
 
-  connectPeer ({agents, peers}, newPeer, numConnections) {
-    const shuffledAgents = _.shuffle(agents)
-    agents.push(newPeer)
-    peers[newPeer.id] = []
+  connectPeer (newPeer, numConnections) {
+    const shuffledAgents = _.shuffle(this.agents)
+    this.agents.push(newPeer)
+    this.peers[newPeer.pid] = []
     for (let a of shuffledAgents.slice(0, numConnections)) {
-      peers[newPeer.id].push(a.id)
-      peers[a.id].push(newPeer.id)
+      this.peers[newPeer.pid].push(a.pid)
+      this.peers[a.pid].push(newPeer.pid)
+    }
+  }
+
+  broadcast (sender, message) {
+    for (let pid of this.peers[sender]) {
+      const recvTime = this.time + this.latencyDistribution()
+      if (!(recvTime in this.messageQueue)) {
+        this.messageQueue[recvTime] = []
+      }
+      this.messageQueue[recvTime].push({recipient: pid, message})
+    }
+  }
+
+  tick () {
+    if (this.time in this.messageQueue) {
+      for (let {recipient, message} of this.messageQueue[this.time]) {
+        if (Math.random() > this.packetLoss) {
+          console.log('woot', recipient, message)
+        }
+      }
+      delete this.messageQueue.time
+    }
+    this.time += 1
+  }
+
+  run (steps) {
+    for (let i = 0; i < steps; i++) {
+      this.tick()
     }
   }
 }
 
-const broadcast = (network, sender, message) => {
-  for (let pid of network.peers[sender]) {
-    const recvTime = network.time + network.latencyDistribution()
-    if (!(recvTime in network.messageQueue)) {
-      network.messageQueue[recvTime] = []
-    }
-    network.messageQueue[recvTime].push({recipient: pid, message})
-  }
-}
-
-const tick = (network) => {
-  if (network.time in network.messageQueue) {
-    for (let {recipient, message} of network.messageQueue[network.time]) {
-      console.log('woot', recipient, message)
-    }
-  }
-  network.time += 1
-}
-
-function getNetwork (latency) {
-  let network = {
-    agents: [],
-    latencyDistribution: () => Math.floor(Math.max(normalRandom(), 0)),
-    time: 0,
-    messageQueue: {},
-    peers: {},
-    reliability: 0.9,
-    connectPeer: connectPeer.bind(null, this)
-  }
-  return network
-}
-
-const network = getNetwork(5)
-const testAgents = [{id: 'karl'}, {id: 'aparna'}, {id: 'jing'}, {id: 'bob'}, {id: 'phil'}, {id: 'vitalik'}]
+const network = new NetworkSimulator(5, 0.1)
+const testAgents = [{pid: 'karl'}, {pid: 'aparna'}, {pid: 'jing'}, {pid: 'bob'}, {pid: 'phil'}, {pid: 'vitalik'}]
 for (let a of testAgents) {
   network.connectPeer(a, 1)
 }
+network.broadcast('karl', 'testing!')
+network.broadcast('aparna', 'besting!')
 console.log(network)
-
-// console.log(network)
-// for (let a of testAgents) {
-//   connectPeer(network, a, 1)
-// }
-// broadcast(network, 'karl', 'testing!')
-// broadcast(network, 'aparna', 'besting!')
-// console.log(network)
-// tick(network)
-// tick(network)
-// tick(network)
-// tick(network)
-// tick(network)
+network.run(50)
