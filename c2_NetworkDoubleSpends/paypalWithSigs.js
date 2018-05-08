@@ -1,16 +1,36 @@
 var EthCrypto = require('eth-crypto')
+var network = require('./networksim')()
 
-/* Signed transaction format
-tx = {
-  contents: {
-    type: string,  // either 'mint' or 'send'
-    amount: int,   // some quantity of coins
-    from: string,  // the address of the sender
-    to: string,    // the address of the recipient
-  },
-  sig: string      // the signature of the sender
+const paypalIdentity = EthCrypto.createIdentity()
+const genesis = {
+  [paypalIdentity.address]: {
+    balance: 10000000000000,
+    nonce: 0
+  }
 }
-*/
+
+class Node {
+  constructor ({address, privateKey, publicKey}, name, genesis, network) {
+    this.address = address
+    this.privateKey = privateKey
+    this.publicKey = publicKey
+    this.name = name
+    this.network = network
+    this.state = genesis
+  }
+
+  onReceive (tx) {
+    this.state = applyTransaction(this.state, tx)
+  }
+
+  tick () {
+    // TODO: If possible, attempt to generate a send transaction
+    // Broadcast this tx to the network
+  }
+}
+
+let test = new Node(paypalIdentity, 'paypal', genesis, network)
+console.log('YOLO', test)
 
 var nodes = {
   'paypal': Object.assign(EthCrypto.createIdentity(), {state: {}}),
@@ -112,7 +132,7 @@ try {
 
 // Now let's try replaying a tx and see if we catch it
 try {
-  applyTransaction(state, signedTxs[2])
+  applyTransaction(nodes.paypal.state, signedTxs[2])
 } catch (err) {
   console.log('We caught the error!', err)
 }
