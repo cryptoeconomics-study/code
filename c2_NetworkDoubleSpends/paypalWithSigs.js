@@ -125,14 +125,13 @@ const nodes = []
 // Create new nodes based on our identities, and connect them to the network
 for (let i = 0; i < numNodes; i++) {
   nodes.push(new Node(identities[i], genesis, network))
-  network.connectPeer(nodes[i], 1)
+  network.connectPeer(nodes[i], 2)
 }
 network.broadcast(nodes[0].pid, 'Hello World')
 network.run(100)
 
 function visualizeNetwork (network) {
   // Press "Execute" to run your program
-  var faker = require('faker')
   var Graph = require('p2p-graph')
 
   var graph = new Graph('.root')
@@ -142,21 +141,18 @@ function visualizeNetwork (network) {
     console.log(id + ' selected!')
   })
 
-  // Add main peer
-  graph.add({
-    id: 'me',
-    me: true,
-    name: 'You'
-  })
-
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < nodes.length; i++) {
     // add peers
     graph.add({
-      id: 'peer' + i,
-      name: faker.internet.ip()
+      id: nodes[i].pid,
+      name: nodes[i].pid.slice(0, 10)
     })
+  }
+  for (const node of nodes) {
     // connect them
-    graph.connect('me', 'peer' + i)
+    for (const peer of network.peers[node.pid]) {
+      graph.connect(node.pid, peer.pid)
+    }
   }
 }
 visualizeNetwork(network)
