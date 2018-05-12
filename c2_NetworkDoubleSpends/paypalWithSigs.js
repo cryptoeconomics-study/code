@@ -1,42 +1,8 @@
 var EthCrypto = require('eth-crypto')
 var network = require('./networksim')()
 
-const paypalIdentity = EthCrypto.createIdentity()
-const genesis = {
-  [paypalIdentity.address]: {
-    balance: 10000000000000,
-    nonce: 0
-  }
-}
-
-class Node {
-  constructor ({address, privateKey, publicKey}, name, genesis, network) {
-    this.address = address
-    this.privateKey = privateKey
-    this.publicKey = publicKey
-    this.name = name
-    this.network = network
-    this.state = genesis
-  }
-
-  onReceive (tx) {
-    this.state = applyTransaction(this.state, tx)
-  }
-
-  tick () {
-    // TODO: If possible, attempt to generate a send transaction
-    // Broadcast this tx to the network
-  }
-}
-
-let test = new Node(paypalIdentity, 'paypal', genesis, network)
-console.log('YOLO', test)
-
-var nodes = {
-  'paypal': Object.assign(EthCrypto.createIdentity(), {state: {}}),
-  'aparna': Object.assign(EthCrypto.createIdentity(), {state: {}}),
-  'jing': Object.assign(EthCrypto.createIdentity(), {state: {}})
-}
+/*
+ * Example Transactions
 
 var unsignedTxs = [
   {
@@ -62,10 +28,6 @@ var unsignedTxs = [
   }
 ]
 
-function getTxHash (tx) {
-  return EthCrypto.hash.keccak256(JSON.stringify(tx))
-}
-
 var signedTxs = [
   {
     contents: unsignedTxs[0],
@@ -80,6 +42,11 @@ var signedTxs = [
     sig: EthCrypto.sign(nodes.aparna.privateKey, getTxHash(unsignedTxs[2]))
   }
 ]
+*/
+
+function getTxHash (tx) {
+  return EthCrypto.hash.keccak256(JSON.stringify(tx))
+}
 
 function applyTransaction (state, tx) {
   // Check the from address matches the signature
@@ -112,29 +79,53 @@ function applyTransaction (state, tx) {
   return state
 }
 
-// Apply all transactions for Paypal and print out all intermediate state
-for (let i = 0; i < signedTxs.length; i++) {
-  nodes.paypal.state = applyTransaction(nodes.paypal.state, signedTxs[i])
-  console.log(('State at time ' + i), nodes.paypal.state)
+class Node {
+  constructor ({address, privateKey, publicKey}, genesis, network) {
+    // Blockchain identity
+    this.address = address
+    this.privateKey = privateKey
+    this.publicKey = publicKey
+    // P2P Node identity -- used for connecting to peers
+    this.p2pNodeId = EthCrypto.createIdentity()
+    this.pid = this.p2pNodeId.address
+    this.network = network
+    this.state = genesis
+    this.transactions = []
+  }
+
+  onReceive (tx) {
+    if (!this.transactions.includes(tx)) {
+      this.transactions.push(tx)
+      console.log(this.pid, 'got', tx)
+      this.network.broadcast(this.pid, tx)
+    }
+    // this.state = applyTransaction(this.state, tx)
+  }
+
+  tick () {
+    // TODO: If possible, attempt to generate a send transaction
+    // Broadcast this tx to the network
+  }
 }
 
-// Just for fun, let's try signing aparna's transaction with jing's privatekey and see if we catch it
-const invalidSigTx = {
-  contents: unsignedTxs[2], // aparna sending jing 10
-  sig: EthCrypto.sign(nodes.jing.privateKey, getTxHash(unsignedTxs[2]))
+// ****** Test this out using a simulated network ****** //
+const numNodes = 50
+const identities = []
+const genesis = {}
+for (let i = 0; i < numNodes; i++) {
+  // Create new identity
+  identities.push(EthCrypto.createIdentity())
+  // Add that node to our genesis block & give them an allocation
+  genesis[identities[i].address] = {
+    balance: 100,
+    nonce: 0
+  }
 }
-
-try {
-  applyTransaction(nodes.paypal.state, invalidSigTx)
-} catch (err) {
-  console.log('We caught the error!', err)
+const nodes = []
+// Create new nodes based on our identities, and connect them to the network
+for (let i = 0; i < numNodes; i++) {
+  nodes.push(new Node(identities[i], genesis, network))
+  network.connectPeer(nodes[i], 1)
 }
-
-// Now let's try replaying a tx and see if we catch it
-try {
-  applyTransaction(nodes.paypal.state, signedTxs[2])
-} catch (err) {
-  console.log('We caught the error!', err)
-}
-// Woot!
-console.log('Success!')
+network.broadcast(nodes[0].pid, 'Hello World')
+network.run(100)
