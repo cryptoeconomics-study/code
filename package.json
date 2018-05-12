@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "chapter1": "node c1_CentralPaymentOperator/paypalWithSigs.js"
+    "serve": "http-server public",
+    "chapter1": "node c1_CentralPaymentOperator/paypalWithSigs.js",
+    "build-c2": "browserify c2_NetworkDoubleSpends/paypalWithSigs.js -o public/bundle.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +25,8 @@
   "dependencies": {
     "d3": "^5.2.0",
     "eth-crypto": "^1.1.0",
+    "faker": "^4.1.0",
+    "http-server": "^0.11.1",
     "lodash": "^4.17.10",
     "npm": "^6.0.0",
     "p2p-graph": "^1.2.2",

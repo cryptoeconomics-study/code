@@ -1,6 +1,9 @@
 # Vim
 *.swp
 
+# Built JS
+public/bundle.js
+
 # Logs
 logs
 *.log

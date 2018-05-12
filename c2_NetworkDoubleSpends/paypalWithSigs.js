@@ -129,3 +129,34 @@ for (let i = 0; i < numNodes; i++) {
 }
 network.broadcast(nodes[0].pid, 'Hello World')
 network.run(100)
+
+function visualizeNetwork (network) {
+  // Press "Execute" to run your program
+  var faker = require('faker')
+  var Graph = require('p2p-graph')
+
+  var graph = new Graph('.root')
+
+  // select event
+  graph.on('select', function (id) {
+    console.log(id + ' selected!')
+  })
+
+  // Add main peer
+  graph.add({
+    id: 'me',
+    me: true,
+    name: 'You'
+  })
+
+  for (let i = 0; i < 10; i++) {
+    // add peers
+    graph.add({
+      id: 'peer' + i,
+      name: faker.internet.ip()
+    })
+    // connect them
+    graph.connect('me', 'peer' + i)
+  }
+}
+visualizeNetwork(network)
