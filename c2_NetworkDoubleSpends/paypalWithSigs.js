@@ -48,6 +48,13 @@ function getTxHash (tx) {
   return EthCrypto.hash.keccak256(JSON.stringify(tx))
 }
 
+class InvalidNonce extends Error {
+  constructor (...args) {
+    super(...args)
+    Error.captureStackTrace(this, InvalidNonce)
+  }
+}
+
 function applyTransaction (state, tx) {
   // Check the from address matches the signature
   const signer = EthCrypto.recover(tx.sig, getTxHash(tx.contents))
@@ -63,7 +70,7 @@ function applyTransaction (state, tx) {
   }
   // Check that the nonce is correct for replay protection
   if (tx.contents.nonce !== state[[tx.contents.from]].nonce + 1) {
-    throw new Error('Invalid nonce!')
+    throw new InvalidNonce(tx)
   }
   // Mint coins **only if identity is PayPal**
   if (tx.contents.type === 'mint' && tx.contents.from === nodes.paypal.address) {
@@ -76,7 +83,6 @@ function applyTransaction (state, tx) {
     state[[tx.contents.to]].balance += tx.contents.amount
   }
   state[[tx.contents.from]].nonce += 1
-  return state
 }
 
 class Node {
@@ -91,20 +97,44 @@ class Node {
     this.network = network
     this.state = genesis
     this.transactions = []
+    this.invalidNonceTxs = {}
   }
 
   onReceive (tx) {
     if (!this.transactions.includes(tx)) {
       this.transactions.push(tx)
-      console.log(this.pid, 'got', tx)
       this.network.broadcast(this.pid, tx)
     }
-    // this.state = applyTransaction(this.state, tx)
+    try {
+      applyTransaction(this.state, tx)
+    } catch (e) {
+      if (!(e instanceof InvalidNonce)) {
+        throw e
+      }
+      if (!(tx.contents.sender in this.invalidNonceTxs)) {
+        this.invalidNonceTxs[tx.contents.sender] = []
+      }
+      this.invalidNonceTxs[tx.contents.sender].push(tx)
+    }
   }
 
   tick () {
-    // TODO: If possible, attempt to generate a send transaction
+    // Generate random transaction
+    const unsignedTx = {
+      type: 'send',
+      amount: 1,
+      from: this.address,
+      to: nodes[Math.floor(Math.random() * nodes.length)].address,
+      nonce: this.state[this.address].nonce + 1
+    }
+    const tx = {
+      contents: unsignedTx,
+      sig: EthCrypto.sign(this.privateKey, getTxHash(unsignedTx))
+    }
+    this.transactions.push(tx)
+    applyTransaction(this.state, tx)
     // Broadcast this tx to the network
+    this.network.broadcast(this.pid, tx)
   }
 }
 
@@ -124,35 +154,39 @@ for (let i = 0; i < numNodes; i++) {
 const nodes = []
 // Create new nodes based on our identities, and connect them to the network
 for (let i = 0; i < numNodes; i++) {
-  nodes.push(new Node(identities[i], genesis, network))
+  nodes.push(new Node(identities[i], JSON.parse(JSON.stringify(genesis)), network))
   network.connectPeer(nodes[i], 2)
 }
-network.broadcast(nodes[0].pid, 'Hello World')
-network.run(100)
 
-function visualizeNetwork (network) {
-  // Press "Execute" to run your program
-  var Graph = require('p2p-graph')
+network.run(30)
 
-  var graph = new Graph('.root')
+console.log('~~~~~~~~~~~ Node 0 ~~~~~~~~~~~')
+console.log(nodes[0].state)
+console.log('~~~~~~~~~~~ Node 1 ~~~~~~~~~~~')
+console.log(nodes[1].state)
 
-  // select event
-  graph.on('select', function (id) {
-    console.log(id + ' selected!')
-  })
+// function visualizeNetwork (network) {
+//   // Press "Execute" to run your program
+//   var Graph = require('p2p-graph')
 
-  for (let i = 0; i < nodes.length; i++) {
-    // add peers
-    graph.add({
-      id: nodes[i].pid,
-      name: nodes[i].pid.slice(0, 10)
-    })
-  }
-  for (const node of nodes) {
-    // connect them
-    for (const peer of network.peers[node.pid]) {
-      graph.connect(node.pid, peer.pid)
-    }
-  }
-}
-visualizeNetwork(network)
+//   var graph = new Graph('.root')
+
+//   // select event
+//   graph.on('select', function (id) {
+//     console.log(id + ' selected!')
+//   })
+
+//   for (let i = 0; i < nodes.length; i++) {
+//     // add peers
+//     graph.add({
+//       id: nodes[i].pid,
+//       name: nodes[i].pid.slice(0, 10)
+//     })
+//   }
+//   for (const node of nodes) {
+//     // connect them
+//     for (const peer of network.peers[node.pid]) {
+//       graph.connect(node.pid, peer.pid)
+//     }
+//   }
+// }
