@@ -73,24 +73,22 @@ function applyTransaction (state, tx) {
     throw new InvalidNonce(tx)
   }
   // Mint coins **only if identity is PayPal**
-  if (tx.contents.type === 'mint' && tx.contents.from === nodes.paypal.address) {
-    state[[tx.contents.to]].balance += tx.contents.amount
-  } else if (tx.contents.type === 'send') { // Send coins
+  if (tx.contents.type === 'send') { // Send coins
     if (state[[tx.contents.from]].balance - tx.contents.amount < 0) {
       throw new Error('Not enough money!')
     }
     state[[tx.contents.from]].balance -= tx.contents.amount
     state[[tx.contents.to]].balance += tx.contents.amount
+  } else {
+    throw new Error('Invalid transaction type!')
   }
   state[[tx.contents.from]].nonce += 1
 }
 
 class Node {
-  constructor ({address, privateKey, publicKey}, genesis, network) {
+  constructor (wallet, genesis, network) {
     // Blockchain identity
-    this.address = address
-    this.privateKey = privateKey
-    this.publicKey = publicKey
+    this.wallet = wallet
     // P2P Node identity -- used for connecting to peers
     this.p2pNodeId = EthCrypto.createIdentity()
     this.pid = this.p2pNodeId.address
@@ -108,13 +106,34 @@ class Node {
     try {
       applyTransaction(this.state, tx)
     } catch (e) {
+      // Catch invalid nonce
       if (!(e instanceof InvalidNonce)) {
         throw e
       }
-      if (!(tx.contents.sender in this.invalidNonceTxs)) {
-        this.invalidNonceTxs[tx.contents.sender] = []
+      // Add transaction to invalidNonceTxs
+      if (!(tx.contents.from in this.invalidNonceTxs)) {
+        this.invalidNonceTxs[tx.contents.from] = {}
       }
-      this.invalidNonceTxs[tx.contents.sender].push(tx)
+      this.invalidNonceTxs[tx.contents.from][tx.contents.nonce] = tx
+    }
+    this.applyInvalidNonceTxs(tx.contents.from)
+  }
+
+  applyInvalidNonceTxs (address) {
+    const targetNonce = this.state[address].nonce + 1
+    if (address in this.invalidNonceTxs && targetNonce in this.invalidNonceTxs[address]) {
+      applyTransaction(this.state, this.invalidNonceTxs[address][targetNonce])
+      if (targetNonce > 3 && '2' in this.invalidNonceTxs[address]) {
+        console.log('my adddress:', address)
+        console.log("Deleting:", this.invalidNonceTxs[address][targetNonce])
+        console.log('~~~~~~~Transactions~~~~~~')
+        console.log(this.transactions)
+        console.log('~~~~~~~Invalid nonce txs~~~~~~')
+        console.log(this.invalidNonceTxs[address])
+        throw 'WTF'
+      }
+      delete this.invalidNonceTxs[address][targetNonce]
+      this.applyInvalidNonceTxs(address)
     }
   }
 
@@ -123,13 +142,13 @@ class Node {
     const unsignedTx = {
       type: 'send',
       amount: 1,
-      from: this.address,
-      to: nodes[Math.floor(Math.random() * nodes.length)].address,
-      nonce: this.state[this.address].nonce + 1
+      from: this.wallet.address,
+      to: nodes[Math.floor(Math.random() * nodes.length)].wallet.address,
+      nonce: this.state[this.wallet.address].nonce + 1
     }
     const tx = {
       contents: unsignedTx,
-      sig: EthCrypto.sign(this.privateKey, getTxHash(unsignedTx))
+      sig: EthCrypto.sign(this.wallet.privateKey, getTxHash(unsignedTx))
     }
     this.transactions.push(tx)
     applyTransaction(this.state, tx)
@@ -139,22 +158,22 @@ class Node {
 }
 
 // ****** Test this out using a simulated network ****** //
-const numNodes = 50
-const identities = []
+const numNodes = 5
+const wallets = []
 const genesis = {}
 for (let i = 0; i < numNodes; i++) {
   // Create new identity
-  identities.push(EthCrypto.createIdentity())
+  wallets.push(EthCrypto.createIdentity())
   // Add that node to our genesis block & give them an allocation
-  genesis[identities[i].address] = {
+  genesis[wallets[i].address] = {
     balance: 100,
     nonce: 0
   }
 }
 const nodes = []
-// Create new nodes based on our identities, and connect them to the network
+// Create new nodes based on our wallets, and connect them to the network
 for (let i = 0; i < numNodes; i++) {
-  nodes.push(new Node(identities[i], JSON.parse(JSON.stringify(genesis)), network))
+  nodes.push(new Node(wallets[i], JSON.parse(JSON.stringify(genesis)), network))
   network.connectPeer(nodes[i], 2)
 }
 
@@ -164,6 +183,19 @@ console.log('~~~~~~~~~~~ Node 0 ~~~~~~~~~~~')
 console.log(nodes[0].state)
 console.log('~~~~~~~~~~~ Node 1 ~~~~~~~~~~~')
 console.log(nodes[1].state)
+console.log('~~~~~~~~~~~ Node 1 ~~~~~~~~~~~')
+console.log(nodes[1].invalidNonceTxs)
+
+// for (tx of nodes[1].transactions) {
+//   if (tx.contents.from == nodes[2].wallet.address) {
+//     console.log(tx)
+//   }
+// }
+
+// console.log(nodes[1].transactions)
+// for (key in nodes[1].invalidNonceTxs) {
+//   console.log(nodes[1].invalidNonceTxs[key].contents)
+// }
 
 // function visualizeNetwork (network) {
 //   // Press "Execute" to run your program

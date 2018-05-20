@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/cryptoeconomics-study/code#readme",
   "dependencies": {
+    "browserify": "^16.2.2",
     "d3": "^5.2.0",
     "eth-crypto": "^1.1.0",
     "faker": "^4.1.0",
