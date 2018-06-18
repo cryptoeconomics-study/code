@@ -45,10 +45,15 @@ class Node {
   }
 
   tick () {
+    // If we have no money, don't do anything!
+    if (this.state[this.wallet.address].balance < 10) {
+      console.log('We are honest so we wont send anything :)')
+      return
+    }
     // Generate random transaction
     const unsignedTx = {
       type: 'send',
-      amount: 1,
+      amount: 10,
       from: this.wallet.address,
       to: nodes[Math.floor(Math.random() * nodes.length)].wallet.address,
       nonce: this.state[this.wallet.address].nonce
@@ -118,48 +123,15 @@ for (let i = 0; i < numNodes; i++) {
   network.connectPeer(nodes[i], 2)
 }
 
-network.run(30)
-
-console.log('~~~~~~~~~~~ Node 0 ~~~~~~~~~~~')
-console.log(nodes[0].state)
-console.log('~~~~~~~~~~~ Node 1 ~~~~~~~~~~~')
-console.log(nodes[1].state)
-console.log('~~~~~~~~~~~ Node 1 ~~~~~~~~~~~')
-console.log(nodes[1].invalidNonceTxs[wallets[0].address])
-
-// for (tx of nodes[1].transactions) {
-//   if (tx.contents.from == nodes[2].wallet.address) {
-//     console.log(tx)
-//   }
-// }
-
-// console.log(nodes[1].transactions)
-// for (key in nodes[1].invalidNonceTxs) {
-//   console.log(nodes[1].invalidNonceTxs[key].contents)
-// }
-
-// function visualizeNetwork (network) {
-//   // Press "Execute" to run your program
-//   var Graph = require('p2p-graph')
-
-//   var graph = new Graph('.root')
-
-//   // select event
-//   graph.on('select', function (id) {
-//     console.log(id + ' selected!')
-//   })
-
-//   for (let i = 0; i < nodes.length; i++) {
-//     // add peers
-//     graph.add({
-//       id: nodes[i].pid,
-//       name: nodes[i].pid.slice(0, 10)
-//     })
-//   }
-//   for (const node of nodes) {
-//     // connect them
-//     for (const peer of network.peers[node.pid]) {
-//       graph.connect(node.pid, peer.pid)
-//     }
-//   }
-// }
+try {
+  network.run(300)
+} catch (e) {
+  console.log('One of our honest nodes had a transaction fail because of network latency!')
+  // console.log(e)
+  console.log('~~~~~~~~~~~ Node 0 ~~~~~~~~~~~')
+  console.log(nodes[0].state)
+  console.log('~~~~~~~~~~~ Node 1 ~~~~~~~~~~~')
+  console.log(nodes[1].state)
+  console.log('~~~~~~~~~~~ Node 1 ~~~~~~~~~~~')
+  console.log(nodes[1].invalidNonceTxs[wallets[0].address])
+}
