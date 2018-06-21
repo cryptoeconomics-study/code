@@ -26,12 +26,16 @@ class NetworkSimulator {
 
   broadcast (sender, message) {
     for (let pid of this.peers[sender]) {
-      const recvTime = this.time + this.latencyDistribution()
-      if (!(recvTime in this.messageQueue)) {
-        this.messageQueue[recvTime] = []
-      }
-      this.messageQueue[recvTime].push({recipient: pid, message})
+      this.broadcastTo(sender, pid, message)
     }
+  }
+
+  broadcastTo (sender, receiver, message) {
+    const recvTime = this.time + this.latencyDistribution()
+    if (!(recvTime in this.messageQueue)) {
+      this.messageQueue[recvTime] = []
+    }
+    this.messageQueue[recvTime].push({recipient: receiver, message})
   }
 
   tick () {
