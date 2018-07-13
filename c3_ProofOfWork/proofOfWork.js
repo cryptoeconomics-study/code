@@ -12,10 +12,22 @@ function getTxHash (tx) {
   return EthCrypto.hash.keccak256(JSON.stringify(tx))
 }
 
-//fork choice: requires comparing accumulated difficulty in two chains
+//fork choice: requires comparing accumulated difficulty in two chains.
+//for now compare lengths of this.blockchain and aBlockchain
+function forkChoice(aBlockchain) {
+  console.log((this.blockhain.length > aBlockchain.length) ? this.blockhain : aBlockchain)
+  return ((this.blockhain.length > aBlockchain.length) ? this.blockhain : aBlockchain)
+}
+
 //applies all the transactions in the longest chain and returns the resulting state object
-function getState() {
-    return this.state
+function getState(aBlockchain) {
+  let cannonicalChain = forkChoice(aBlockchain)
+  console.log(cannonicalChain)
+  for (let i = 0; i < cannonicalChain.length; i++) {
+    this.applyTransaction(cannonicalChain.contents.data)       //apply tx to state / ledger
+    this.applyInvalidNonceTxs(cannonicalChain.contents.data.contents.from) //apply tx to state / ledger
+  }
+  return this.state
 }
 
 class Client {
@@ -33,6 +45,11 @@ class Client {
     this.lastBlockHash = 0
   }
 
+  onReceive (tx) {
+    return //default should be do nothing and only miner catches txs?
+    // Miner.onReceive(tx)
+  }
+
   onNewBlock(block) {
     //some validations
     if (this.blockhain.includes(block)) {
@@ -46,8 +63,10 @@ class Client {
     //add block to blockhain
     this.blockchain.push(block)
     console.log(this.blockchain)
-    // this.applyTransaction(tx)       //apply tx to state / ledger
-    // this.applyInvalidNonceTxs(tx.contents.from) //apply tx to state / ledger
+    console.log(block.contents.data)
+    console.log(block.contents.data.contents.from)
+    this.applyTransaction(block.contents.data)       //apply tx to state / ledger
+    this.applyInvalidNonceTxs(block.contents.data.contents.from) //apply tx to state / ledger
   }
 
   applyInvalidNonceTxs (address) {
@@ -122,7 +141,7 @@ class Miner extends Client {
     this.transactions.push(tx)      //add tx to mempool
     let block = this.mineBlock(tx)  //mine a block with the tx
     this.blockhain.push(block)      //add tx to own blockchain
-    this.lastBlockHash = EthCrypto.hash.keccak256(block)  //set lastBlockHash
+    this.lastBlockHash = EthCrypto.hash.keccak256([{blockAttempt}])  //set lastBlockHash
     this.network.broadcast(this.pid, block) //broadcast new block to network
   }
 
@@ -135,19 +154,22 @@ class Miner extends Client {
       type: 'block',
       prevHash: this.lastBlockHash,
       timestamp: timestamp,
-      data: tx,
-      nonce: 0
+      data: tx
     }
 
+    // console.log('mining block for tx: ' + tx)
+    // console.log('unsingedBlock ', unsignedBlock)
     for (let i = 0; i < maxAttempts; i++) {
-      blockAttempt = Object.assign({'nonce': i}, block)
-      console.log(blockAttempt)
-      const blockHash = EthCrypto.hash.keccak256(blockAttempt)
+      let blockAttempt = Object.assign({'nonce': i}, unsignedBlock)
+      // console.log('blockAttempt ', blockAttempt)
+      let blockHash = EthCrypto.hash.keccak256([{blockAttempt}])
+      // console.log('blockHash ', blockHash)
       if (parseInt(blockHash.substring(0, 2 + difficulty)) === 0) {
         const newBlock = {
           contents: blockAttempt,
           sig: EthCrypto.sign(this.wallet.privateKey, getTxHash(unsignedBlock))
         }
+        console.log('new block found: ', newBlock)
         return newBlock
       }
     }
@@ -198,10 +220,13 @@ genesis[wallets[0].address] = {
 const nodes = []
 // Create new nodes based on our wallets, and connect them to the network
 for (let i = 0; i < numNodes; i++) {
-  nodes.push(new Node(wallets[i], JSON.parse(JSON.stringify(genesis)), network))
+  nodes.push(new Client(wallets[i], JSON.parse(JSON.stringify(genesis)), network))
+  // nodes.push(new Miner(wallets[i], JSON.parse(JSON.stringify(genesis)), network))
   // Connect everyone to everyone
   network.connectPeer(nodes[i], 3)
 }
+nodes.push(new Miner(wallets[numNodes], JSON.parse(JSON.stringify(genesis)), network))
+network.connectPeer(nodes[numNodes], 3)
 
 // Attempt double spend
 const evilNode = nodes[0]

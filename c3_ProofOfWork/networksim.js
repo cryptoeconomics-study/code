@@ -42,13 +42,18 @@ class NetworkSimulator {
     if (this.time in this.messageQueue) {
       for (let {recipient, message} of this.messageQueue[this.time]) {
         if (Math.random() > this.packetLoss) {
-          if (message.contents.type === 'send') {
-            recipient.onReceive(message)
+          try {
+              if (message.contents.type === 'send') {
+                recipient.onReceive(message)
+              }
+              if (message.contents.type === 'block') {
+                recipient.onNewBlock(message)
+              }
+              console.log('ok')
+          } catch (e) {
+            console.log('nok', message)
+            // console.log(this.messageQueue)
           }
-          if (message.contents.type === 'block') {
-            recipient.onNewBlock(message)
-          }
-
         }
       }
       delete this.messageQueue.time
