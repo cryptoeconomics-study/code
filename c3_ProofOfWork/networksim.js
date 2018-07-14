@@ -55,10 +55,9 @@ class NetworkSimulator {
             }
           } catch (e) {
             //sometimes message is undefined... not an object?
-            console.log("error!", e)
-            if (message.prototype !== 'object') {
-              console.log('not an object: ', message.prototype)
-            }
+            // console.log("error!", e)
+            console.log('net err msg : ', message)
+
           }
         }
       }
