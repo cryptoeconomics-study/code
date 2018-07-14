@@ -17,8 +17,8 @@ function getHash (data) {
 //   let cannonicalChain = forkChoice(aBlockchain)
 //   console.log(cannonicalChain)
 //   for (let i = 0; i < cannonicalChain.length; i++) {
-//     this.applyTransaction(cannonicalChain.contents.data)       //apply tx to state / ledger
-//     this.applyInvalidNonceTxs(cannonicalChain.contents.data.contents.from) //apply tx to state / ledger
+//     this.applyTransaction(cannonicalChain[i].contents.data)       //apply tx to state / ledger
+//     this.applyInvalidNonceTxs(cannonicalChain[i].contents.data.contents.from) //apply tx to state / ledger
 //   }
 //   return this.state
 // }
@@ -33,16 +33,17 @@ class Miner {
 
   //collect txs from network
   onReceive (tx) {
-    console.log('received a tx!')
+    console.log('received a tx!', tx)
     if (this.transactions.includes(tx)) {
+      console.log('skipped a tx!')
       return
     }
     this.transactions.push(tx)      //add tx to mempool
     this.applyTransaction(tx)       //update state
     this.applyInvalidNonceTxs(tx.contents.from) //update state
-    let block = this.mineBlock(tx)  //mine a block with the tx
-    // this.lastBlockHash = getHash(block)  //set lastBlockHash!!! this sets lastBlockHash with sig
-    this.network.broadcast(this.pid, block) //broadcast new block to network
+    let newBlock = this.mineBlock(tx)  //mine a block with the tx
+    this.lastBlockHash = getHash(newBlock)  //set lastBlockHash for tx block:content+sig
+    this.network.broadcast(this.pid, newBlock) //broadcast new block to network
     // console.log('my tx list is: ' +  this.transactions.length + ' long')
     // console.log('my badtx list is:', this.invalidNonceTxs)
   }
@@ -53,23 +54,21 @@ class Miner {
     if (this.blockchain.includes(block)) {
       console.log('skipped a block!')
       return
-    } else {
-      console.log(this.blockchain)
-      console.log(block.contents)
     }
-    if (!block.contents.prevHash === this.lastBlockHash) {
+    // console.log(block.contents.nonce)
+    if (block.contents.prevHash !== this.lastBlockHash) {
+      console.log('skipped a block!')
       return
-    } else {
-      // console.log(block.contents.prevHash)
-      // console.log(this.lastBlockHash)
     }
 
     this.blockchain.push(block)      //add tx to own blockchain
+    this.lastBlockHash = getHash(block)  //set lastBlockHash for tx block:content+sig
     let tx = block.contents.data
     // console.log('txcontents: ',tx.contents.from)
     this.applyTransaction(tx)       //update state
     this.applyInvalidNonceTxs(tx.contents.from) //update state
-    // console.log('addr ' + this.wallet.address + ' block count : ' + this.blockchain.length )
+    console.log('addr ' + this.wallet.address + ' block count : ' + this.blockchain.length )
+    // console.log('my chain is: ', this.blockchain)
     // console.log('inside the block: ', block.contents.data)
   }
 
@@ -95,9 +94,10 @@ class Miner {
       if (parseInt(blockHash.substring(0, 2 + difficulty)) === 0) {
         const newBlock = {
           contents: blockAttempt,
-          sig: EthCrypto.sign(this.wallet.privateKey, getHash(unsignedBlock))
+          sig: EthCrypto.sign(this.wallet.privateKey, getHash(blockHash)) //sign the unsignedBlock + nonce
         }
         // console.log('new block found: ', newBlock)
+        // this.lastBlockHash = blockHash ... i want the lastBlockHash to include the sig
         return newBlock
       }
     }
@@ -148,6 +148,8 @@ class Client extends Miner {
     }
     // Check that the nonce is correct for replay protection
     if (tx.contents.nonce !== this.state[[tx.contents.from]].nonce) {
+      // console.log('txnonce: ', tx.contents.nonce + ' txfrom: ', tx.contents.from)
+      // console.log('state nonce: ', this.state[[tx.contents.from]].nonce )
       // If it isn't correct, then we should add it to transaction to invalidNonceTxs
       if (!(tx.contents.from in this.invalidNonceTxs)) {
         this.invalidNonceTxs[tx.contents.from] = {}
@@ -180,7 +182,7 @@ class Client extends Miner {
 }
 
 // ****** Test this out using a simulated network ****** //
-const numNodes = 2
+const numNodes = 5
 const wallets = []
 const genesis = {}
 for (let i = 0; i < numNodes; i++) {
@@ -203,11 +205,16 @@ for (let i = 0; i < numNodes; i++) {
   network.connectPeer(nodes[i], 3)
 }
 
-const transactions = [nodes[0].generateTx(nodes[1].wallet.address, 100)]
+// const transactions = [nodes[0].generateTx(nodes[1].wallet.address, 100)]
 //// TODO: multiple tx
-
+nodes[0].generateTx(nodes[1].wallet.address, 10)
 for (let i = 0; i < 800; i++) {
   network.tick()
 }
+nodes[0].generateTx(nodes[1].wallet.address, 5)
+for (let i = 0; i < 800; i++) {
+  network.tick()
+}
+
 console.log('state 0: ', nodes[0].state)
 console.log('state 1: ', nodes[1].state)
