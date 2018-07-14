@@ -1,84 +1,120 @@
-//objective:
-//generate a tx and put it in a block that is added to the highest difficulty chain
-//story:
-//account uses node to sign and broadcast tx > generateTx
-//miner node picks up tx and mines new block > mineBlock
-//miner node adds block to chain > applyTransaction
-
 var EthCrypto = require('eth-crypto')
 var network = require('./networksim')()
 
-function getTxHash (tx) {
-  return EthCrypto.hash.keccak256(JSON.stringify(tx))
+function getHash (data) {
+  return EthCrypto.hash.keccak256(JSON.stringify(data))
 }
 
-//fork choice: requires comparing accumulated difficulty in two chains.
-//for now compare lengths of this.blockchain and aBlockchain
-function forkChoice(aBlockchain) {
-  console.log((this.blockhain.length > aBlockchain.length) ? this.blockhain : aBlockchain)
-  return ((this.blockhain.length > aBlockchain.length) ? this.blockhain : aBlockchain)
-}
+// //fork choice: requires comparing accumulated difficulty in two chains.
+// //for now compare lengths of this.blockchain and aBlockchain
+// function forkChoice(aBlockchain) {
+//   console.log((this.blockhain.length > aBlockchain.length) ? this.blockhain : aBlockchain)
+//   return ((this.blockhain.length > aBlockchain.length) ? this.blockhain : aBlockchain)
+// }
+//
+// //applies all the transactions in the longest chain and returns the resulting state object
+// function getState(aBlockchain) {
+//   let cannonicalChain = forkChoice(aBlockchain)
+//   console.log(cannonicalChain)
+//   for (let i = 0; i < cannonicalChain.length; i++) {
+//     this.applyTransaction(cannonicalChain.contents.data)       //apply tx to state / ledger
+//     this.applyInvalidNonceTxs(cannonicalChain.contents.data.contents.from) //apply tx to state / ledger
+//   }
+//   return this.state
+// }
 
-//applies all the transactions in the longest chain and returns the resulting state object
-function getState(aBlockchain) {
-  let cannonicalChain = forkChoice(aBlockchain)
-  console.log(cannonicalChain)
-  for (let i = 0; i < cannonicalChain.length; i++) {
-    this.applyTransaction(cannonicalChain.contents.data)       //apply tx to state / ledger
-    this.applyInvalidNonceTxs(cannonicalChain.contents.data.contents.from) //apply tx to state / ledger
-  }
-  return this.state
-}
-
-class Client {
-  constructor (wallet, genesis, network) {
-    // Blockchain identity
-    this.wallet = wallet
-    // P2P Node identity -- used for connecting to peers
-    this.p2pNodeId = EthCrypto.createIdentity()
-    this.pid = this.p2pNodeId.address
-    this.network = network
-    this.state = genesis
+class Miner {
+  constructor () {
     this.transactions = [] //all txs
-    this.blockhain = []    //all blocks
+    this.blockchain = []    //all blocks
     this.invalidNonceTxs = {}
     this.lastBlockHash = 0
   }
 
+  //collect txs from network
   onReceive (tx) {
-    return //default should be do nothing and only miner catches txs?
-    // Miner.onReceive(tx)
-  }
-
-  onNewBlock(block) {
-    //some validations
-    if (this.blockhain.includes(block)) {
+    console.log('received a tx!')
+    if (this.transactions.includes(tx)) {
       return
     }
-    //check prevHash with hash of last block
+    this.transactions.push(tx)      //add tx to mempool
+    this.applyTransaction(tx)       //update state
+    this.applyInvalidNonceTxs(tx.contents.from) //update state
+    let block = this.mineBlock(tx)  //mine a block with the tx
+    // this.lastBlockHash = getHash(block)  //set lastBlockHash!!! this sets lastBlockHash with sig
+    this.network.broadcast(this.pid, block) //broadcast new block to network
+    // console.log('my tx list is: ' +  this.transactions.length + ' long')
+    // console.log('my badtx list is:', this.invalidNonceTxs)
+  }
+
+  //collect blocks from network
+  onNewBlock (block) {
+    console.log('received a block!')
+    if (this.blockchain.includes(block)) {
+      console.log('skipped a block!')
+      return
+    } else {
+      console.log(this.blockchain)
+      console.log(block.contents)
+    }
     if (!block.contents.prevHash === this.lastBlockHash) {
       return
+    } else {
+      // console.log(block.contents.prevHash)
+      // console.log(this.lastBlockHash)
     }
-    //if block clash then fork choice
-    //add block to blockhain
-    this.blockchain.push(block)
-    console.log(this.blockchain)
-    console.log(block.contents.data)
-    console.log(block.contents.data.contents.from)
-    this.applyTransaction(block.contents.data)       //apply tx to state / ledger
-    this.applyInvalidNonceTxs(block.contents.data.contents.from) //apply tx to state / ledger
+
+    this.blockchain.push(block)      //add tx to own blockchain
+    let tx = block.contents.data
+    // console.log('txcontents: ',tx.contents.from)
+    this.applyTransaction(tx)       //update state
+    this.applyInvalidNonceTxs(tx.contents.from) //update state
+    // console.log('addr ' + this.wallet.address + ' block count : ' + this.blockchain.length )
+    // console.log('inside the block: ', block.contents.data)
   }
 
-  applyInvalidNonceTxs (address) {
-    const targetNonce = this.state[address].nonce
-    if (address in this.invalidNonceTxs && targetNonce in this.invalidNonceTxs[address]) {
-      this.applyTransaction(this.invalidNonceTxs[address][targetNonce])
-      delete this.invalidNonceTxs[address][targetNonce]
-      this.applyInvalidNonceTxs(address)
-    }
+  tick () {
+
   }
 
-  tick () {}
+  //makes block
+  mineBlock (tx) {
+    let difficulty = 3
+    let maxAttempts = 100000
+    let timestamp = Math.round(new Date().getTime() / 1000)
+    const unsignedBlock = {
+      type: 'block',
+      prevHash: this.lastBlockHash,
+      timestamp: timestamp,
+      data: tx
+    }
+    for (let i = 0; i < maxAttempts; i++) {
+      let blockAttempt = Object.assign({'nonce': i}, unsignedBlock)
+      let blockHash = getHash(blockAttempt)
+      // console.log('nonce: ' + i + ' blockHash: ' + blockHash)
+      if (parseInt(blockHash.substring(0, 2 + difficulty)) === 0) {
+        const newBlock = {
+          contents: blockAttempt,
+          sig: EthCrypto.sign(this.wallet.privateKey, getHash(unsignedBlock))
+        }
+        // console.log('new block found: ', newBlock)
+        return newBlock
+      }
+    }
+    return 'FAIL'
+  }
+
+}
+
+class Client extends Miner {
+  constructor (wallet, genesis, network) {
+    super()
+    this.wallet = wallet
+    this.p2pNodeId = EthCrypto.createIdentity()
+    this.pid = this.p2pNodeId.address
+    this.network = network
+    this.state = genesis
+  }
 
   generateTx (to, amount) {
     const unsignedTx = {
@@ -88,18 +124,18 @@ class Client {
       to: to,
       nonce: this.state[this.wallet.address].nonce
     }
-    // console.log(unsignedTx)
     const tx = {
       contents: unsignedTx,
-      sig: EthCrypto.sign(this.wallet.privateKey, getTxHash(unsignedTx))
+      sig: EthCrypto.sign(this.wallet.privateKey, getHash(unsignedTx))
     }
-    // return tx
-    this.network.broadcast(this.pid, tx) //broadcast new tx to network
+    //broadcast new tx to network
+    this.network.broadcast(this.pid, tx)
   }
 
   applyTransaction (tx) {
     // Check the from address matches the signature
-    const signer = EthCrypto.recover(tx.sig, getTxHash(tx.contents))
+    // console.log('i was sent tx: ', tx)
+    const signer = EthCrypto.recover(tx.sig, getHash(tx.contents))
     if (signer !== tx.contents.from) {
       throw new Error('Invalid signature!')
     }
@@ -130,83 +166,25 @@ class Client {
     }
     this.state[[tx.contents.from]].nonce += 1
   }
-}
 
-class Miner extends Client {
-  //collect txs
-  onReceive (tx) {
-    if (this.transactions.includes(tx)) {
-      return
+  applyInvalidNonceTxs (address) {
+    // console.log('my addr:', address)
+    const targetNonce = this.state[address].nonce
+    if (address in this.invalidNonceTxs && targetNonce in this.invalidNonceTxs[address]) {
+      this.applyTransaction(this.invalidNonceTxs[address][targetNonce])
+      delete this.invalidNonceTxs[address][targetNonce]
+      this.applyInvalidNonceTxs(address)
     }
-    this.transactions.push(tx)      //add tx to mempool
-    let block = this.mineBlock(tx)  //mine a block with the tx
-    this.blockhain.push(block)      //add tx to own blockchain
-    this.lastBlockHash = EthCrypto.hash.keccak256([{blockAttempt}])  //set lastBlockHash
-    this.network.broadcast(this.pid, block) //broadcast new block to network
-  }
-
-  //makes block
-  mineBlock (tx) {
-    let difficulty = 3
-    let maxAttempts = 100000
-    let timestamp = Math.round(new Date().getTime() / 1000)
-    const unsignedBlock = {
-      type: 'block',
-      prevHash: this.lastBlockHash,
-      timestamp: timestamp,
-      data: tx
-    }
-
-    // console.log('mining block for tx: ' + tx)
-    // console.log('unsingedBlock ', unsignedBlock)
-    for (let i = 0; i < maxAttempts; i++) {
-      let blockAttempt = Object.assign({'nonce': i}, unsignedBlock)
-      // console.log('blockAttempt ', blockAttempt)
-      let blockHash = EthCrypto.hash.keccak256([{blockAttempt}])
-      // console.log('blockHash ', blockHash)
-      if (parseInt(blockHash.substring(0, 2 + difficulty)) === 0) {
-        const newBlock = {
-          contents: blockAttempt,
-          sig: EthCrypto.sign(this.wallet.privateKey, getTxHash(unsignedBlock))
-        }
-        console.log('new block found: ', newBlock)
-        return newBlock
-      }
-    }
-    return 'FAIL'
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // ****** Test this out using a simulated network ****** //
-const numNodes = 5
+const numNodes = 2
 const wallets = []
 const genesis = {}
 for (let i = 0; i < numNodes; i++) {
-  // Create new identity
   wallets.push(EthCrypto.createIdentity())
-  // Add that node to our genesis block & give them an allocation
   genesis[wallets[i].address] = {
     balance: 0,
     nonce: 0
@@ -217,40 +195,19 @@ genesis[wallets[0].address] = {
   balance: 100,
   nonce: 0
 }
+
 const nodes = []
 // Create new nodes based on our wallets, and connect them to the network
 for (let i = 0; i < numNodes; i++) {
   nodes.push(new Client(wallets[i], JSON.parse(JSON.stringify(genesis)), network))
-  // nodes.push(new Miner(wallets[i], JSON.parse(JSON.stringify(genesis)), network))
-  // Connect everyone to everyone
   network.connectPeer(nodes[i], 3)
 }
-nodes.push(new Miner(wallets[numNodes], JSON.parse(JSON.stringify(genesis)), network))
-network.connectPeer(nodes[numNodes], 3)
 
-// Attempt double spend
-const evilNode = nodes[0]
-const victims = [network.peers[evilNode.pid][0], network.peers[evilNode.pid][1]]
-const spends = [evilNode.generateTx(victims[0].wallet.address, 100), evilNode.generateTx(victims[1].wallet.address, 100)]
-network.broadcastTo(evilNode.pid, victims[0], spends[0])
-network.broadcastTo(evilNode.pid, victims[1], spends[1])
-// Now run the network until an invalid spend is detected.
-// We will also detect if the two victim nodes, for a short time, both believe they have been sent money
-// by our evil node. That's our double spend!
+const transactions = [nodes[0].generateTx(nodes[1].wallet.address, 100)]
+//// TODO: multiple tx
+
 for (let i = 0; i < 800; i++) {
   network.tick()
-  let victimBalances = []
-  for (let v of victims) {
-    victimBalances.push([v.state[evilNode.wallet.address].balance, v.state[v.wallet.address].balance])
-    console.log('Victim ' + victimBalances.length + ' has balance ' + victimBalances[victimBalances.length - 1][1])
-    if (Object.keys(v.invalidNonceTxs).length > 0) {
-      console.log('Double spend propagated to victim ' + victimBalances.length)
-      throw (new Error('Double spend was successful!'))
-    }
-  }
-  if (victimBalances[0][1] === 100 && victimBalances[1][1] === 100) {
-    console.log('Double spend detected!!!!! Ahh!!!')
-  }
 }
-console.log('Looks like the double spend was foiled by network latency! Victim 1 or 2 propegated their transaction ' +
-  'to the other victim before the double spend was received!')
+console.log('state 0: ', nodes[0].state)
+console.log('state 1: ', nodes[1].state)

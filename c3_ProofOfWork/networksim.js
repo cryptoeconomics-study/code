@@ -42,17 +42,23 @@ class NetworkSimulator {
     if (this.time in this.messageQueue) {
       for (let {recipient, message} of this.messageQueue[this.time]) {
         if (Math.random() > this.packetLoss) {
+          // console.log('tick called', message)
           try {
-              if (message.contents.type === 'send') {
-                recipient.onReceive(message)
-              }
-              if (message.contents.type === 'block') {
-                recipient.onNewBlock(message)
-              }
-              console.log('ok')
+            if (message.contents.type === 'send') {
+              recipient.onReceive(message)
+              // console.log('got a send msg')
+            } else if (message.contents.type === 'block') {
+              recipient.onNewBlock(message)
+              // console.log('got a block msg')
+            } else {
+              // console.log('errr',message.contents.type)
+            }
           } catch (e) {
-            console.log('nok', message)
-            // console.log(this.messageQueue)
+            //sometimes message is undefined... not an object?
+            console.log("error!", e)
+            if (message.prototype !== 'object') {
+              console.log('not an object: ', message.prototype)
+            }
           }
         }
       }

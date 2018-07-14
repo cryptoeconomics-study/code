@@ -66,3 +66,6 @@ typings/
 
 # next.js build output
 .next
+c3_ProofOfWork/test.js
+c3_ProofOfWork/Ztest.js
+.gitignore
