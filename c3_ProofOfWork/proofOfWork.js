@@ -5,37 +5,20 @@ function getHash (data) {
   return EthCrypto.hash.keccak256(JSON.stringify(data))
 }
 
-// //fork choice: requires comparing accumulated difficulty in two chains.
-// //for now compare lengths of this.blockchain and aBlockchain
-// function forkChoice(aBlockchain) {
-//   console.log((this.blockhain.length > aBlockchain.length) ? this.blockhain : aBlockchain)
-//   return ((this.blockhain.length > aBlockchain.length) ? this.blockhain : aBlockchain)
-// }
-//
-// //applies all the transactions in the longest chain and returns the resulting state object
-// function getState(aBlockchain) {
-//   let cannonicalChain = forkChoice(aBlockchain)
-//   console.log(cannonicalChain)
-//   for (let i = 0; i < cannonicalChain.length; i++) {
-//     this.applyTransaction(cannonicalChain[i].contents.data)       //apply tx to state / ledger
-//     this.applyInvalidNonceTxs(cannonicalChain[i].contents.data.contents.from) //apply tx to state / ledger
-//   }
-//   return this.state
-// }
-
 class Miner {
   constructor () {
     this.transactions = [] //all txs
-    this.blockchain = []    //all blocks
+    this.blockchain = []    //main chain
+    this.uncles = []    //uncle blocks
     this.invalidNonceTxs = {}
     this.lastBlockHash = 0
   }
 
   //collect txs from network
   onReceive (tx) {
-    console.log('received a tx!', tx)
+    // console.log('received a tx!', tx.contents)
     if (this.transactions.includes(tx)) {
-      console.log('skipped a tx!')
+      // console.log('skipped a tx!', tx.contents)
       return
     }
     this.transactions.push(tx)      //add tx to mempool
@@ -50,24 +33,26 @@ class Miner {
 
   //collect blocks from network
   onNewBlock (block) {
-    console.log('received a block!')
+    // console.log('received a block!', block.contents)
     if (this.blockchain.includes(block)) {
-      console.log('skipped a block!')
+      console.log('skipped a block!', block.contents)
       return
     }
     // console.log(block.contents.nonce)
-    if (block.contents.prevHash !== this.lastBlockHash) {
-      console.log('skipped a block!')
-      return
+
+    if (block.contents.prevHash === this.lastBlockHash) {
+      this.blockchain.push(block)      //add tx to own blockchain
+      this.lastBlockHash = getHash(block)  //set lastBlockHash for tx block:content+sig
+    } else {
+      this.uncles.push(block) //add tx to uncles
+      //if uncles.length > blockchain.length?
     }
 
-    this.blockchain.push(block)      //add tx to own blockchain
-    this.lastBlockHash = getHash(block)  //set lastBlockHash for tx block:content+sig
     let tx = block.contents.data
-    // console.log('txcontents: ',tx.contents.from)
     this.applyTransaction(tx)       //update state
     this.applyInvalidNonceTxs(tx.contents.from) //update state
-    console.log('addr ' + this.wallet.address + ' block count : ' + this.blockchain.length )
+    // console.log('txcontents: ',tx.contents.from)
+    // console.log('addr ' + this.wallet.address + ' block count : ' + this.blockchain.length )
     // console.log('my chain is: ', this.blockchain)
     // console.log('inside the block: ', block.contents.data)
   }
@@ -216,5 +201,8 @@ for (let i = 0; i < 800; i++) {
   network.tick()
 }
 
-console.log('state 0: ', nodes[0].state)
-console.log('state 1: ', nodes[1].state)
+for (let i = 0; i < numNodes; i++) {
+  console.log('node: ', i)
+  console.log('state: ', nodes[0].state)
+  console.log('chain len', nodes[0].blockchain.length)
+}
