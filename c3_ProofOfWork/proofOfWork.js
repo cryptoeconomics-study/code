@@ -17,11 +17,13 @@ class Client {
     this.state = genesis
     this.transactions = []
     this.blockchain = []    //longest chain
-    this.allBlocks = []    //all blocks received
+    this.allBlocks = []    //all blocks
     this.invalidNonceTxs = {}
+    this.blockNumber = 0 //keep track of blocks added to blockchain despite getState()
 
     const genesisBlock = {
       nonce: 0,
+      number: 0,
       coinbase: 0,
       difficulty: 9000,
       parentHash: 0,
@@ -32,13 +34,15 @@ class Client {
       }
     }
     this.blockchain.push(genesisBlock)
+    this.allBlocks.push(genesisBlock)
 
   }
 
   onReceive (message) {
     if (message.contents.type === 'block') {
+      // this.blockchain.push(message)
       this.allBlocks.push(message)
-      this.getState()
+      // this.getState()
     } else {
       //do nothing for now, not a miner
       return
@@ -71,13 +75,11 @@ class Client {
       }
       // Check there is enough balance for tx
       if (this.state[[tx.contents.from]].balance - tx.contents.amount < 0) {
-        // throw new Error('Not enough money!')
         console.log('not enough money...yet')
         return
       }
       // Check that the nonce is correct for replay protection
       if (tx.contents.nonce !== this.state[[tx.contents.from]].nonce) {
-        // If it isn't correct, then we should add it to transaction to invalidNonceTxs
         if (!(tx.contents.from in this.invalidNonceTxs)) {
           this.invalidNonceTxs[tx.contents.from] = {}
         }
@@ -136,19 +138,39 @@ class Client {
     */
   }
 
+  // Fork choice
+  // Only apply transactions which are contained in the longest chain
+  // and returns the resulting state object.
   getState() {
-
-    for (let i = 0; i < this.allBlocks.length; i++) {
-      if (this.blockchain.includes(this.allBlocks[i])) {
-        this.allBlocks.pop(this.allBlocks[i])
-      } else {
-        if (this.allBlocks[i].parentHash === getHash(this.blockchain.slice(-1)[0])) {
-          this.blockchain.push(this.allBlocks[i])
+    //a temp chain
+    let tempChain = []
+    //a temp store of tempChain[lastblock].parentHash
+    let prevHash = 0
+    //return max blocknumber from allBlocks
+    let max = Math.max.apply(Math, this.allBlocks.map(function(block) { return block.number; }))
+    //debug.. inside filter function this.allBlocks returns Cannot read property 'allBlocks' of undefined
+    let allBlocks = this.allBlocks
+    //add the highestBlockNumber to tempChain using blockNumber
+    Object.keys(allBlocks).filter(function(block) {
+      if (allBlocks[block].number === max) {
+        if (tempChain.length === 0) { //should only add one block. if two competing, pick the first one by position in allBlocks array
+          tempChain.push(allBlocks[block])
         }
       }
+    })
+    //add max number of blocks to tempChain using parentHash
+    for (let i = tempChain.length; i < max; i++) {
+      // console.log('now my prevhash is', prevHash)
+      Object.keys(allBlocks).filter(function(block) {
+        prevHash = tempChain[tempChain.length -1].parentHash
+        if (getHash(allBlocks[block]) === prevHash) {
+          tempChain.push(allBlocks[block])
+        }
+      })
     }
-
-    // this.state = {} //RESET STATE
+    //save the ordered sequence
+    this.blockchain = tempChain.reverse()
+    //apply all txs from ordered list of blocks
     for (let i = 0; i < this.blockchain.length; i++) {
       for (let j = 0; j < this.blockchain[i].contents.txList.length; j++) {
         let tx = this.blockchain[i].contents.txList[j]
@@ -163,6 +185,7 @@ class Client {
 
 }
 
+
 class Miner extends Client {
   onReceive (message) {
     if (message.contents.type === 'send') {
@@ -172,38 +195,63 @@ class Miner extends Client {
       this.transactions.push(message)      //add tx to mempool
       this.applyTransaction(message)       //update state
       this.applyInvalidNonceTxs(message.contents.from) //update state
-      let newBlock = this.mineBlock(message)  //mine a block with the tx
-
+      this.getState() //check if blockchain is the longest sequence
+      let newBlock = this.mineBlock(message)
       if (newBlock === 'FAIL') {
         console.log("no valid block found, giving up")
       } else {
+        this.blockNumber++ //increment
         this.blockchain.push(newBlock) //add to own blockchain
+        this.allBlocks.push(newBlock) //add to allBlocks
         this.network.broadcast(this.pid, newBlock) //broadcast new block to network
       }
+
     } else if (message.contents.type === 'block') {
       if (message.parentHash === getHash(this.blockchain.slice(-1)[0])) {
+        this.blockNumber++ //increment
+        this.blockchain.push(message)      //add block to own blockchain
         this.allBlocks.push(message)      //add block to all blocks received
-        this.getState() //check if block should go to own blockchain
       } else {
         this.allBlocks.push(message)
+        this.getState() //check if blockchain is the longest sequence
       }
-      this.getState() // fork choice + updates state only with tx from longest chain
     }
   }
 
   mineBlock (tx) {
+    //returns an integer between 3 and 4 so we can have blocks with
+    //different difficulties for fork choice (MDN example)
+    // let difficulty = Math.floor(Math.random() * (4 - 3 + 1)) + 3
     let difficulty = 3
     let maxAttempts = 100000
     let timestamp = Math.round(new Date().getTime() / 1000)
 
+    // no mint tx for now :-)
+    // const unsignedTx = {
+    //     type: 'mint',
+    //     amount: 3,
+    //     from: 0,
+    //     to: this.wallet.address,
+    //     nonce: 0
+    // }
+    //
+    // const blockRewardTx = {
+    //   contents: unsignedTx,
+    //   sig: EthCrypto.sign(this.wallet.privateKey, getHash(unsignedTx))
+    // }
+
     const newBlock = {
+      number: this.blockNumber,
       coinbase: this.wallet.address,
       difficulty: difficulty,
       parentHash: getHash(this.blockchain.slice(-1)[0]),
       timestamp: timestamp,
       contents: {
         type: 'block',
-        txList: [tx]
+        txList: [
+          // blockRewardTx,
+          tx
+        ]
       }
     }
 
@@ -254,7 +302,11 @@ nodes[0].generateTx(nodes[2].wallet.address, 5)
 for (let i = 0; i < 800; i++) {
   network.tick()
 }
-nodes[1].generateTx(nodes[2].wallet.address, 5)
+nodes[0].generateTx(nodes[3].wallet.address, 5)
+for (let i = 0; i < 800; i++) {
+  network.tick()
+}
+nodes[1].generateTx(nodes[4].wallet.address, 5)
 for (let i = 0; i < 800; i++) {
   network.tick()
 }
@@ -262,9 +314,16 @@ for (let i = 0; i < 800; i++) {
 
 for (let i = 0; i < numNodes; i++) {
   console.log('node: ', nodes[i].p2pNodeId.address)
+  // console.log('my chain',nodes[i].blockchain)
+  // console.log('all blocks',nodes[i].allBlocks)
   console.log('chain len', nodes[i].blockchain.length)
-  for (let j = 0; j < nodes[i].blockchain.length; j++) {
-    console.log('block parentHash', nodes[i].blockchain[j].parentHash)
-  }
+  // for (let j = 0; j < nodes[i].blockchain.length; j++) {
+    // console.log('block number', nodes[i].blockchain[j].number)
+    // console.log('block parentHash', nodes[i].blockchain[j].parentHash)
+  // }
   console.log('node state: ', nodes[i].state)
+  // console.log('invalidNonceTxs: ', nodes[i].invalidNonceTxs)
+  console.log('xxxxxxxxx0xxxxxxxxx')
+  // nodes[i].getState()
+  // console.log('new node state: ', nodes[i].state)
 }

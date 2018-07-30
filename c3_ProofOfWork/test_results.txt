@@ -1,0 +1,88 @@
+TEST RESULTS
+
+#1
+ProBook:c3_ProofOfWork EthDev$ node powTest.js
+node:  0xd1C25fdC4EC883f1bEF3F2cf676AD0204e4A192f
+chain len 1
+node state:  { '0xF8d2e24BBD4ff37c09cCa86c067279fF56e0FD12': { balance: 80, nonce: 3 },
+  '0x33ce6AC32D0468D539bAd20A14602658e8095ED4': { balance: 5, nonce: 1 },
+  '0x539031186e0455bef26C0c3fDc222C71dc5253C0': { balance: 5, nonce: 0 },
+  '0x1f82Da7540A59d1A422379494d9AC1d6A2a6d9b2': { balance: 5, nonce: 0 },
+  '0x975daBc356D26b04124de759daf50A7e574693Da': { balance: 5, nonce: 0 } }
+xxxxxxxxx0xxxxxxxxx
+node:  0xf3Ac87Dad3823225ff5e4cb22b90A6B8E7139C83
+chain len 3
+node state:  { '0xF8d2e24BBD4ff37c09cCa86c067279fF56e0FD12': { balance: 80, nonce: 3 },
+  '0x33ce6AC32D0468D539bAd20A14602658e8095ED4': { balance: 5, nonce: 1 },
+  '0x539031186e0455bef26C0c3fDc222C71dc5253C0': { balance: 5, nonce: 0 },
+  '0x1f82Da7540A59d1A422379494d9AC1d6A2a6d9b2': { balance: 5, nonce: 0 },
+  '0x975daBc356D26b04124de759daf50A7e574693Da': { balance: 5, nonce: 0 } }
+xxxxxxxxx0xxxxxxxxx
+node:  0x1148de48fF46119aaa48b6b42a2a08810E7e68Ec
+chain len 4
+node state:  { '0xF8d2e24BBD4ff37c09cCa86c067279fF56e0FD12': { balance: 80, nonce: 3 },
+  '0x33ce6AC32D0468D539bAd20A14602658e8095ED4': { balance: 5, nonce: 1 },
+  '0x539031186e0455bef26C0c3fDc222C71dc5253C0': { balance: 5, nonce: 0 },
+  '0x1f82Da7540A59d1A422379494d9AC1d6A2a6d9b2': { balance: 5, nonce: 0 },
+  '0x975daBc356D26b04124de759daf50A7e574693Da': { balance: 5, nonce: 0 } }
+xxxxxxxxx0xxxxxxxxx
+node:  0xE3eC68234B7ff2DC5612eead00171A17520BBeEA
+chain len 4
+node state:  { '0xF8d2e24BBD4ff37c09cCa86c067279fF56e0FD12': { balance: 80, nonce: 3 },
+  '0x33ce6AC32D0468D539bAd20A14602658e8095ED4': { balance: 5, nonce: 1 },
+  '0x539031186e0455bef26C0c3fDc222C71dc5253C0': { balance: 5, nonce: 0 },
+  '0x1f82Da7540A59d1A422379494d9AC1d6A2a6d9b2': { balance: 5, nonce: 0 },
+  '0x975daBc356D26b04124de759daf50A7e574693Da': { balance: 5, nonce: 0 } }
+xxxxxxxxx0xxxxxxxxx
+node:  0xc309bb83DB19bE7C52311318A03f22f8471a9482
+chain len 4
+node state:  { '0xF8d2e24BBD4ff37c09cCa86c067279fF56e0FD12': { balance: 80, nonce: 3 },
+  '0x33ce6AC32D0468D539bAd20A14602658e8095ED4': { balance: 5, nonce: 1 },
+  '0x539031186e0455bef26C0c3fDc222C71dc5253C0': { balance: 5, nonce: 0 },
+  '0x1f82Da7540A59d1A422379494d9AC1d6A2a6d9b2': { balance: 5, nonce: 0 },
+  '0x975daBc356D26b04124de759daf50A7e574693Da': { balance: 5, nonce: 0 } }
+xxxxxxxxx0xxxxxxxxx
+
+
+#2
+ProBook:c3_ProofOfWork EthDev$ node powTest.js
+node:  0x0148d5d666d2B0E42Af53Dfd9cdeB78CB047f69b
+chain len 4
+node state:  { '0x6D67C5429D268EbfEd7f5C9050eBb967DD1C8dac': { balance: 80, nonce: 3 },
+  '0xbF10A89aD50C2D22B7CE1c8A77f8716B740BfF09': { balance: 5, nonce: 1 },
+  '0xA640bEacCb181F20AeF1aE1C240F58DF485FB645': { balance: 5, nonce: 0 },
+  '0x44997429f13238005eeb6E746251888De7C1fFAc': { balance: 5, nonce: 0 },
+  '0x43363EEE42062f7e9b4263f6565d5e64C5781F0A': { balance: 5, nonce: 0 } }
+xxxxxxxxx0xxxxxxxxx
+node:  0x7Ff295B953b001F4d4C6ECD6D105786527FEC6A9
+chain len 4
+node state:  { '0x6D67C5429D268EbfEd7f5C9050eBb967DD1C8dac': { balance: 80, nonce: 3 },
+  '0xbF10A89aD50C2D22B7CE1c8A77f8716B740BfF09': { balance: 10, nonce: 0 },
+  '0xA640bEacCb181F20AeF1aE1C240F58DF485FB645': { balance: 5, nonce: 0 },
+  '0x44997429f13238005eeb6E746251888De7C1fFAc': { balance: 5, nonce: 0 },
+  '0x43363EEE42062f7e9b4263f6565d5e64C5781F0A': { balance: 0, nonce: 0 } }
+xxxxxxxxx0xxxxxxxxx
+node:  0xb259588a8daB916e6fa5f141FD0cd54f38866020
+chain len 4
+node state:  { '0x6D67C5429D268EbfEd7f5C9050eBb967DD1C8dac': { balance: 80, nonce: 3 },
+  '0xbF10A89aD50C2D22B7CE1c8A77f8716B740BfF09': { balance: 5, nonce: 1 },
+  '0xA640bEacCb181F20AeF1aE1C240F58DF485FB645': { balance: 5, nonce: 0 },
+  '0x44997429f13238005eeb6E746251888De7C1fFAc': { balance: 5, nonce: 0 },
+  '0x43363EEE42062f7e9b4263f6565d5e64C5781F0A': { balance: 5, nonce: 0 } }
+xxxxxxxxx0xxxxxxxxx
+node:  0xD258093C93c92dB391d6be57fC5ae6Cf1fdF5b5a
+chain len 2
+node state:  { '0x6D67C5429D268EbfEd7f5C9050eBb967DD1C8dac': { balance: 80, nonce: 3 },
+  '0xbF10A89aD50C2D22B7CE1c8A77f8716B740BfF09': { balance: 5, nonce: 1 },
+  '0xA640bEacCb181F20AeF1aE1C240F58DF485FB645': { balance: 5, nonce: 0 },
+  '0x44997429f13238005eeb6E746251888De7C1fFAc': { balance: 5, nonce: 0 },
+  '0x43363EEE42062f7e9b4263f6565d5e64C5781F0A': { balance: 5, nonce: 0 } }
+xxxxxxxxx0xxxxxxxxx
+node:  0xEcCF5Fc7Fb4587658020D1F6d5C899E767b91D0e
+chain len 3
+node state:  { '0x6D67C5429D268EbfEd7f5C9050eBb967DD1C8dac': { balance: 80, nonce: 3 },
+  '0xbF10A89aD50C2D22B7CE1c8A77f8716B740BfF09': { balance: 10, nonce: 0 },
+  '0xA640bEacCb181F20AeF1aE1C240F58DF485FB645': { balance: 5, nonce: 0 },
+  '0x44997429f13238005eeb6E746251888De7C1fFAc': { balance: 5, nonce: 0 },
+  '0x43363EEE42062f7e9b4263f6565d5e64C5781F0A': { balance: 0, nonce: 0 } }
+xxxxxxxxx0xxxxxxxxx
