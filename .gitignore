@@ -66,3 +66,14 @@ typings/
 
 # next.js build output
 .next
+c3_ProofOfWork/test.js
+c3_ProofOfWork/Ztest.js
+.gitignore
+c3_ProofOfWork/zzz.js
+c3_ProofOfWork/ZtestBKP.js
+c3_ProofOfWork/powTest.js
+c3_ProofOfWork/networksimBKP.js
+c3_ProofOfWork/onReceive.js
+c3_ProofOfWork/getState.js
+c3_ProofOfWork/cccc.js
+c3_ProofOfWork/bbbb.js
