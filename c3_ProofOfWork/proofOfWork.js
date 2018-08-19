@@ -217,6 +217,7 @@ class Miner extends Client {
         this.allBlocks.push(message)      //add block to all blocks received
       } else {
         this.allBlocks.push(message)
+        this.getState() //check if local blockchain is still the longest sequence
       }
     }
   }
@@ -329,5 +330,6 @@ for (let i = 0; i < numNodes; i++) {
   console.log('xxxxxxxxx0xxxxxxxxx')
   //form the longest accumulated difficulty chain locally and update state
   nodes[i].getState()
+  console.log('new chain len', nodes[i].blockchain.length)
   console.log('new node state: ', nodes[i].state)
 }
