@@ -1,0 +1,143 @@
+TEST RESULTS
+
+ProBook:c3_ProofOfWork EthDev$ node proofOfWork.js
+no valid block found, giving up
+not enough money...yet
+node:  0x5763862AA442916535093e8940f419E758D91de7
+chain len 5
+node state:  { '0x1366ba595DaB6211f045F3d6B0fBfc08cC1be242': { balance: 100, nonce: 0 },
+  '0xf03D5934F3E5C6B1a6dD955f0b9E86DFa7b3461E': { balance: 0, nonce: 0 },
+  '0x8Aa858c1C119C11DDB4ef7503BAa2153871F8EAE': { balance: 0, nonce: 0 },
+  '0x97BB74CA3895C7F3Ca3867669545d65973BEd4b7': { balance: 0, nonce: 0 },
+  '0x5195B8e608397e9475AfFaa5a1BD420cba11aBcF': { balance: 0, nonce: 0 } }
+xxxxxxxxx0xxxxxxxxx
+new node state:  { '0x1366ba595DaB6211f045F3d6B0fBfc08cC1be242': { balance: 90, nonce: 1 },
+  '0xf03D5934F3E5C6B1a6dD955f0b9E86DFa7b3461E': { balance: 5, nonce: 1 },
+  '0x8Aa858c1C119C11DDB4ef7503BAa2153871F8EAE': { balance: 0, nonce: 0 },
+  '0x97BB74CA3895C7F3Ca3867669545d65973BEd4b7': { balance: 0, nonce: 0 },
+  '0x5195B8e608397e9475AfFaa5a1BD420cba11aBcF': { balance: 5, nonce: 0 } }
+node:  0x0dc3dD2f67e66C5fb78262321f1f1FDa4897E3FB
+chain len 3
+node state:  { '0x1366ba595DaB6211f045F3d6B0fBfc08cC1be242': { balance: 90, nonce: 1 },
+  '0xf03D5934F3E5C6B1a6dD955f0b9E86DFa7b3461E': { balance: 10, nonce: 0 },
+  '0x8Aa858c1C119C11DDB4ef7503BAa2153871F8EAE': { balance: 0, nonce: 0 },
+  '0x97BB74CA3895C7F3Ca3867669545d65973BEd4b7': { balance: 0, nonce: 0 },
+  '0x5195B8e608397e9475AfFaa5a1BD420cba11aBcF': { balance: 0, nonce: 0 } }
+xxxxxxxxx0xxxxxxxxx
+new node state:  { '0x1366ba595DaB6211f045F3d6B0fBfc08cC1be242': { balance: 90, nonce: 1 },
+  '0xf03D5934F3E5C6B1a6dD955f0b9E86DFa7b3461E': { balance: 5, nonce: 1 },
+  '0x8Aa858c1C119C11DDB4ef7503BAa2153871F8EAE': { balance: 0, nonce: 0 },
+  '0x97BB74CA3895C7F3Ca3867669545d65973BEd4b7': { balance: 0, nonce: 0 },
+  '0x5195B8e608397e9475AfFaa5a1BD420cba11aBcF': { balance: 5, nonce: 0 } }
+node:  0x1Dd265c563C976D154c12A6DD2b019C3CeB72aC4
+chain len 5
+node state:  { '0x1366ba595DaB6211f045F3d6B0fBfc08cC1be242': { balance: 90, nonce: 1 },
+  '0xf03D5934F3E5C6B1a6dD955f0b9E86DFa7b3461E': { balance: 5, nonce: 1 },
+  '0x8Aa858c1C119C11DDB4ef7503BAa2153871F8EAE': { balance: 0, nonce: 0 },
+  '0x97BB74CA3895C7F3Ca3867669545d65973BEd4b7': { balance: 0, nonce: 0 },
+  '0x5195B8e608397e9475AfFaa5a1BD420cba11aBcF': { balance: 5, nonce: 0 } }
+xxxxxxxxx0xxxxxxxxx
+new node state:  { '0x1366ba595DaB6211f045F3d6B0fBfc08cC1be242': { balance: 90, nonce: 1 },
+  '0xf03D5934F3E5C6B1a6dD955f0b9E86DFa7b3461E': { balance: 5, nonce: 1 },
+  '0x8Aa858c1C119C11DDB4ef7503BAa2153871F8EAE': { balance: 0, nonce: 0 },
+  '0x97BB74CA3895C7F3Ca3867669545d65973BEd4b7': { balance: 0, nonce: 0 },
+  '0x5195B8e608397e9475AfFaa5a1BD420cba11aBcF': { balance: 5, nonce: 0 } }
+node:  0xd8457028208a409e000069ae7D9021A33456bF83
+chain len 5
+node state:  { '0x1366ba595DaB6211f045F3d6B0fBfc08cC1be242': { balance: 90, nonce: 1 },
+  '0xf03D5934F3E5C6B1a6dD955f0b9E86DFa7b3461E': { balance: 5, nonce: 1 },
+  '0x8Aa858c1C119C11DDB4ef7503BAa2153871F8EAE': { balance: 0, nonce: 0 },
+  '0x97BB74CA3895C7F3Ca3867669545d65973BEd4b7': { balance: 0, nonce: 0 },
+  '0x5195B8e608397e9475AfFaa5a1BD420cba11aBcF': { balance: 5, nonce: 0 } }
+xxxxxxxxx0xxxxxxxxx
+new node state:  { '0x1366ba595DaB6211f045F3d6B0fBfc08cC1be242': { balance: 90, nonce: 1 },
+  '0xf03D5934F3E5C6B1a6dD955f0b9E86DFa7b3461E': { balance: 5, nonce: 1 },
+  '0x8Aa858c1C119C11DDB4ef7503BAa2153871F8EAE': { balance: 0, nonce: 0 },
+  '0x97BB74CA3895C7F3Ca3867669545d65973BEd4b7': { balance: 0, nonce: 0 },
+  '0x5195B8e608397e9475AfFaa5a1BD420cba11aBcF': { balance: 5, nonce: 0 } }
+node:  0x8F1f122169170F8e0a87C4af44dD63C22bc2BC69
+chain len 4
+node state:  { '0x1366ba595DaB6211f045F3d6B0fBfc08cC1be242': { balance: 90, nonce: 1 },
+  '0xf03D5934F3E5C6B1a6dD955f0b9E86DFa7b3461E': { balance: 10, nonce: 0 },
+  '0x8Aa858c1C119C11DDB4ef7503BAa2153871F8EAE': { balance: 0, nonce: 0 },
+  '0x97BB74CA3895C7F3Ca3867669545d65973BEd4b7': { balance: 0, nonce: 0 },
+  '0x5195B8e608397e9475AfFaa5a1BD420cba11aBcF': { balance: 0, nonce: 0 } }
+xxxxxxxxx0xxxxxxxxx
+new node state:  { '0x1366ba595DaB6211f045F3d6B0fBfc08cC1be242': { balance: 90, nonce: 1 },
+  '0xf03D5934F3E5C6B1a6dD955f0b9E86DFa7b3461E': { balance: 5, nonce: 1 },
+  '0x8Aa858c1C119C11DDB4ef7503BAa2153871F8EAE': { balance: 0, nonce: 0 },
+  '0x97BB74CA3895C7F3Ca3867669545d65973BEd4b7': { balance: 0, nonce: 0 },
+  '0x5195B8e608397e9475AfFaa5a1BD420cba11aBcF': { balance: 5, nonce: 0 } }
+
+
+  TEST RESULTS 2
+
+  ProBook:c3_ProofOfWork EthDev$ node proofOfWork.js
+no valid block found, giving up
+not enough money...yet
+node:  0x84c7A069DDa415d9deB41ddf1732c3f7c7EE252c
+chain len 5
+node state:  { '0x69eCf00fc1a4916d2fBB13BcFCb3771C6aeEb82C': { balance: 100, nonce: 0 },
+  '0x7D68dfcAB7693C119F2524f912F2Af78E80B9a1b': { balance: 0, nonce: 0 },
+  '0xF43638CabaDe09251b3AE9E28E889e0E1129aFcD': { balance: 0, nonce: 0 },
+  '0xCfeD7A68d1eB1263622a088F76F243bB152f105D': { balance: 0, nonce: 0 },
+  '0x52dA951a2C860924d13820e8Bd3B72159B5e0f2a': { balance: 0, nonce: 0 } }
+xxxxxxxxx0xxxxxxxxx
+not enough money...yet
+new node state:  { '0x69eCf00fc1a4916d2fBB13BcFCb3771C6aeEb82C': { balance: 100, nonce: 0 },
+  '0x7D68dfcAB7693C119F2524f912F2Af78E80B9a1b': { balance: 0, nonce: 0 },
+  '0xF43638CabaDe09251b3AE9E28E889e0E1129aFcD': { balance: 0, nonce: 0 },
+  '0xCfeD7A68d1eB1263622a088F76F243bB152f105D': { balance: 0, nonce: 0 },
+  '0x52dA951a2C860924d13820e8Bd3B72159B5e0f2a': { balance: 0, nonce: 0 } }
+node:  0xC2168349e8ce9525E4E26c0b142D9049B8Bc89C2
+chain len 5
+node state:  { '0x69eCf00fc1a4916d2fBB13BcFCb3771C6aeEb82C': { balance: 90, nonce: 1 },
+  '0x7D68dfcAB7693C119F2524f912F2Af78E80B9a1b': { balance: 10, nonce: 0 },
+  '0xF43638CabaDe09251b3AE9E28E889e0E1129aFcD': { balance: 0, nonce: 0 },
+  '0xCfeD7A68d1eB1263622a088F76F243bB152f105D': { balance: 0, nonce: 0 },
+  '0x52dA951a2C860924d13820e8Bd3B72159B5e0f2a': { balance: 0, nonce: 0 } }
+xxxxxxxxx0xxxxxxxxx
+new node state:  { '0x69eCf00fc1a4916d2fBB13BcFCb3771C6aeEb82C': { balance: 90, nonce: 1 },
+  '0x7D68dfcAB7693C119F2524f912F2Af78E80B9a1b': { balance: 5, nonce: 1 },
+  '0xF43638CabaDe09251b3AE9E28E889e0E1129aFcD': { balance: 0, nonce: 0 },
+  '0xCfeD7A68d1eB1263622a088F76F243bB152f105D': { balance: 0, nonce: 0 },
+  '0x52dA951a2C860924d13820e8Bd3B72159B5e0f2a': { balance: 5, nonce: 0 } }
+node:  0x7609D5420A920b7C891149a18A8ba2AC7BdD4776
+chain len 6
+node state:  { '0x69eCf00fc1a4916d2fBB13BcFCb3771C6aeEb82C': { balance: 90, nonce: 1 },
+  '0x7D68dfcAB7693C119F2524f912F2Af78E80B9a1b': { balance: 5, nonce: 1 },
+  '0xF43638CabaDe09251b3AE9E28E889e0E1129aFcD': { balance: 0, nonce: 0 },
+  '0xCfeD7A68d1eB1263622a088F76F243bB152f105D': { balance: 0, nonce: 0 },
+  '0x52dA951a2C860924d13820e8Bd3B72159B5e0f2a': { balance: 5, nonce: 0 } }
+xxxxxxxxx0xxxxxxxxx
+new node state:  { '0x69eCf00fc1a4916d2fBB13BcFCb3771C6aeEb82C': { balance: 90, nonce: 1 },
+  '0x7D68dfcAB7693C119F2524f912F2Af78E80B9a1b': { balance: 5, nonce: 1 },
+  '0xF43638CabaDe09251b3AE9E28E889e0E1129aFcD': { balance: 0, nonce: 0 },
+  '0xCfeD7A68d1eB1263622a088F76F243bB152f105D': { balance: 0, nonce: 0 },
+  '0x52dA951a2C860924d13820e8Bd3B72159B5e0f2a': { balance: 5, nonce: 0 } }
+node:  0x07b117C52aa1e40e26E2e945d5eb56EcA2aa8828
+chain len 5
+node state:  { '0x69eCf00fc1a4916d2fBB13BcFCb3771C6aeEb82C': { balance: 90, nonce: 1 },
+  '0x7D68dfcAB7693C119F2524f912F2Af78E80B9a1b': { balance: 5, nonce: 1 },
+  '0xF43638CabaDe09251b3AE9E28E889e0E1129aFcD': { balance: 0, nonce: 0 },
+  '0xCfeD7A68d1eB1263622a088F76F243bB152f105D': { balance: 0, nonce: 0 },
+  '0x52dA951a2C860924d13820e8Bd3B72159B5e0f2a': { balance: 5, nonce: 0 } }
+xxxxxxxxx0xxxxxxxxx
+new node state:  { '0x69eCf00fc1a4916d2fBB13BcFCb3771C6aeEb82C': { balance: 90, nonce: 1 },
+  '0x7D68dfcAB7693C119F2524f912F2Af78E80B9a1b': { balance: 5, nonce: 1 },
+  '0xF43638CabaDe09251b3AE9E28E889e0E1129aFcD': { balance: 0, nonce: 0 },
+  '0xCfeD7A68d1eB1263622a088F76F243bB152f105D': { balance: 0, nonce: 0 },
+  '0x52dA951a2C860924d13820e8Bd3B72159B5e0f2a': { balance: 5, nonce: 0 } }
+node:  0xD7a2CF33D014f79EFE46a88e15D1074A34D9D57F
+chain len 5
+node state:  { '0x69eCf00fc1a4916d2fBB13BcFCb3771C6aeEb82C': { balance: 90, nonce: 1 },
+  '0x7D68dfcAB7693C119F2524f912F2Af78E80B9a1b': { balance: 5, nonce: 1 },
+  '0xF43638CabaDe09251b3AE9E28E889e0E1129aFcD': { balance: 0, nonce: 0 },
+  '0xCfeD7A68d1eB1263622a088F76F243bB152f105D': { balance: 0, nonce: 0 },
+  '0x52dA951a2C860924d13820e8Bd3B72159B5e0f2a': { balance: 5, nonce: 0 } }
+xxxxxxxxx0xxxxxxxxx
+new node state:  { '0x69eCf00fc1a4916d2fBB13BcFCb3771C6aeEb82C': { balance: 90, nonce: 1 },
+  '0x7D68dfcAB7693C119F2524f912F2Af78E80B9a1b': { balance: 5, nonce: 1 },
+  '0xF43638CabaDe09251b3AE9E28E889e0E1129aFcD': { balance: 0, nonce: 0 },
+  '0xCfeD7A68d1eB1263622a088F76F243bB152f105D': { balance: 0, nonce: 0 },
+  '0x52dA951a2C860924d13820e8Bd3B72159B5e0f2a': { balance: 5, nonce: 0 } }
