@@ -19,7 +19,7 @@ class Client {
     this.blockchain = []    //longest chain
     this.allBlocks = []    //all blocks
     this.invalidNonceTxs = {}
-    this.blockNumber = 0 //keep track of blocks added to blockchain despite getState()
+    this.head = 0 //keep track of highest block number added received
 
     const genesisBlock = {
       nonce: 0,
@@ -146,21 +146,27 @@ class Client {
     let tempChain = []
     //a temp store of tempChain[lastblock].parentHash
     let prevHash = 0
-    //return max blocknumber from allBlocks
+    //return highest block number (ie, head) from allBlocks
     let max = Math.max.apply(Math, this.allBlocks.map(function(block) { return block.number; }))
-    //debug.. inside filter function this.allBlocks returns Cannot read property 'allBlocks' of undefined
     let allBlocks = this.allBlocks
-    //add the highestBlockNumber to tempChain using blockNumber
+    //add head to tempChain
     Object.keys(allBlocks).filter(function(block) {
       if (allBlocks[block].number === max) {
-        if (tempChain.length === 0) { //should only add one block. if two competing, pick the first one by position in allBlocks array
+        //should only add one block. push the first one by position in allBlocks array
+        if (tempChain.length === 0) {
           tempChain.push(allBlocks[block])
+        //if there are two or more blocks with "max" as block number
+        } else {
+          //compare difficulty and store from the one with most work
+          if (allBlocks[block].difficulty > tempChain[0].difficulty) {
+            tempChain.pop()
+            tempChain.push(allBlocks[block])
+          }
         }
       }
     })
-    //add max number of blocks to tempChain using parentHash
+    //look for up to "max" number of blocks to add to tempChain using parentHash
     for (let i = tempChain.length; i < max; i++) {
-      // console.log('now my prevhash is', prevHash)
       Object.keys(allBlocks).filter(function(block) {
         prevHash = tempChain[tempChain.length -1].parentHash
         if (getHash(allBlocks[block]) === prevHash) {
@@ -195,12 +201,10 @@ class Miner extends Client {
       this.transactions.push(message)      //add tx to mempool
       this.applyTransaction(message)       //update state
       this.applyInvalidNonceTxs(message.contents.from) //update state
-      this.getState() //check if blockchain is the longest sequence
       let newBlock = this.mineBlock(message)
       if (newBlock === 'FAIL') {
         console.log("no valid block found, giving up")
       } else {
-        this.blockNumber++ //increment
         this.blockchain.push(newBlock) //add to own blockchain
         this.allBlocks.push(newBlock) //add to allBlocks
         this.network.broadcast(this.pid, newBlock) //broadcast new block to network
@@ -208,12 +212,12 @@ class Miner extends Client {
 
     } else if (message.contents.type === 'block') {
       if (message.parentHash === getHash(this.blockchain.slice(-1)[0])) {
-        this.blockNumber++ //increment
+        this.head = message.number
         this.blockchain.push(message)      //add block to own blockchain
         this.allBlocks.push(message)      //add block to all blocks received
       } else {
         this.allBlocks.push(message)
-        this.getState() //check if blockchain is the longest sequence
+        this.getState() //check if local blockchain is still the longest sequence
       }
     }
   }
@@ -221,8 +225,8 @@ class Miner extends Client {
   mineBlock (tx) {
     //returns an integer between 3 and 4 so we can have blocks with
     //different difficulties for fork choice (MDN example)
-    // let difficulty = Math.floor(Math.random() * (4 - 3 + 1)) + 3
-    let difficulty = 3
+    let difficulty = Math.floor(Math.random() * (4 - 3 + 1)) + 3
+    // let difficulty = 3 //for faster execution
     let maxAttempts = 100000
     let timestamp = Math.round(new Date().getTime() / 1000)
 
@@ -241,7 +245,7 @@ class Miner extends Client {
     // }
 
     const newBlock = {
-      number: this.blockNumber,
+      number: this.blockchain.slice(-1)[0].number + 1, // follow local version of the longest chain
       coinbase: this.wallet.address,
       difficulty: difficulty,
       parentHash: getHash(this.blockchain.slice(-1)[0]),
@@ -324,6 +328,8 @@ for (let i = 0; i < numNodes; i++) {
   console.log('node state: ', nodes[i].state)
   // console.log('invalidNonceTxs: ', nodes[i].invalidNonceTxs)
   console.log('xxxxxxxxx0xxxxxxxxx')
-  // nodes[i].getState()
-  // console.log('new node state: ', nodes[i].state)
+  //form the longest accumulated difficulty chain locally and update state
+  nodes[i].getState()
+  console.log('new chain len', nodes[i].blockchain.length)
+  console.log('new node state: ', nodes[i].state)
 }
