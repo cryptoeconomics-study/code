@@ -60,6 +60,4 @@ class NetworkSimulator {
   }
 }
 
-module.exports = function (latency = 5, packetLoss = 0.1) {
-  return new NetworkSimulator(latency, packetLoss)
-}
+module.exports = NetworkSimulator

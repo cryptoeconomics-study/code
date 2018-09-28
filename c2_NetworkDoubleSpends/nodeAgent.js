@@ -1,16 +1,8 @@
 var EthCrypto = require('eth-crypto')
-var network = require('./networksim')()
 
 function getTxHash (tx) {
   return EthCrypto.hash.keccak256(JSON.stringify(tx))
 }
-
-// class InvalidNonce extends Error {
-//   constructor (...args) {
-//     super(...args)
-//     Error.captureStackTrace(this, InvalidNonce)
-//   }
-// }
 
 class Node {
   constructor (wallet, genesis, network) {
@@ -44,28 +36,21 @@ class Node {
     }
   }
 
-  tick () {
-    // If we have no money, don't do anything!
-    if (this.state[this.wallet.address].balance < 10) {
-      console.log('We are honest so we wont send anything :)')
-      return
-    }
-    // Generate random transaction
+  tick () {}
+
+  generateTx (to, amount) {
     const unsignedTx = {
       type: 'send',
-      amount: 10,
+      amount: amount,
       from: this.wallet.address,
-      to: nodes[Math.floor(Math.random() * nodes.length)].wallet.address,
+      to: to,
       nonce: this.state[this.wallet.address].nonce
     }
     const tx = {
       contents: unsignedTx,
       sig: EthCrypto.sign(this.wallet.privateKey, getTxHash(unsignedTx))
     }
-    this.transactions.push(tx)
-    this.applyTransaction(tx)
-    // Broadcast this tx to the network
-    this.network.broadcast(this.pid, tx)
+    return tx
   }
 
   applyTransaction (tx) {
@@ -83,7 +68,7 @@ class Node {
     }
     // Check that the nonce is correct for replay protection
     if (tx.contents.nonce !== this.state[[tx.contents.from]].nonce) {
-      // If it isn't correct, then we should add it to transaction to invalidNonceTxs
+      // If it isn't correct, then we should add the transaction to invalidNonceTxs
       if (!(tx.contents.from in this.invalidNonceTxs)) {
         this.invalidNonceTxs[tx.contents.from] = {}
       }
@@ -103,35 +88,4 @@ class Node {
   }
 }
 
-// ****** Test this out using a simulated network ****** //
-const numNodes = 5
-const wallets = []
-const genesis = {}
-for (let i = 0; i < numNodes; i++) {
-  // Create new identity
-  wallets.push(EthCrypto.createIdentity())
-  // Add that node to our genesis block & give them an allocation
-  genesis[wallets[i].address] = {
-    balance: 100,
-    nonce: 0
-  }
-}
-const nodes = []
-// Create new nodes based on our wallets, and connect them to the network
-for (let i = 0; i < numNodes; i++) {
-  nodes.push(new Node(wallets[i], JSON.parse(JSON.stringify(genesis)), network))
-  network.connectPeer(nodes[i], 2)
-}
-
-try {
-  network.run(300)
-} catch (e) {
-  console.log('One of our honest nodes had a transaction fail because of network latency!')
-  // console.log(e)
-  console.log('~~~~~~~~~~~ Node 0 ~~~~~~~~~~~')
-  console.log(nodes[0].state)
-  console.log('~~~~~~~~~~~ Node 1 ~~~~~~~~~~~')
-  console.log(nodes[1].state)
-  console.log('~~~~~~~~~~~ Node 1 ~~~~~~~~~~~')
-  console.log(nodes[1].invalidNonceTxs[wallets[0].address])
-}
+module.exports = {Node, getTxHash}
