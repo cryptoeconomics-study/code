@@ -37,4 +37,4 @@ for (let a of testAgents) {
 network.broadcast('karl', 'testing!')
 network.broadcast('aparna', 'besting!')
 console.log(network)
-network.run(50)
+network.run(100)

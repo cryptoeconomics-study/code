@@ -43,6 +43,8 @@ class NetworkSimulator {
       for (let {recipient, message} of this.messageQueue[this.time]) {
         if (Math.random() > this.packetLoss) {
           recipient.onReceive(message)
+        } else {
+          console.log('Packet lost in transmission to', recipient.pid);
         }
       }
       delete this.messageQueue.time
@@ -60,6 +62,4 @@ class NetworkSimulator {
   }
 }
 
-module.exports = function (latency = 5, packetLoss = 0.1) {
-  return new NetworkSimulator(latency, packetLoss)
-}
+module.exports = NetworkSimulator
