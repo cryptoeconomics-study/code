@@ -73,11 +73,11 @@ function applyTransaction (state, tx) {
   if (!(tx.contents.to in state)) {
     state[[tx.contents.to]] = {
       balance: 0,
-      nonce: -1
+      nonce: 0
     }
   }
   // Check that the nonce is correct for replay protection
-  if (tx.contents.nonce !== state[[tx.contents.from]].nonce + 1) {
+  if (tx.contents.nonce !== state[[tx.contents.from]].nonce) {
     throw new Error('Invalid nonce!')
   }
   // Mint coins **only if identity is PayPal**
