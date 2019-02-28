@@ -43,11 +43,9 @@ class NetworkSimulator {
       for (let {recipient, message} of this.messageQueue[this.time]) {
         if (Math.random() > this.packetLoss) {
           recipient.onReceive(message)
-        } else {
-          console.log('Packet lost in transmission to', recipient.pid);
         }
       }
-      delete this.messageQueue.time
+      delete this.messageQueue[this.time]
     }
     for (let a of this.agents) {
       a.tick()

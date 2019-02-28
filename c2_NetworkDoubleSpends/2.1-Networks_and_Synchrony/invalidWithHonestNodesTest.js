@@ -1,7 +1,6 @@
 var EthCrypto = require('eth-crypto')
-var NetworkSimulator = require('./networksim')
-var {Node, getTxHash} = require('./agent')
-const _ = require('lodash')
+var NetworkSimulator = require('../networksim')
+var {Node, getTxHash} = require('../nodeAgent')
 
 // Spender is a Node that sends a random transaction at every tick()
 class Spender extends Node {
@@ -13,7 +12,7 @@ class Spender extends Node {
   getRandomReceiver () {
     const that = this
     // create array without this Node
-    const otherNodes = _.filter(nodes, function (n) {
+    const otherNodes = nodes.filter(function (n) {
       return n.wallet.address !== that.wallet.address
     });
     const randomNode = otherNodes[Math.floor(Math.random() * otherNodes.length)]
@@ -27,7 +26,7 @@ class Spender extends Node {
       return
     }
     // Generate random transaction
-    const tx = this.generateTx(this.getRandomReceiver(), amount = 10)
+    const tx = this.generateTx(this.getRandomReceiver(), 10)
     this.transactions.push(tx)
     this.applyTransaction(tx)
     // Broadcast this tx to the network

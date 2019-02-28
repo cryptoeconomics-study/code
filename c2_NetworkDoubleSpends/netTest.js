@@ -1,4 +1,4 @@
-var network = require('./networksim')()
+const NetworkSimulator = require('./networksim')
 const testAgents = [
   {
     pid: 'karl',
@@ -31,6 +31,7 @@ const testAgents = [
     tick: function () {}
   }
 ]
+const network = new NetworkSimulator(latency = 5, packetLoss = 0);
 for (let a of testAgents) {
   network.connectPeer(a, 1)
 }

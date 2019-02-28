@@ -1,6 +1,6 @@
 var EthCrypto = require('eth-crypto')
-var NetworkSimulator = require('./networksim')
-var {Node} = require('./agent.js')
+var NetworkSimulator = require('../networksim')
+var {Node} = require('../nodeAgent')
 
 class DoubleSpendNetSim extends NetworkSimulator {
   constructor (latency, packetLoss) {
@@ -55,13 +55,13 @@ for (let i = 0; i < numNodes; i++) {
 // Attempt double spend
 const evilNode = nodes[0]
 const victims = [network.peers[evilNode.pid][0], network.peers[evilNode.pid][1]]
-const spends = [evilNode.generateTx(victims[0].wallet.address, amount = 100), evilNode.generateTx(victims[1].wallet.address, 100)]
+const spends = [evilNode.generateTx(victims[0].wallet.address, amount = 100), evilNode.generateTx(victims[1].wallet.address, amount = 100)]
 network.broadcastTo(evilNode.pid, victims[0], spends[0])
 network.broadcastTo(evilNode.pid, victims[1], spends[1])
+
 // Now run the network until an invalid spend is detected.
 // We will also detect if the two victim nodes, for a short time, both believe they have been sent money
 // by our evil node. That's our double spend!
-
 network.run(steps = 20);
 
 console.log('Looks like the double spend was foiled by network latency! Victim 1 propagated their transaction ' +
