@@ -45,7 +45,7 @@ class NetworkSimulator {
           recipient.onReceive(message)
         }
       }
-      delete this.messageQueue.time
+      delete this.messageQueue[this.time]
     }
     for (let a of this.agents) {
       a.tick()
@@ -60,6 +60,4 @@ class NetworkSimulator {
   }
 }
 
-module.exports = function (latency = 5, packetLoss = 0.1) {
-  return new NetworkSimulator(latency, packetLoss)
-}
+module.exports = NetworkSimulator
