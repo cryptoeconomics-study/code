@@ -19,7 +19,7 @@ for (let i = 0; i < numNodes; i++) {
 const nodes = []
 // Create new nodes based on our wallets, and connect them to the network
 for (let i = 0; i < numNodes; i++) {
-  nodes.push(new FaultTolerant(wallets[i], JSON.parse(JSON.stringify(genesis)), network, delta = 5))
+  nodes.push(new FaultTolerant(wallets[i], JSON.parse(JSON.stringify(genesis)), network, delta = 7))
   network.connectPeer(nodes[i], numConnections = 2)
 }
 
@@ -33,19 +33,18 @@ const getRandomReceiver = (address) => {
 }
 
 const tx = nodes[0].generateTx(getRandomReceiver(nodes[0].wallet.address), 10)
-nodes[0].applyTransaction(tx)
-nodes[0].seen.push(tx.contents)
+nodes[0].onReceive(tx)
 // Broadcast this tx to the network
 nodes[0].network.broadcast(nodes[0].pid, tx)
 
 
 try {
-  network.run(steps = 50)
+  network.run(steps = 80)
 } catch (e) {
-  console.log('err:', e)
+  console.err(e)
   for (let i = 0; i < numNodes; i++) {
     console.log('~~~~~~~~~~~ Node', i, '~~~~~~~~~~~')
     console.log(nodes[i].state)
   }
-  console.log(nodes[1].invalidNonceTxs[wallets[0].address])
 }
+console.log('all nodes stayed in consensus!')

@@ -1,5 +1,5 @@
 var EthCrypto = require('eth-crypto')
-var NetworkSimulator = require('../networksim')
+var NetworkSimulator = require('../networksimDebug')
 var FaultTolerant = require('./FaultTolerant')
 var {getTxHash} = require('../nodeAgent')
 
@@ -11,21 +11,17 @@ class TimestampSimulator extends NetworkSimulator {
   tick () {
     // call NetworkSimulator tick()
     super.tick()
-    if (this.time === 65) {
+
+    if (this.time === 5) {
       network.broadcast(evilNode.pid, fakeEarlySpend)
     }
   }
 }
-
-
-
-
-
 // ****** Test this out using a simulated network ****** //
 const numNodes = 5
 const wallets = []
 const genesis = {}
-const network = new NetworkSimulator(latency = 5, packetLoss = 0);
+const network = new TimestampSimulator(latency = 5, packetLoss = 0);
 for (let i = 0; i < numNodes; i++) {
   // Create new identity
   wallets.push(EthCrypto.createIdentity())
@@ -75,12 +71,12 @@ network.broadcast(evilNode.pid, spend)
 // We will also detect if the two victim nodes, for a short time, both believe they have been sent money
 // by our evil node. That's our double spend!
 try {
-  network.run(steps = 70)
+  network.run(steps = 100)
 } catch (e) {
   console.log('err:', e)
   for (let i = 0; i < numNodes; i++) {
     console.log('~~~~~~~~~~~ Node', i, '~~~~~~~~~~~')
     console.log(nodes[i].state)
   }
-  console.log(nodes[1].invalidNonceTxs[wallets[0].address])
 }
+console.log('all nodes stayed in consensus!')

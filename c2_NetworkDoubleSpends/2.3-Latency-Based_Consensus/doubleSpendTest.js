@@ -43,10 +43,10 @@ network.broadcastTo(evilNode.pid, victims[1], spends[1])
 try {
   network.run(steps = 70)
 } catch (e) {
-  console.log('err:', e)
+  console.err(e)
   for (let i = 0; i < numNodes; i++) {
     console.log('~~~~~~~~~~~ Node', i, '~~~~~~~~~~~')
     console.log(nodes[i].state)
   }
-  console.log(nodes[1].invalidNonceTxs[wallets[0].address])
 }
+console.log('all nodes stayed in consensus!')

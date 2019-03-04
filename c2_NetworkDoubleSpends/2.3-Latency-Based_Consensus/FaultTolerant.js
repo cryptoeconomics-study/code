@@ -16,7 +16,6 @@ class FaultTolerant extends Node {
     return timestamp + (numObservers - 0.5) * 2 * this.delta
   }
   addressesFromSigs(tx) {
-      // console.log('~~~~~~~~~~~~~~TX~~~~~~~~~~', tx)
       let addressSet = new Set()
       for (let i = 0; i < tx.sigs.length; i++) {
         const sig = tx.sigs[i]
@@ -24,7 +23,6 @@ class FaultTolerant extends Node {
           contents: tx.contents,
           sigs: tx.sigs.slice(0,i)
         }
-        // console.log('~~~~~~~~~~~~~~SLICED TX~~~~~~~~~~', slicedTx)
         const messageHash = getTxHash(slicedTx)
         const address = EthCrypto.recover(sig, messageHash)
         if(i===0 && address !== tx.contents.from) throw new Error('Invalid first signature!')
@@ -43,15 +41,12 @@ class FaultTolerant extends Node {
     //TODO Check that each signee is actually a peer in the network
       //-possible attack: byzantine node signs a message 100 times with random Private Key
     const finalTimeout = this.timeout(tx.contents.timestamp, this.network.agents.length)
-    if (!this.pendingTxs[finalTimeout]) {this.pendingTxs[finalTimeout] = []}
-    else {
-      console.log('hmm?')
-    }
+    if (!this.pendingTxs[finalTimeout]) this.pendingTxs[finalTimeout] = []
     //add to pending ( we'll apply this transaction once we hit finalTimeout)
     this.pendingTxs[finalTimeout].push(tx)
     //Choice rule: if have two transactions with same sender, nonce, and timestamp apply the one with lower sig first
     this.pendingTxs[finalTimeout].sort((a, b)=>{
-      return a.sigs[0] < b.sigs[0]
+      return a.sigs[0] - b.sigs[0]
     })
 
     //add signature
