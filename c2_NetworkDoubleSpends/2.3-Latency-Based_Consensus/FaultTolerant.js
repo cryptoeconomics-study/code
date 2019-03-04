@@ -113,16 +113,6 @@ class FaultTolerant extends Node {
     }
     this.state[[tx.contents.from]].nonce += 1
   }
-
-  applyInvalidNonceTxs(address) {
-    const targetNonce = this.state[address].nonce
-    if (address in this.invalidNonceTxs &&
-    targetNonce in this.invalidNonceTxs[address]) {
-      this.applyTransaction(this.invalidNonceTxs[address][targetNonce])
-      delete this.invalidNonceTxs[address][targetNonce]
-      this.applyInvalidNonceTxs(address)
-    }
-  }
 }
 
 module.exports = FaultTolerant
