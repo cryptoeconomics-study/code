@@ -1,5 +1,5 @@
 var EthCrypto = require('eth-crypto')
-var NetworkSimulator = require('../networksimDebug')
+var NetworkSimulator = require('./networksimFT')
 var FaultTolerant = require('./FaultTolerant')
 
 // ****** Test this out using a simulated network ****** //

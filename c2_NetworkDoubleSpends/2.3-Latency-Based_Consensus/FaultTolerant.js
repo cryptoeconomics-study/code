@@ -1,5 +1,4 @@
 var EthCrypto = require('eth-crypto')
-var NetworkSimulator = require('../networksim')
 var {Node, getTxHash} = require('../nodeAgent')
 var _ = require('lodash')
 
@@ -85,7 +84,7 @@ class FaultTolerant extends Node {
     console.log('~~~~~~~~~APPLY TRANSACTION~~~~~~~~~~', tx)
     // If we don't have a record for this address, create one
     if (!(tx.contents.to in this.state)) {
-      this.state[[tx.contents.to]] = {
+      this.state[tx.contents.to] = {
         balance: 0,
         nonce: 0
       }
@@ -103,15 +102,15 @@ class FaultTolerant extends Node {
     }
     //Apply send to balances
     if (tx.contents.type === 'send') { // Send coins
-      if (this.state[[tx.contents.from]].balance - tx.contents.amount < 0) {
+      if (this.state[tx.contents.from].balance - tx.contents.amount < 0) {
         throw new Error('Not enough money!')
       }
-      this.state[[tx.contents.from]].balance -= tx.contents.amount
-      this.state[[tx.contents.to]].balance += tx.contents.amount
+      this.state[tx.contents.from].balance -= tx.contents.amount
+      this.state[tx.contents.to].balance += tx.contents.amount
     } else {
       throw new Error('Invalid transaction type!')
     }
-    this.state[[tx.contents.from]].nonce += 1
+    this.state[tx.contents.from].nonce += 1
   }
 }
 
