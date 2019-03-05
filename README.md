@@ -24,9 +24,10 @@ Suggestions and contributions are extremely welcome. For instance, there might b
 - [x] Nodes sending transactions
   - [x] Send transactions until invalid tx found - [completed](https://github.com/cryptoeconomics-study/code/blob/master/c2_NetworkDoubleSpends/invalidWithHonestNodes.js)
   - [x] Intentionally double spend - [completed](https://github.com/cryptoeconomics-study/code/blob/master/c2_NetworkDoubleSpends/doubleSpend.js)
--  [ ] Latency-Based Consensus Client
-	- [ ] Timestamp attack
-	- [ ] Double Spend attack
+-  [x] Latency-Based Consensus Client
+	- [x] Timestamp attack
+	- [x] Double Spend attack
+	- [ ] Byzantine node attack 
 - [ ] PoA Consensus
 	- [ ] Authority Client
 	- [ ] PoA User Client
