@@ -5,7 +5,7 @@ var _ = require('lodash')
 
 // Spender is a Node that sends a random transaction at every tick()
 class Authority extends Node {
-  constructor (wallet, genesis, network, authority) {
+  constructor (wallet, genesis, network) {
     super(wallet, genesis, network)
     this.orderNonce = 0
   }
@@ -28,7 +28,11 @@ class Authority extends Node {
 
   applyTransaction (tx) {
     // Check the from address matches the signature
-    const signer = EthCrypto.recover(tx.sigs[0], getTxHash(tx.contents))
+    const slicedTx = {
+      contents: tx.contents,
+      sigs: []
+    }
+    const signer = EthCrypto.recover(tx.sigs[0], getTxHash(slicedTx))
     if (signer !== tx.contents.from) {
       throw new Error('Invalid signature!')
     }
@@ -40,13 +44,15 @@ class Authority extends Node {
       }
     }
     // Check that the nonce is correct for replay protection
-    if (tx.contents.nonce !== this.state[[tx.contents.from]].nonce) {
-      // If it isn't correct, then we should add the transaction to invalidNonceTxs
-      if (!(tx.contents.from in this.invalidNonceTxs)) {
-        this.invalidNonceTxs[tx.contents.from] = {}
-      }
-      this.invalidNonceTxs[tx.contents.from][tx.contents.nonce] = tx
-      return
+    if (tx.contents.nonce > this.state[tx.contents.from].nonce) {
+        if (!(tx.contents.from in this.invalidNonceTxs)) {
+            this.invalidNonceTxs[tx.contents.from] = {}
+        }
+        this.invalidNonceTxs[tx.contents.from][tx.contents.nonce] = tx
+        return
+    } else if (tx.contents.nonce < this.state[tx.contents.from].nonce) {
+        console.log('passed nonce tx rejected')
+        return
     }
     if (tx.contents.type === 'send') { // Send coins
       if (this.state[[tx.contents.from]].balance - tx.contents.amount < 0) {
