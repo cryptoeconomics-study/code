@@ -19,7 +19,7 @@ for (let i = 0; i < numNodes; i++) {
 const nodes = []
 // Create new nodes based on our wallets, and connect them to the network
 for (let i = 0; i < numNodes; i++) {
-  nodes.push(new FaultTolerant(wallets[i], JSON.parse(JSON.stringify(genesis)), network, delta = 7))
+  nodes.push(new FaultTolerant(wallets[i], JSON.parse(JSON.stringify(genesis)), network, delta = 5))
   network.connectPeer(nodes[i], numConnections = 2)
 }
 
