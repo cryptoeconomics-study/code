@@ -42,36 +42,33 @@ class Client extends Node {
   getState() {
     //a temp chain
     let tempChain = []
-    //a temp store of tempChain[lastblock].parentHash
-    let prevHash = 0
-    //return max blocknumber from allBlocks
-    let max = Math.max.apply(Math, this.allBlocks.map(function(block) { return block.number; }))
-    //debug.. inside filter function this.allBlocks returns Cannot read property 'allBlocks' of undefined
     let allBlocks = this.allBlocks
+    //return max blocknumber from allBlocks
+    let max = Math.max.apply(Math, allBlocks.map(function(block) { return block.number; }))
     //add the highestBlockNumber to tempChain using blockNumber
-    Object.keys(allBlocks).filter(function(block) {
-      if (allBlocks[block].number === max) {
-        if (tempChain.length === 0) { //should only add one block. if two competing, pick the first one by position in allBlocks array
-          tempChain.push(allBlocks[block])
+    for (let block of allBlocks) { //TODO optimize this...Once there are many blocks in allBlocks, this may be SLOW af
+      if (block.number === max) {
+        tempChain.push(block)
+        break;
+      }
+    }
+    //add max number of blocks to tempChain using parentHash
+    //i is the current block number
+    for (let i = max; i > 0; i--) {
+      const prevHash = tempChain[0].parentHash
+      for (let block of allBlocks) {
+        if (getTxHash(block) === prevHash) { //TODO verify blockhash before adding to allBlocks
+          tempChain.unshift(block) //add block to front of array
+          break;
         }
       }
-    })
-    //add max number of blocks to tempChain using parentHash
-    for (let i = tempChain.length; i < max; i++) {
-      // console.log('now my prevhash is', prevHash)
-      Object.keys(allBlocks).filter(function(block) {
-        prevHash = tempChain[tempChain.length -1].parentHash
-        if (getTxHash(allBlocks[block]) === prevHash) {
-          tempChain.push(allBlocks[block])
-        }
-      })
     }
     //save the ordered sequence
-    this.blockchain = tempChain.reverse()
+    this.blockchain = tempChain
     //apply all txs from ordered list of blocks
-    for (let i = 0; i < this.blockchain.length; i++) {
-      for (let j = 0; j < this.blockchain[i].contents.txList.length; j++) {
-        let tx = this.blockchain[i].contents.txList[j]
+    for (let block of this.blockchain) {
+      const txList = block.contents.txList
+      for (let tx of txList) {
         this.applyTransaction(tx)       //update state
         if (tx.contents.from !== 0) { //mint tx is excluded
           this.applyInvalidNonceTxs(tx.contents.from) //update state

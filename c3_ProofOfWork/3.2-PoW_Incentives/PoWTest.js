@@ -29,7 +29,7 @@ for (let i = 0; i < numNodes; i++) {
   network.connectPeer(nodes[i], 3)
 }
 
-const tx0 = nodes[0].generateTx(nodes[1].wallet.address, 10)
+const tx0 = nodes[0].generateTx(nodes[1].wallet.address,10)
 nodes[0].network.broadcast(nodes[0].pid, tx0)
 for (let i = 0; i < 800; i++) {
   network.tick()
@@ -39,12 +39,12 @@ nodes[0].network.broadcast(nodes[0].pid, tx1)
 for (let i = 0; i < 800; i++) {
   network.tick()
 }
-const tx2 = nodes[0].generateTx(nodes[3].wallet.address, 5)
+const tx2 = nodes[0].generateTx(nodes[3].wallet.address, 6)
 nodes[0].network.broadcast(nodes[0].pid, tx2)
 for (let i = 0; i < 800; i++) {
   network.tick()
 }
-const tx3 = nodes[1].generateTx(nodes[4].wallet.address, 5)
+const tx3 = nodes[1].generateTx(nodes[4].wallet.address, 3)
 nodes[1].network.broadcast(nodes[1].pid, tx3)
 for (let i = 0; i < 800; i++) {
   network.tick()
