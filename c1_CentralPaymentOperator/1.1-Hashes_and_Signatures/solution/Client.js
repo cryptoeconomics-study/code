@@ -1,4 +1,4 @@
-import EthCrypto from 'eth-crypto'
+const EthCrypto = require('eth-crypto')
 
 class Client {
     constructor() {
@@ -23,5 +23,5 @@ class Client {
     }
 }
 
-export default Client;
+module.exports = Client;
 

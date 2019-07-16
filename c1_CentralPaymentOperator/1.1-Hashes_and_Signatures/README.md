@@ -3,7 +3,6 @@
 Complete the `toHash` function.
 
 You should be able to pass in some data to the function and it should return the `keccak256` hash of that data. Use `EthCrypto.hash.keccak256` ([Documentation](https://github.com/pubkey/eth-crypto#sign)). 
-See **Details** to learn more about the `keccak256` hash function.
 
 ## Creating Keys
 
@@ -16,7 +15,8 @@ Inside of our client's `constructor`, assign `this.wallet` to  [`EthCrypto.creat
 We use our private key in order to sign messages. Let's create a method function `sign(data)` in our Client class.
 
 This function should take in `data`, use `this.toHash` calculate the `hash` of that `data`, and then use [`EthCrypto.sign`](https://github.com/pubkey/eth-crypto#sign) and your wallet's private key to sign that hash. The function should return the resulting signature.
-Use `console.log` to log messages to the output. Add `console.log(this.wallet)` to figure out how to access your private key. 
+
+> *Hint*: `console.log(this.wallet)` to figure out how to access your private key. 
 
 ## Verifying Signatures
 
