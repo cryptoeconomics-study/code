@@ -13,4 +13,4 @@ class Paypal extends Client {
     }
 }
 
-module.exports = Client;
+module.exports = Paypal;
