@@ -3,75 +3,50 @@ This repository contains code for the protocols and attacks covered in the Crypt
 
 Much of the code here will be reviewed in online videos which karl.tech and other community members put together. Links to these tutorial videos coming soon!
 
-After protocols and attacks are implemented here, they will be formalized into lessons hosted on Chainshot. If you'd like to help build the lessons  check out the **[chainshot-content repo](https://github.com/cryptoeconomics-study/chainshot-content)**.
+
+
+## Installation
+
+### Beginners
+
+* You're going to need *Node.js* and *npm* to complete these assignments. Install both at once [here](https://nodejs.org/en/).
+
+You'll also need a Github account and `git` installed on your computer.
+
+* Create a Github account [here](https://github.com/join).
+
+* Setting up Git:
+	* [Download and install the latest version of Git.](https://git-scm.com/downloads)
+	* [Set your username in Git.](https://help.github.com/en/articles/setting-your-username-in-git)
+	* [Set your commit email address in Git.](https://help.github.com/en/articles/setting-your-commit-email-address)
+	* [Authenticate with Github from Git](https://help.github.com/en/articles/set-up-git#next-steps-authenticating-with-github-from-git)
+
+### Installation
+
+We're going to be using [Mocha](https://mochajs.org/) in order to run tests, so install the Mocha package globally by running: 
+`npm install -g mocha`
+
+Next, fork [this repository](https://github.com/cryptoeconomics-study/code) ([guide](https://help.github.com/en/articles/fork-a-repo)).
+Once you have your own fork at `github.com/YOUR_USERNAME/code`, create a local clone of your fork ([guide](https://help.github.com/en/articles/fork-a-repo#keep-your-fork-synced)).
+`cd` into your local clone and run `npm install` to install all of the required dependencies.
+
+## Taking the Course
+
+You'll start off at Section 1.1, so `cd` into Section 1.1 of the Chapter 1 folder `/c1_CentralPaymentOperator/1.1 - Hashes_and_Signatures`. 
+
+Open the `README.md` for instructions on how to complete this part of the coding project. 
+You'll be editing the `Client.js` file in the root of this folder to complete this assignment.
+
+ In order to run tests on your work, `cd` into `/test` and run `mocha test.js`. Once you pass all the tests, you can move on to the next section!
+ 
+Don't forget to commit your progress to Github, so we can verify your work and give you a certificate of completion at the end of the course!
 
 ## Contributing
-Suggestions and contributions are extremely welcome. For instance, there might be room in the curriculum to implement a simple state channel as well. There is also room for contributors to optimize the code as well as create **[visualizations](https://github.com/cryptoeconomics-study/visualizations)**. Check out the open issues and project board and help out! Feel free to add any questions, suggestions, or ideas as issues! :) 
+See our [CONTRIBUTING.md](CONTRIBUTING.md) for more information about how to help improve our coding project.
 
 
-## Coding Project Outline
-
-### Ch. 1 - Node Implementation
-- [x] Account Model
-	- [Code review video](https://www.youtube.com/watch?v=e36n0WG4tgY)
-- [x] UTXO Model
-	- [Code review video](https://www.youtube.com/watch?v=t_x9ReUewZ4)
 
 
-### Ch. 2 - Adding Networking
-- [x] Network Simulator with nodes sending each other “hello world”
-  - Network simulator implementation - [completed](https://github.com/cryptoeconomics-study/code/blob/master/c2_NetworkDoubleSpends/networksim.js)
-- [x] Nodes sending transactions
-  - [x] Send transactions until invalid tx found - [completed](https://github.com/cryptoeconomics-study/code/blob/master/c2_NetworkDoubleSpends/invalidWithHonestNodes.js)
-  - [x] Intentionally double spend - [completed](https://github.com/cryptoeconomics-study/code/blob/master/c2_NetworkDoubleSpends/doubleSpend.js)
--  [ ] Latency-Based Consensus Client
-	- [x] Timestamp attack
-	- [x] Double Spend attack
-	- [ ] Observer Client
-- [ ] PoA Consensus
-	- [x] Authority Client
-	- [x] PoA User Client
-	- [ ] Support for multiple Authorities 
 
-### Ch. 3 - Adding Proof of Work block proposal
-- [ ] Nodes sending blocks
-  - Instead of each node generating and sending a transaction, generate a transaction and put it in a block which point to previous blocks
-  - Create blocks only one the longest known chain of blocks which the node has
-  - Clients still apply all transactions, whether or not they are on the longest chain.
-- [ ] Proof of work on the blocks
-  - Add anti-spam protection with proof of work on each block
-  - See implementation here: https://github.com/karlfloersch/lessons/blob/master/lessons/02_proofOfWork.js#L16-L26
-- [ ] Fork choice
-  - Only apply transactions which are contained in the longest chain
-  - Lazily apply these transactions (create function `getState()` which applies all the transactions in the chain and returns the resulting state object.
-- [ ] Miner // client separation
-  - Add Miner class which collects txs & makes blocks
-  - Add Client class which generates & sends transactions
-- [ ] Selfish Mining client implementation
-	- [ ] Add block rewards, cost simulation of mining
-
-### Ch. 4 - Adding Proof of Stake Finality (FFG)
-- [ ] Add validator class
-- [ ] Add deposit transaction which locks coins
-- [ ] Add withdraw transaction which unlocks coins (after some delay)
-- [ ] Add `vote()` which votes on the current epoch, if more than ⅔ vote then the block is finalized
-- [ ] Update the fork choice rule to not revert finalized blocks, and accept a ‘starting block’ blockhash.
-
-### Ch. 5 - Instead Implement as Plasma with a Central Operator
-- [ ] Create `rootChain.sol` which accepts block hashes
-- [ ] Create `merkleProof.sol` which validates merkle proofs
-- [ ] Using https://github.com/ethereum/py-evm write tests which:
-  - Deploy the merkle prover & root chain
-  - Deposit test ETH to the root chain, creating a new Plasma Cash coin
-  - Submit merkle proofs to the root chain contract which transfer the coin
-  - Exit the coin with a different account than the one that deposited
-- [ ] Add exit challenges
-
-## Stretch Goals!
-- [x] Ch. 2 - Network message propagation visualization (Interested in consensus algorithm visualizations? Check out the [/visualizations repo](https://github.com/cryptoeconomics-study/visualizations))
-- [ ] Ch. 5 - zkSTARK or zkSNARK implementation/usage?
-- [ ] Ch. 5 - State Channel implementation
-- [ ] Implementations in other languages
-- [ ] Missing any valuable protocols  or attacks? Add an issue and let's discuss!
 
 
