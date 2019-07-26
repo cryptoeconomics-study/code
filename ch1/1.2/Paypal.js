@@ -13,22 +13,14 @@ class Paypal extends Client {
         }
         // the history of transactions
         this.transactions = []
-        // a pool of pending transactoins
-        this.pendingTransactions = []
     }
 
-    // Generates new transactions
-    function generateTx(to, amount, type) {
-        // TODO:
-        // - create an unsigned transaction
-        // - create a digital signature of the transaction
-        // - return a Javascript object with the unsigned transaction and transaction signature
-    }
-
-    // Processes transactions and updates the state
+    // Receives a transaction, checks if it's valid, and updates the state
     function stateTransitionFunction(transaction) {
-        // TODO: apply transaction to this.state
-        // Note: in the future this is where we'll apply protocol rules to check the transaction and reject those that are invalid, but right now we're just going to process all transactions as valid
+        // TODO: 
+			  // - if a transaction is minting new tokens, check that the sender is the central payment operator (PayPal)
+        // - if a transaction is moving tokens from one wallet to another, check that the sender's account balance is greater than or equal to the amount of the transaction
+        // - if all checks pass, process the transaction (updated the account balances accordingly and add the transaction to this.transactions) 
     }
 }
 

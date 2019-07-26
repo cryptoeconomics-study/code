@@ -16,6 +16,14 @@ class Client {
     verify(signature, messageHash, address) {
       //TODO
     }
+
+    // Generates new transactions
+    function generateTx(to, amount, type) {
+        // TODO:
+        // - create an unsigned transaction
+        // - create a signature of the transaction
+        // - return a Javascript object with the unsigned transaction and transaction signature
+    }
 }
 
 module.exports = Client;
