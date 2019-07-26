@@ -1,5 +1,4 @@
-# 👾 Coding Project
-This repository contains code for the protocols and attacks covered in the Cryptoeconomics.study course. This includes implementing a payment processor blockchain, proof of work, proof of stake, and Plasma.
+The Cryptoeconomics.study coding challenges follow the course lectures. This includes implementing a centralized payment processor, a distributed proof of authority blockchain, and a proof of work blockchain. To make sure that you can complete all the challenges we recommend the following development setup.
 
 ## Prerequisites
 
