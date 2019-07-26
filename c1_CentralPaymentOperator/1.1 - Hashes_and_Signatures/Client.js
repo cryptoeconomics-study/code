@@ -11,7 +11,7 @@ class Client {
       return EthCrypto.hash.keccak256(data);
     }
 
-    sign(message) {
+    sign(data) {
       // TODO
     }
 
