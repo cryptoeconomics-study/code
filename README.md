@@ -51,7 +51,7 @@ Now that you're good to go, let's start the course!
 
 We recommend starting at the beginning of the [Course](https://burrrata.ch/docs/en/getting-started/welcome) with the lecture videos and then trying the coding challenges, but you can also jump straight to the coding challenges [here](https://burrrata.ch/coding-challenges). Whichever path you choose, be aware that they progress sequentially so it's important that you start at the beginning of each chapter and go all the way through. Good luck! 🍀
  
-Don't forget to commit your progress to Github, so we can verify your work and give you a certificate of completion at the end of the course!
+Don't forget to commit your progress to Github as you go. This will create checkpoints that allow you to go back if you made a mistake. It also creates a proof of work (get it... proof of work) that shows you actually went through the course :)
 
 ## Contributing
 
