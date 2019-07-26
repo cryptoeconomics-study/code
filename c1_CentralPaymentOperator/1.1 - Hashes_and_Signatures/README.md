@@ -50,6 +50,14 @@ Write a `verify` method that takes in 3 parameters (in this order):
 
 This function should return true if the signature is valid and false if it is not. 
 
-
 > *Hint*: You can use [`EthCrypto.recover`](https://github.com/pubkey/eth-crypto#recover) to recover an Ethereum address from a `signature` and `messageHash`. See "Details" to learn how this function works.
 > [relevant documentation](https://github.com/pubkey/eth-crypto#recover)
+
+## Testing
+
+Testing is a very important part of programming. Good testing will make us better, checking that our code actually does what we think it does. Bad testing will make us sloppy. Don't be sloppy. Run the tests. Make sure your code actually works. To ease this burden, we've already written the tests for you. All you have to do is run `npm test` in this directory (`c1_CentralPaymentOperator/`). 
+
+If all the tests don't pass, it's ok. That's what tests are for! Test exist to show you where your code breaks so that you can improve it. If all your tests are always passing it means you're probably not writing very good tests. Keep trying until the tests pass. If you really need help, reach out to other students on the [forum](https://forum.cryptoeconomics.study).
+
+If all the tests do pass, congratulations! You did it. Time to move on to the next section. 
+
