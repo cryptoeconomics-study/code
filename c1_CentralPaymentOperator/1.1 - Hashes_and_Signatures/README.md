@@ -18,7 +18,7 @@ Complete the `toHash` function.
 
 You should be able to pass in some data to the function and it should return the `keccak256` hash of that data. Use `EthCrypto.hash.keccak256`. 
 
-- [relevant documentation](https://github.com/pubkey/eth-crypto#sign)
+> *Hint*: Check out the [EthCrpto documentation](https://github.com/pubkey/eth-crypto#sign) to learn how to use `EthCrypto.hash.keccak256()`.
 
 ## Creating Keys
 
@@ -59,5 +59,5 @@ Testing is a very important part of programming. Good testing will make us bette
 
 If all the tests don't pass, it's ok. That's what tests are for! Test exist to show you where your code breaks so that you can improve it. If all your tests are always passing it means you're probably not writing very good tests. Keep trying until the tests pass. If you really need help, reach out to other students on the [forum](https://forum.cryptoeconomics.study).
 
-If all the tests do pass, congratulations! You did it. Time to move on to the next section. 
+If all the tests do pass, congratulations! You did it. Move on to the next section whenever you're ready. 
 
