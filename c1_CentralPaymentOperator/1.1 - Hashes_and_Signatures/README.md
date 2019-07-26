@@ -1,3 +1,9 @@
+# Section 1.1 - Hashes and Signatures
+
+Welcome to the first coding assignment of Cryptoeconomics.study! If you haven't already, set up your local clone of the `/code` repo by following our [Installation Instructions](../../README.md)
+
+This assignment will take you through using cryptographic hash functions, creating a public/private key pair, and verifying digital signatures. 
+
 ## Using Keccak-256
 
 Complete the `toHash` function.
