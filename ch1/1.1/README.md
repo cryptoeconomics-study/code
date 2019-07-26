@@ -32,7 +32,7 @@ You should be able to pass in some data to the function and it should return the
 
 Now, let's see digital signatures in action! In order to sign messages, you’ll need a public and private key! 
 
-Inside of our client's `constructor`, assign `this.wallet` to  [`EthCrypto.createIdentity()`](https://github.com/pubkey/eth-crypto#createidentity) to create a public key, private key, and Ethereum address. 
+Inside of our client's `constructor`, assign `this.wallet` to  [`EthCrypto.createIdentity()`](https://github.com/pubkey/eth-crypto#createidentity) to create a public key, private key, and Ethereum address. This will allow users to sign and receive messages with their client.  
 
 > *Hint*: This assumes a knowledge of Javascript basics like classes and constructors. If this doesn't make sense yet, check out the Javascript section of our [Getting Started Guide](https://www.burrrata.ch/ces-website/docs/en/sync/dev-env-setup)
 > [relevant documentation](https://github.com/pubkey/eth-crypto#createidentity)
