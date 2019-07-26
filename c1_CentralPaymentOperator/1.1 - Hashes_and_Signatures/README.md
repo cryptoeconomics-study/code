@@ -14,13 +14,15 @@ In order to run tests on your work, cd into /test and run mocha test.js. Once yo
 
 Complete the `toHash` function.
 
-You should be able to pass in some data to the function and it should return the `keccak256` hash of that data. Use `EthCrypto.hash.keccak256` ([Documentation](https://github.com/pubkey/eth-crypto#sign)). 
+You should be able to pass in some data to the function and it should return the `keccak256` hash of that data. Use `EthCrypto.hash.keccak256` ([EthCrypto Documentation](https://github.com/pubkey/eth-crypto#sign)). 
 
 ## Creating Keys
 
 Now, let's see digital signatures in action! In order to sign messages, you’ll need a public and private key! 
 
 Inside of our client's `constructor`, assign `this.wallet` to  [`EthCrypto.createIdentity()`](https://github.com/pubkey/eth-crypto#createidentity) to create a public key, private key, and Ethereum address. 
+
+> This assumes a knowledge of Javascript basics like classes and constructors. If this doesn't make sense yet, check out the Javascript section of our [Getting Started Guide](https://www.burrrata.ch/ces-website/docs/en/sync/dev-env-setup)
 
 ## Creating Digital Signatures
 
