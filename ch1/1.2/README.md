@@ -2,29 +2,19 @@
 
 ## Payment Processor Overview
 
-Here we’re going to extend our Client from Section 1.1 to add **state**, **transactions**, and our **state transition function**. Replace our Client.js file with your Client.js implementation from Section 1.1 
+Now we’re going to create a centralized server for our centralized payment processor (PayPal). The PayPal server will have a database (`state`) and a function to process transactions (`stateTransitionFunction`). We're also going to extend our client (`client.js`) from Section 1.1 to allow users to create transactions. 
 
-## Format Specifications
 
-Our unsigned transactions will have format: 
-```
-{
-    type: either 'send' or ‘mint’,
-    amount: amount to send
-    from: address of sender,
-    to: address of receiver,
-}
-```
-Because every transaction must have an accompanying signature, a transaction will have format:
-```
-{
-    contents: unsignedTx,
-    sig: signature
-}
-```
+## Creating A Centralized Payments Processor
 
-Lastly, our state will be an object mapping Ethereum addresses as keys to each account state. The account state will be an object containing a `balance`. Here is an example state: 
+Our centralized payments processor has three main goals:
+- managing a state of accounts and balances
+- processing transactions
+- recording a history of transactions
 
+### State
+
+The payment processor's state will be an object mapping addresses (client public keys) to balances (an integer in a javascript object). Here is an example of what that state might look like: 
 ```
 {
     0x129a2BF4B76f3e715E57b4B6CCE78cAf04C87465: {
@@ -39,18 +29,7 @@ Lastly, our state will be an object mapping Ethereum addresses as keys to each a
 }
 ```
 
-## Generating Transactions
-
-Let’s add a `generateTx` function to our Client:
-```
-generateTx(to, amount, type) {
-    //Create an unsigned transaction (see Details)
-    //Create a digital signature of the transaction
-    return //a transaction containing contents and sig (See Details) 
-}
-```
-
-## State Transition Function
+### State Transition Function
 
 Here comes the meat of the protocol. We have our state and we can generate our transactions. Now we need to create our state transition function,
 ```
@@ -72,6 +51,54 @@ For `"mint"` transactions,
 
 * Doesn't decrease balance of sender
 * If the sender is not Paypal, throw an `Error`
+
+
+## Updating The Client To Generate Transactions
+
+### Transaction Format 
+
+Unsigned Transaction: 
+```
+// a javascript oject
+{
+    type: either 'send' or ‘mint’,
+    amount: amount to send
+    from: address of sender,
+    to: address of receiver,
+}
+```
+
+Transaction Signature:
+```
+// a hash
+0x123456789abcdefghijklmnopqrstuvwxyz12345
+```
+
+Transaction:
+```
+// a javascript object with both the unsigned tx and the tx signature
+{
+    contents: unsignedTx,
+    sig: signature
+}
+```
+
+### Generating Transactions
+
+We need to add a function to our client that allows it to generate transactions in the format described above.
+```
+generateTx(to, amount, type) {
+		// TODO:
+		// - create an unsigned transaction
+		// - create a signature of the transaction
+		// - return a Javascript object with the unsigned transaction and transaction signature
+}
+```
+
+## Testing
+
+This is where testing instructions will go. 
+
 
 ## Completion
 
