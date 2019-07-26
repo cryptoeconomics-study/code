@@ -1,10 +1,16 @@
 # Section 1.1 - Hashes and Signatures
 
-Welcome to the first coding assignment of Cryptoeconomics.study! If you haven't already, set up your local clone of the `/code` repo by following our [Installation Instructions](../../README.md)
+Welcome to the first coding assignment of Cryptoeconomics.study! If you haven't already, set up your local clone of the `/code` repo by following our [Installation Instructions](https://www.burrrata.ch/ces-website/docs/en/sync/dev-env-setup)
 
-This assignment will take you through using cryptographic hash functions, creating a public/private key pair, and verifying digital signatures. 
+This assignment will walk you through using cryptographic hash functions, creating a public/private key pair, and verifying digital signatures. 
 
-## Using Keccak-256
+## Getting Started
+
+We're starting at Section 1.1, so cd into Section 1.1 of the Chapter 1 folder `/c1_CentralPaymentOperator/1.1-Hashes_and_Signatures`. You'll be editing the Client.js file in the root (aka not a subdirectory) of this folder to complete this assignment.
+
+In order to run tests on your work, cd into /test and run mocha test.js. Once you pass all the tests, you can move on to the next section!
+
+## Hashing
 
 Complete the `toHash` function.
 
@@ -16,7 +22,7 @@ Now, let's see digital signatures in action! In order to sign messages, you’ll
 
 Inside of our client's `constructor`, assign `this.wallet` to  [`EthCrypto.createIdentity()`](https://github.com/pubkey/eth-crypto#createidentity) to create a public key, private key, and Ethereum address. 
 
-## Digital Signatures
+## Creating Digital Signatures
 
 We use our private key in order to sign messages. Let's create a method function `sign(data)` in our Client class.
 
@@ -24,7 +30,7 @@ This function should take in `data`, use `this.toHash` calculate the `hash` of t
 
 > *Hint*: `console.log(this.wallet)` to figure out how to access your private key. 
 
-## Verifying Signatures
+## Verifying Digital Signatures
 
 Digital Signatures allow anyone to use someone's address to verify that that used their private key to sign a message. If someone sends us a signed message, we'd like our client to be able to verify that their signature is valid.
 
@@ -37,6 +43,4 @@ Write a `verify` method that takes in 3 parameters (in this order):
 This function should return true if the signature is valid and false if it is not. 
 
 > *Hint*: You can use [`EthCrypto.recover`](https://github.com/pubkey/eth-crypto#recover) to recover an Ethereum address from a `signature` and `messageHash`. See "Details" to learn how this function works.
-
-
 
