@@ -31,6 +31,17 @@ You'll also need a Github account and `git` installed on your computer.
 We're going to be using [Mocha](https://mochajs.org/) in order to run tests, so install the Mocha package globally by running: 
 `npm install -g mocha`
 
+### Atom
+
+We recommend [Atom](https://atom.io/) as your IDE (integrated development environment). Atom is free, open source, and works on every major operating system. Furthermore, it's easy to configure and set up. We recommend this setup by [Elad Ossadon](https://medium.com/productivity-freak/my-atom-editor-setup-for-js-react-9726cd69ad20). 
+
+TL;DR:
+- download [Atom](https://atom.io/)
+- run this script to install some awesome atom plugins via apm (the Atom Package Manager)
+```
+apm install atom-beautify prettier-atom atom-transpose case-keep-replace change-case copy-path duplicate-line-or-selection editorconfig file-icons git-plus highlight-selected local-history project-manager related set-syntax sort-lines sublime-style-column-selection tab-foldername-index sync-settings toggle-quotes atom-wrap-in-tag atom-ternjs autoclose-html autocomplete-modules color-picker docblockr emmet emmet-jsx-css-modules es6-javascript js-hyperclick hyperclick pigments linter-eslint tree-view-copy-relative-path lodash-snippets language-babel react-es7-snippets atom-jest-snippets one-dark-ui dracula-theme
+```
+
 ## Local Development Environment
 
 Once you have the prerequisites installed without error, fork [this repository](https://github.com/cryptoeconomics-study/code) ([guide](https://help.github.com/en/articles/fork-a-repo)).
