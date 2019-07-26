@@ -55,7 +55,7 @@ Don't forget to commit your progress to Github as you go. This will create check
 
 ## Contributing
 
-See our [CONTRIBUTING.md](CONTRIBUTING.md) for more information about how to join the team and help improve the coding projects! :)
+We welcome community contributions! There's lots of ways to get involved. Please see our [contributing](https://forum.cryptoeconomics.study/t/official-contribution-guidelines/453) pages for more information :)
 
 
 
