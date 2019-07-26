@@ -1,15 +1,13 @@
 # 👾 Coding Project
 This repository contains code for the protocols and attacks covered in the Cryptoeconomics.study course. This includes implementing a payment processor blockchain, proof of work, proof of stake, and Plasma.
 
-Much of the code here will be reviewed in online videos which karl.tech and other community members put together. Links to these tutorial videos coming soon!
+## Prerequisites
 
-
-
-## Installation
-
-### Beginners
+### NodeJS and NPM
 
 * You're going to need *Node.js* and *npm* to complete these assignments. Install both at once [here](https://nodejs.org/en/).
+
+### Git and GitHub
 
 You'll also need a Github account and `git` installed on your computer.
 
@@ -21,12 +19,14 @@ You'll also need a Github account and `git` installed on your computer.
 	* [Set your commit email address in Git.](https://help.github.com/en/articles/setting-your-commit-email-address)
 	* [Authenticate with Github from Git](https://help.github.com/en/articles/set-up-git#next-steps-authenticating-with-github-from-git)
 
-### Installation
+### Mocha
 
 We're going to be using [Mocha](https://mochajs.org/) in order to run tests, so install the Mocha package globally by running: 
 `npm install -g mocha`
 
-Next, fork [this repository](https://github.com/cryptoeconomics-study/code) ([guide](https://help.github.com/en/articles/fork-a-repo)).
+## Local Development Environment
+
+Once you have the prerequisites installed without error, fork [this repository](https://github.com/cryptoeconomics-study/code) ([guide](https://help.github.com/en/articles/fork-a-repo)).
 Once you have your own fork at `github.com/YOUR_USERNAME/code`, create a local clone of your fork ([guide](https://help.github.com/en/articles/fork-a-repo#keep-your-fork-synced)).
 `cd` into your local clone and run `npm install` to install all of the required dependencies.
 
@@ -42,11 +42,6 @@ You'll be editing the `Client.js` file in the root of this folder to complete th
 Don't forget to commit your progress to Github, so we can verify your work and give you a certificate of completion at the end of the course!
 
 ## Contributing
-See our [CONTRIBUTING.md](CONTRIBUTING.md) for more information about how to help improve our coding project.
 
-
-
-
-
-
+See our [CONTRIBUTING.md](CONTRIBUTING.md) for more information about how to join the team and help improve the coding projects! :)
 
