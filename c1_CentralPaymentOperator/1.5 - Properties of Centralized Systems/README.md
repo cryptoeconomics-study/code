@@ -1,3 +1,5 @@
+> The code challenges in this course build upon each other. It's highly recommended that you start from the beginning. If you haven't already, get started with our [Installation Instructions](https://www.burrrata.ch/ces-website/docs/en/sync/dev-env-setup).  
+
 ## Fault Tolerance
 
 Fault Tolerance is a worry for architecturally centralized systems (e.g. a system with a single database and server). However, it's important to note that many of the systems that we might call "centralized" are architecturally decentralized (e.g. they have multiple databases and servers around the world) and are thus fault tolerant. 
