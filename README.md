@@ -49,12 +49,7 @@ It's a win for everyone! So if you get stuck, don't worry about it. Just post yo
 
 Now that you're good to go, let's start the course!
 
-You'll start off at Section 1.1, so `cd` into Section 1.1 of the Chapter 1 folder `/c1_CentralPaymentOperator/1.1 - Hashes_and_Signatures`. 
-
-Open the `README.md` for instructions on how to complete this part of the coding project. 
-You'll be editing the `Client.js` file in the root of this folder to complete this assignment.
-
- In order to run tests on your work, `cd` into `/test` and run `mocha test.js`. Once you pass all the tests, you can move on to the next section!
+We recommend starting at the beginning of the [Course](https://burrrata.ch/docs/en/getting-started/welcome) with the lecture videos and then trying the coding challenges, but you can also jump straight to the coding challenges [here](https://burrrata.ch/coding-challenges). Whichever path you choose, be aware that they progress sequentially so it's important that you start at the beginning of each chapter and go all the way through. Good luck! 🍀
  
 Don't forget to commit your progress to Github, so we can verify your work and give you a certificate of completion at the end of the course!
 
