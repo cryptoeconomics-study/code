@@ -3,13 +3,15 @@ const EthCrypto = require('eth-crypto')
 class Client {
     constructor() {
       //TODO
+      
     }
 
     toHash(data) {
       //TODO
+      return EthCrypto.hash.keccak256(data);
     }
 
-    sign(message) {
+    sign(data) {
       // TODO
     }
 
@@ -19,4 +21,3 @@ class Client {
 }
 
 module.exports = Client;
-
