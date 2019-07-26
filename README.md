@@ -42,6 +42,14 @@ TL;DR:
 apm install atom-beautify prettier-atom atom-transpose case-keep-replace change-case copy-path duplicate-line-or-selection editorconfig file-icons git-plus highlight-selected local-history project-manager related set-syntax sort-lines sublime-style-column-selection tab-foldername-index sync-settings toggle-quotes atom-wrap-in-tag atom-ternjs autoclose-html autocomplete-modules color-picker docblockr emmet emmet-jsx-css-modules es6-javascript js-hyperclick hyperclick pigments linter-eslint tree-view-copy-relative-path lodash-snippets language-babel react-es7-snippets atom-jest-snippets one-dark-ui dracula-theme
 ```
 
+## Javascript
+
+This course assumes a familiarity with the basics of Javascript. If you're new to programming, or just want a refresher, we recommend the following resources:
+- [Understanding Classes In Javascript](https://www.taniarascia.com/understanding-classes-in-javascript/) - An intro to Javascript classes.
+- [The Complete Javascript Handbook](https://www.freecodecamp.org/news/the-complete-javascript-handbook-f26b2c71719c/) - Updated in 2019. Takes about an hour or two to read (skim) and covers all the basics of Javascript.
+- [FreeCodeCamp Javascript Course](https://learn.freecodecamp.org/javascript-algorithms-and-data-structures/basic-javascript/) - Free community driven course to help people learn programming basics so that they can contribute to non-profits and open-source.
+- [/r/javascript](https://www.reddit.com/r/javascript/) - The Reddit javascript community.
+
 ## Local Development Environment
 
 Once you have the prerequisites installed without error, fork [this repository](https://github.com/cryptoeconomics-study/code) ([guide](https://help.github.com/en/articles/fork-a-repo)).
