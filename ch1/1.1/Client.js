@@ -1,5 +1,6 @@
 const EthCrypto = require('eth-crypto')
 
+// The Javascript 
 class Client {
     constructor() {
       //TODO

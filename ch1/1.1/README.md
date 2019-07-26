@@ -10,7 +10,15 @@ To do this we're going to use the EthCrypto library. This is a Javascript librar
 
 We're starting at Section 1.1, so cd into Section 1.1 of the Chapter 1 folder `/c1_CentralPaymentOperator/1.1-Hashes_and_Signatures`. You'll be editing the Client.js file in the root (aka not a subdirectory) of this folder to complete this assignment.
 
-In order to run tests on your work, cd into /test and run mocha test.js. Once you pass all the tests, you can move on to the next section!
+## Creating A Client
+
+We're going to start by creating a [client](https://en.wikipedia.org/wiki/Client_%28computing%29) for our centralized payment operator. A client is a piece of software that allows an end-user to interact with the network. In bitcoin and Ethereum this is a node (full client) or wallet (light client), and in the more centralized operator space the equivalent would be an app or website you use to connect to the centralized service. Here our client will allow users to send transactions to the central operator to be processed. 
+
+> More info on clients
+> [Wikipedia](https://en.wikipedia.org/wiki/Client_%28computing%29)
+> [Bitcoin](https://en.bitcoin.it/wiki/Clients#Overview)
+> [Ethereum Docs](http://ethdocs.org/en/latest/ethereum-clients/choosing-a-client.html) 
+> [Ethereum Wiki](https://github.com/ethereum/wiki/wiki/Clients,-tools,-dapp-browsers,-wallets-and-other-projects)
 
 ## Hashing
 
