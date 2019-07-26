@@ -1,3 +1,5 @@
+> If you haven't already, set up your local clone of the `/code` repo by following our [Installation Instructions](https://www.burrrata.ch/ces-website/docs/en/sync/dev-env-setup)
+
 ## 1.3 - Replay Protection
 Replace our Client.js and Paypal.js files with your Client.js and Paypal.js implementations from Section 1.2.
 

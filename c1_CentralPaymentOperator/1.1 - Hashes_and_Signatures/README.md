@@ -1,8 +1,8 @@
+> If you haven't already, set up your local clone of the `/code` repo by following our [Installation Instructions](https://www.burrrata.ch/ces-website/docs/en/sync/dev-env-setup)
+
 # Section 1.1 - Hashes and Signatures
 
-Welcome to the first coding assignment of Cryptoeconomics.study! If you haven't already, set up your local clone of the `/code` repo by following our [Installation Instructions](https://www.burrrata.ch/ces-website/docs/en/sync/dev-env-setup)
-
-This assignment will walk you through using cryptographic hash functions, creating a public/private key pair, and verifying digital signatures. 
+Welcome to the first coding assignment of Cryptoeconomics.study! This assignment will walk you through using cryptographic hash functions, creating a public/private key pair, and verifying digital signatures. 
 
 ## Getting Started
 

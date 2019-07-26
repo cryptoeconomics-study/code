@@ -1,6 +1,8 @@
+> If you haven't already, set up your local clone of the `/code` repo by following our [Installation Instructions](https://www.burrrata.ch/ces-website/docs/en/sync/dev-env-setup)
+
 ## Payment Processor Overview
 
-We’re going to extend our Client from Section 1.1 to add **state**, **transactions**, and our **state transition function**. Replace our Client.js file with your Client.js implementation from Section 1.1 
+Here we’re going to extend our Client from Section 1.1 to add **state**, **transactions**, and our **state transition function**. Replace our Client.js file with your Client.js implementation from Section 1.1 
 
 ## Format Specifications
 
