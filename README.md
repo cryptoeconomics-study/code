@@ -73,6 +73,7 @@ Often the first steps are the hardest and we want to make sure you have a great 
 - solve your problem directly
 - document what the problem was and how we solved it so that in the future people can find those answers quickly
 - understand the problem and improve the course material so that it's more intuitive for everyone
+
 It's a win for everyone! So if you get stuck, don't worry about it. Just post your problem on the community forum [technical difficulties thread](https://forum.cryptoeconomics.study/t/technical-difficulties-thread/512) and we'll do our best to help :)
 
 ## Taking the Course
