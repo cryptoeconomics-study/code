@@ -1,12 +1,12 @@
 > The code challenges in this course build upon each other. It's highly recommended that you start from the beginning. If you haven't already, get started with our [Installation Instructions](https://www.burrrata.ch/ces-website/docs/en/sync/dev-env-setup).  
 
-
+<br />
 
 ## Payment Processor Overview
 
 Now we’re going to create a centralized server for our centralized payment processor (PayPal). The PayPal server will have a database (`state`) and a function to process transactions (`stateTransitionFunction`). We're also going to extend our client (`client.js`) from Section 1.1 to allow users to create transactions. 
 
-
+<br />
 
 ## Updating The Client To Generate Transactions
 
@@ -52,7 +52,7 @@ generateTx(to, amount, type) {
 }
 ```
 
-
+<br />
 
 ## Creating A Centralized Payments Processor
 
@@ -179,10 +179,12 @@ processTransaction(tx) {
 }
 ```
 
-
+<br />
 
 ## Testing
 
 This is where testing instructions will go. 
 
 Congrats on building your own Paypal client! But...it's not quite done yet. In section 1.3, we'll cover how our current Paypal client is vulnerable to **replay attacks** and we'll add some code to protect against these attacks!
+
+<br />
