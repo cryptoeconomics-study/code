@@ -15,13 +15,14 @@ class Paypal extends Client {
         this.transactions = []
     }
 
-    // Receives a transaction, checks if it's valid, and updates the state
-    function stateTransitionFunction(transaction) {
-        // TODO: 
-			  // - if a transaction is minting new tokens, check that the sender is the central payment operator (PayPal)
-        // - if a transaction is moving tokens from one wallet to another, check that the sender's account balance is greater than or equal to the amount of the transaction
-        // - if all checks pass, process the transaction (updated the account balances accordingly and add the transaction to this.transactions) 
-    }
+	// Checks and processes transactions
+	applyTransaction(tx) {
+		// TODO:
+        // - check the transaction signature
+		// - check the address is in the state, and if not, add it
+		// - mint tokens only if sender is PayPal
+		// - check that tx sender balances are >= tx amount
+	}
 }
 
 module.exports = Paypal;

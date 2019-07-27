@@ -28,10 +28,6 @@ class Paypal extends Client {
                 balance: 0
             }
         }
-        // Check that the nonce is correct for replay protection
-        //  if (tx.contents.nonce !== state[[tx.contents.from]].nonce + 1) {
-        //   throw new Error('Invalid nonce!')
-        // }
         // Mint coins **only if identity is PayPal**
         if (tx.contents.type === 'mint') {
             if(tx.contents.from !== this.wallet.address) {
@@ -45,7 +41,6 @@ class Paypal extends Client {
             this.state[tx.contents.from].balance -= tx.contents.amount
             this.state[tx.contents.to].balance += tx.contents.amount
         }
-        // state[[tx.contents.from]].nonce += 1
     }
 }
 
