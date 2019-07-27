@@ -62,7 +62,7 @@ $ cd code
 $ npm install
 ```
 
-> It is essential that you run `npm install` in the root directory of the project otherwise you will not be able to test your code!
+> It is essential that you run `npm install` in the root directory of the project otherwise you will not be able to test your code! You should not have to install or initialize npm or any other packages anywhere else in the project after this. 
 > If you have trouble with npm EACCESS errors try the following resources: 
 > - [NPM's official recommendations on solving EACCESS errors](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally)
 > - [Modifying permissions to remove EACCESS errors](https://stackoverflow.com/questions/50639690/on-npm-install-unhandled-rejection-error-eacces-permission-denied)
