@@ -183,8 +183,8 @@ processTransaction(tx) {
 
 ## Testing
 
-This is where testing instructions will go. 
+To check that things are working run `mocha test` in the root directory of the project (the `1.1` folder). The tests are set to all run at the same time, so don't worry if some pass and some don't. We actually recommend running the tests as you build rather than just at the end. This way you'll be sure that everything is working before creating things on top of that foundation.
 
-Congrats on building your own Paypal client! But...it's not quite done yet. In section 1.3, we'll cover how our current Paypal client is vulnerable to **replay attacks** and we'll add some code to protect against these attacks!
+If all your tests, pass.... congrats on building your own centralized payments processor! But...it's not quite done yet. In section 1.3, we'll cover how our current Paypal client is vulnerable to **replay attacks** and we'll add some code to protect against these attacks.
 
 <br />
