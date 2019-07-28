@@ -162,7 +162,7 @@ processTransaction(tx) {
 
 ## Testing
 
-As with `1.1`, we recommend building the first function, then applying it in `demo.js`, then running the tests to make sure it passes (`mocha`). If you need help our wonderful community is just a [click](https://forum.cryptoeconomics.study) away :)
+As with `1.1`, we recommend building the first function, then testing it out in `demo.js` to see how it works (`node demo.js`). Once you've got that working, then run the mocha tests to make sure it passes (`mocha`). If you need help our wonderful community is just a [click](https://forum.cryptoeconomics.study) away :)
 
 If all your tests, pass.... congrats on building your own centralized payments processor! But...it's not quite done yet. In section 1.3, we'll cover how our current Paypal client is vulnerable to **replay attacks** and we'll add some code to protect against these attacks.
 

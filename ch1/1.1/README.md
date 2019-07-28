@@ -64,7 +64,9 @@ This function should return true if the signature is valid and false if it is no
 
 Testing is a very important part of programming. Good testing will make you better. 
 
-To make sure that your code actually does what you think it does, try going through `demo.js` and filling out the story with the functions you just created. Doing so will not only allow you to check that your code is working correctly, but also let you see exactly what's happening via the console. 
+To make sure that your code actually does what you think it does, try going through `demo.js` and filling out the story with the functions you just created. Doing so will not only allow you to check that your code is working correctly, but also let you see exactly what's happening via the console. When you're ready run `node demo.js` in the directory for this section (`1.1`) to see the functions you're creating come to life!
+
+`$ node demo.js`
 
 When you think you have it work, all you have to do is run `mocha` in this directory (`1.1`) and you'll see if the tests pass. 
 
