@@ -14,7 +14,7 @@ class Paypal extends Client {
         // the history of transactions
         this.transactionHistory = []
     }
-
+  
 	// Checks that the sender of a transaction is the same as the signer
 	checkTxSignature(tx) {
 	  // TODO: 

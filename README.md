@@ -13,6 +13,11 @@ In order to install the packages you need for development you're going to have t
 
 You're going to need *Node.js* and *npm* to complete these assignments. Install both at once [here](https://nodejs.org/en/).
 
+### Mocha
+
+We're going to be using [Mocha](https://mochajs.org/) in order to run tests, so install the Mocha package globally by running: 
+`npm install -g mocha`
+
 ### Git and GitHub
 
 You'll also need a Github account and `git` installed on your computer.
@@ -24,11 +29,6 @@ You'll also need a Github account and `git` installed on your computer.
 	* [Set your username in Git.](https://help.github.com/en/articles/setting-your-username-in-git)
 	* [Set your commit email address in Git.](https://help.github.com/en/articles/setting-your-commit-email-address)
 	* [Authenticate with Github from Git](https://help.github.com/en/articles/set-up-git#next-steps-authenticating-with-github-from-git)
-
-### Mocha
-
-We're going to be using [Mocha](https://mochajs.org/) in order to run tests, so install the Mocha package globally by running: 
-`npm install -g mocha`
 
 ### Atom
 
@@ -52,8 +52,20 @@ This course assumes a familiarity with the basics of Javascript. If you're new t
 ## Local Development Environment
 
 Once you have the prerequisites installed without error, fork [this repository](https://github.com/cryptoeconomics-study/code) ([guide](https://help.github.com/en/articles/fork-a-repo)).
+
 Once you have your own fork at `github.com/YOUR_USERNAME/code`, create a local clone of your fork ([guide](https://help.github.com/en/articles/fork-a-repo#keep-your-fork-synced)).
+`git clone https://github.com/YOUR_USERNAME/code.git`
+
 `cd` into your local clone and run `npm install` to install all of the required dependencies.
+```
+$ cd code
+$ npm install
+```
+
+> It is essential that you run `npm install` in the root directory of the project otherwise you will not be able to test your code! You should not have to install or initialize npm or any other packages anywhere else in the project after this. 
+> If you have trouble with npm EACCESS errors try the following resources: 
+> - [NPM's official recommendations on solving EACCESS errors](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally)
+> - [Modifying permissions to remove EACCESS errors](https://stackoverflow.com/questions/50639690/on-npm-install-unhandled-rejection-error-eacces-permission-denied)
 
 ## Technical Difficulties?
 
@@ -61,6 +73,7 @@ Often the first steps are the hardest and we want to make sure you have a great 
 - solve your problem directly
 - document what the problem was and how we solved it so that in the future people can find those answers quickly
 - understand the problem and improve the course material so that it's more intuitive for everyone
+
 It's a win for everyone! So if you get stuck, don't worry about it. Just post your problem on the community forum [technical difficulties thread](https://forum.cryptoeconomics.study/t/technical-difficulties-thread/512) and we'll do our best to help :)
 
 ## Taking the Course
