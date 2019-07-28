@@ -1,97 +1,201 @@
-const Client = require('../Client.js')
-const Paypal = require('../Paypal.js';
+//const Client = require('../Client.js')
+const Client = require('../solution/Client.js')
+//const Paypal = require('../Paypal.js');
+const Paypal = require('../solution/Paypal.js');
 const EthCrypto = require('eth-crypto')
 const assert = require('assert')
 
-describe('Generate Transactions', function () {
-    let alice = new Client(),
-        bob = new Client,
-        tx,
-        unsignedTx
-    beforeEach(() => {
-        tx = alice.generateTx(bob.wallet.address, 10, 'send')
-    })
-
-    it('should properly set contents', function () {
-        unsignedTx = {
-            type: 'send',
-            amount: 10,
-            from: alice.wallet.address,
-            to: bob.wallet.address,
-        }
-        assert.deepEqual(tx.contents, unsignedTx)
-    });
-
-    it('should properly sign the contents', function () {
-        const sig = alice.sign(unsignedTx)
-        assert.equal(tx.sig, sig)
-    })
+// Test The Client
+describe('Client Tests', function() {
+	// Test Transaction Generation
+	describe('Generate Transactions', function () {
+		// init params
+		let alice = new Client(),
+			bob = new Client(),
+			tx,
+			unsignedTx
+		// run the tests
+		beforeEach(() => {
+			tx = alice.generateTx(bob.wallet.address, 10, 'send')
+		})
+		it('should properly set contents', function () {
+			unsignedTx = {
+				type: 'send',
+				amount: 10,
+				from: alice.wallet.address,
+				to: bob.wallet.address,
+			}
+			assert.deepEqual(tx.contents, unsignedTx)
+		});
+		it('should properly sign the contents', function () {
+			const sig = alice.sign(unsignedTx)
+			assert.equal(tx.sig, sig)
+		})
+	})
 })
 
-// **Uncomment these tests after passing the previous tests**
+// Test Paypal
+describe('Paypal Tests', function() {
+	// Test Contructor 
+	describe('Constructor', function () {
+		// init params
+		const paypal = new Paypal()
+		const genesis = {
+			[paypal.wallet.address]: {
+				balance: 1000000
+			}
+		}
+		// run the tests
+		it('should properly set this.state', function () {
+			assert.deepEqual(paypal.state, genesis)
+		});
+		it('should properly set this.txHistory', function () {
+			assert.deepEqual(paypal.txHistory, [])
+		})
+	})
 
-// describe('Paypal Constructor', function () {
-//     const paypal = new Paypal()
-//     const genesis = {
-//         [paypal.wallet.address]: {
-//             balance: 0
-//         }
-//     }
-//     it('should properly set this.state', function () {
-//         assert.deepEqual(paypal.state, genesis)
-//     });
-//     it('should properly set this.transactions', function () {
-//         assert.deepEqual(paypal.transactions, [])
-//     })
-// })
+	// Test Transaction Signature Check
+	describe('Transaction Signature Check', function() {
+		// init params
+		const paypal = new Paypal()
+		const alice = new Client()
+		const bob = new Client()
+		const aliceUnsignedTx = {
+			type: 'send',
+			amount: 10,
+			from: alice.wallet.address,
+			to: bob.wallet.address,
+		}
+		const invalidTx = {
+			contents: aliceUnsignedTx,
+			sig: bob.sign(aliceUnsignedTx)
+		}
+		const validTx = {
+			contents: aliceUnsignedTx,
+			sig: alice.sign(aliceUnsignedTx)
+		}
+		// run the tests
+		it('should fail because the sender is not Alice', function() {
+			assert.equal(false, paypal.checkTxSignature(invalidTx))
+		})
+		it('should pass if the sender and signer are the same', function() {
+			assert.equal(true, paypal.checkTxSignature(validTx))
+		})
+	})
 
-// **Uncomment these tests after passing the previous tests**
+	// Test User Address Check
+	describe('User Address Check', function() {
+		// init params
+		const paypal = new Paypal()
+		const bob = new Client()
+		const alice = new Client()
+		const aliceTx = alice.generateTx(bob.wallet.address, 10, 'send')
+		// run the tests
+		it('should pass even though Alice is not already in the newly created Paypal state', function() {
+			assert.equal(true, paypal.checkUserAddress(aliceTx))
+		})
+		it('Alice\'s address should have a 0 balance in the paypal state', function() {
+			assert.equal(0, paypal.state[alice.wallet.address].balance)
+		})
+	})
 
-// describe('Apply Transactions', function () {
-//     let paypal = new Paypal()
-//     let Alice = new Client()
-//     let Bob = new Client()
-//     const mintTx = paypal.generateTx(Alice.wallet.address, 100, 'mint')
-//     const sendTx = Alice.generateTx(Bob.wallet.address, 35, 'send')
-//     const badMintTx = Alice.generateTx(Alice.wallet.address, 100, 'mint')
-//     const badSigTx = {
-//         contents: mintTx.contents,
-//         sig: Alice.sign(mintTx.contents)
-//     }
-//     const badSendTx = Alice.generateTx(Bob.wallet.address, 150, 'send')
+	// Test TX Check
+	describe('TX Check', function() {
+		// init params
+		const paypal = new Paypal()
+		const bob = new Client()
+		const alice = new Client()
+		// run the tests
+		it('should return false because Alice has a balance of 0 with Paypal, but the transaction amount is 10', function() {
+			const aliceTx2Bob = alice.generateTx(bob.wallet.address, 10, 'send')
+			// we need to check the user address in order to add Alice and Bob to the state to then see that she has a 0 balance
+			paypal.checkUserAddress(aliceTx2Bob)
+			assert.equal(false, paypal.checkTxType(aliceTx2Bob))
+		})
+		it('should return false because Alice is just checking her balance and true would move her transaction through to processing in the state transition function', function() {
+			const aliceBalanceCheck = alice.generateTx(paypal.wallet.address, 0, 'check')
+			assert.equal(false, paypal.checkTxType(aliceBalanceCheck))
+		})
+		it('should return true because this is a test to test the tests', function() {
+			assert.equal(true, true)	
+		})
+		it('should return false because Alice is not authorized to mint tokens on the Paypal network', function() {
+			const invalidMint = alice.generateTx(alice.wallet.address, 1000, 'mint')
+			assert.equal(false, paypal.checkTxType(invalidMint))
+		})
+		it('should return true because Paypal is authorized to mint tokens on their own network', function() {
+			const validMint = paypal.generateTx(paypal.wallet.address, 1000, 'mint')
+			assert.equal(true, paypal.checkTxType(validMint))
+		})
+	})
 
-//     it('should properly apply "mint" transactions', function () {
-//         paypal.applyTransaction(mintTx)
-//         assert.deepEqual(paypal.state, {
-//             [Alice.wallet.address]: {
-//                 balance: 100
-//             },
-//             [paypal.wallet.address]: {
-//                 balance: 0
-//             }
-//         })
-//     });
-//     it('should properly apply "spend" transactions', function () {
-//         paypal.applyTransaction(sendTx)
-//         assert.deepEqual(paypal.state, {
-//             [Alice.wallet.address]: {
-//                 balance: 65
-//             },
-//             [Bob.wallet.address]: {
-//                 balance: 35
-//             },
-//             [paypal.wallet.address]: {
-//                 balance: 0
-//             }
-//         })
-//     });
-//     it('should throw Error when trying to mint from non-Paypal address', function () {
-//         assert.throws(()=>{paypal.applyTransaction(badMintTx)}, Error)
-//     })
-//     it('should throw Error for invalid signatures', function () {
-//         assert.throws(()=>{paypal.applyTransaction(badSigTx)}, Error)
-//     })
-//     it('should throw Error for insufficient balance', function () {
-//         assert.throws(() => { paypal.applyTransaction(badSendTx)}, Error)
-//     })
-// })
+	// Test Transaction Processing
+	describe('Transaction Processing', function() {
+		// init params
+		const paypal = new Paypal()
+		const alice = new Client()
+		const bob = new Client()
+		// run the tests
+		it('should return true because the processTransaction() function assumes that any tx it receives is valid', function() {
+			const aliceTx2Bob = alice.generateTx(bob.wallet.address, 10, 'send')
+			// we need to check the user address in order to add Alice and Bob to the state to then see that she has a 0 balance
+			paypal.checkUserAddress(aliceTx2Bob)
+			assert.equal(true, paypal.processTransaction(aliceTx2Bob))
+		})
+		it('should return true because the processTransaction() function assumes that any tx it receives is valid', function() {
+			const aliceTx2Alice = alice.generateTx(alice.wallet.address, 10, 'send')
+			// we need to check the user address in order to add Alice and Bob to the state to then see that she has a 0 balance
+			paypal.checkUserAddress(aliceTx2Alice)
+			assert.equal(true, paypal.processTransaction(aliceTx2Alice))
+		})
+	})
+
+	// Test State Transition Function
+	describe('State Transition Function', function() {
+		// init params
+		const paypal = new Paypal()
+		const alice = new Client()
+		const bob = new Client()
+		const aliceUnsignedTx = {
+			type: 'send',
+			amount: 10,
+			from: alice.wallet.address,
+			to: bob.wallet.address,
+		}
+		const invalidTx = {
+			contents: aliceUnsignedTx,
+			sig: bob.sign(aliceUnsignedTx)
+		}
+		// run the tests
+		it('should return false because the sender is not Alice', function() {
+			assert.equal(false, paypal.stateTransitionFunction(invalidTx))
+		})
+		it('should return false because Alice has a balance of 0 with Paypal, but the transaction amount is 10', function() {
+			const aliceTx2Bob = alice.generateTx(bob.wallet.address, 10, 'send')
+			// we need to check the user address in order to add Alice and Bob to the state to then see that she has a 0 balance
+			paypal.checkUserAddress(aliceTx2Bob)
+			assert.equal(false, paypal.stateTransitionFunction(aliceTx2Bob))
+		})
+		it('should return true because Paypal is authorized to mind tokens on their own network', function() {
+			const validMint = paypal.generateTx(paypal.wallet.address, 1000, 'mint')
+			assert.equal(true, paypal.stateTransitionFunction(validMint))
+		})
+		it('should return true because Paypal is minting tokens for Alice to spend, adding Alice and Bob to the state, and Alice is creating a valid transaction to Bob', function() {
+			const validMint = paypal.generateTx(alice.wallet.address, 1000, 'mint')
+			paypal.stateTransitionFunction(validMint)
+			const aliceTx2Bob = alice.generateTx(bob.wallet.address, 10, 'send')
+			// we need to check the user address in order to add Alice and Bob to the state to then see that she has a 0 balance
+			//paypal.checkUserAddress(aliceTx2Bob)
+			assert.equal(true, paypal.stateTransitionFunction(aliceTx2Bob))
+		})
+		it('should return true because Paypal is minting tokens for Alice to spend, adding Alice and Bob to the state, and Alice is creating a valid transaction to send tokens to Bob', function() {
+			const validMint = paypal.generateTx(alice.wallet.address, 1000, 'mint')
+			paypal.stateTransitionFunction(validMint)
+			const aliceTx2Bob = alice.generateTx(bob.wallet.address, 10, 'send')
+			paypal.stateTransitionFunction(aliceTx2Bob)
+			// the test above this just sent 10 tokens to Bob, and now we're sending 10 more
+			assert.equal(20, paypal.state[bob.wallet.address].balance)
+		})
+	})
+})
+

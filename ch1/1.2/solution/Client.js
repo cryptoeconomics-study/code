@@ -8,15 +8,13 @@ class Client {
     }
 
 	// Creates a keccak256/SHA3 hash of some data 
-    toHash(data) {
-				// ?! why is this JSON.stringify thing here, but not in 1.1 ???
-        const dataStr = JSON.stringify(data)
-        return EthCrypto.hash.keccak256(dataStr)
+    hash(data) {
+        return EthCrypto.hash.keccak256(data)
     }
 
 	// Signs a hash of data with the client's private key
     sign(message) {
-        const messageHash = this.toHash(message)
+        const messageHash = this.hash(message)
         return EthCrypto.sign(
             this.wallet.privateKey,
             messageHash
@@ -29,18 +27,27 @@ class Client {
         return signer === address
     }
 
-    // Generates new transactions
+	// Buys tokens from Paypal
+	buy(amount) {
+		// Let the user know that they just exchanged off-network goods for network tokens
+		console.log(`You bought ${amount} magic tokens from Paypal`)
+	}
+
+	// Generates new transactions
     generateTx(to, amount, type) {
+        // create an unsigned transaction
         const unsignedTx = {
             type: type,
             amount: amount,
             from: this.wallet.address,
             to: to,
         }
+        // create a signature of the transaction
         const tx = {
             contents: unsignedTx,
             sig: this.sign(unsignedTx)
         }
+        // return a Javascript object with the unsigned transaction and transaction signature
         return tx
     }
 }

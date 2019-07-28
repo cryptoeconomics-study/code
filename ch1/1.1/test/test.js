@@ -1,12 +1,13 @@
-const Client = require('../Client.js')
+//const Client = require('../Client.js')
+const Client = require('../solution/Client.js')
 const EthCrypto = require('eth-crypto')
 const assert = require('assert')
 
-// Testing tohash() function to hash random data
+// Testing hash() function to hash random data
 describe('Hash', function() {
     const data = Math.random();
     const client = new Client()
-    const output = client.toHash(data);
+    const output = client.hash(data);
     it('should return the hash of data', function(){
         assert.equal(EthCrypto.hash.keccak256(data), output);
     });

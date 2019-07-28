@@ -1,9 +1,58 @@
 > The code challenges in this course build upon each other. It's highly recommended that you start from the beginning. If you haven't already, get started with our [Installation Instructions](https://www.burrrata.ch/ces-website/docs/en/sync/dev-env-setup).  
 
+<br />
+
 ## Payment Processor Overview
 
 Now we’re going to create a centralized server for our centralized payment processor (PayPal). The PayPal server will have a database (`state`) and a function to process transactions (`stateTransitionFunction`). We're also going to extend our client (`client.js`) from Section 1.1 to allow users to create transactions. 
 
+<br />
+
+## Updating The Client To Generate Transactions
+
+### Transaction Format 
+
+Transactions for our payment processor will be in this format.
+
+#### Unsigned Transaction
+```
+// a javascript oject
+{
+  type: either 'send' or ‘mint’,
+  amount: amount to send
+  from: address of sender,
+  to: address of receiver,
+}
+```
+
+#### Transaction Signature
+```
+// a hash
+0x123456789abcdefghijklmnopqrstuvwxyz12345
+```
+
+#### Transaction
+```
+// a javascript object with both the unsigned tx and the tx signature
+{
+  contents: unsignedTx,
+  sig: signature,
+}
+```
+
+### Generating Transactions
+
+We need to add a function to our client that allows it to generate transactions in the format described above.
+```
+generateTx(to, amount, type) {
+  // TODO:
+  // - create an unsigned transaction
+  // - create a signature of the transaction
+  // - return a Javascript object with the unsigned transaction and transaction signature
+}
+```
+
+<br />
 
 ## Creating A Centralized Payments Processor
 
@@ -14,7 +63,7 @@ Our centralized payments processor has three main goals:
 
 ### State
 
-The payment processor's state will be an object mapping addresses (client public keys) to balances (an integer in a javascript object). Here is an example of what that state might look like: 
+The payment processor's state will be an object mapping addresses (client public keys) to balances (an integer in a javascript object). It might look something like this: 
 ```
 {
     0x129a2BF4B76f3e715E57b4B6CCE78cAf04C87465: {
@@ -29,77 +78,93 @@ The payment processor's state will be an object mapping addresses (client public
 }
 ```
 
+### History
+
+The history will keep track of all the transactions that the payments processor has ever processed. It might look something like this:
+```
+transactionHistory:
+ [ { contents: [Object],
+     sig:
+      '0xe6273560f0c3a7b9832d1ddb3caf9c18bdc2b2a4d97ea6d384557ec52b64ba5c2e86be63d2e57a3432aec6f269b1f36f93c12042c54f9321a80b27cccce81d6e1b' },
+   { contents: [Object],
+     sig:
+      '0xe113e2b71f810641ebb574df70fd4dfdfc3d5275cbc3d7659958f9fce0f846b22a31a821c38e8573ea7681d71e5dd091c7566a0fd982b2d8da235590a37ca6d51c' } ] 
+```
+
 ### State Transition Function
 
-Here comes the meat of the protocol. We have our state and we can generate our transactions. Now we need to create our state transition function,
+The state transition function determines how the system operates. It is the rules that define the system. In other contexts this is sometimes called the protocol or runtime. Here we are going to create a state transition function that allows our centralized payments processor to:
+- check that the transaction signature is valid
+- check that the transaction sender and receiver are in the state
+- check that the transaction type is valid
+- process the transaction and add it to the transaction history
 ```
- applyTransaction(transaction) {
-     //apply transaction to this.state
- }
-```
-This function applies a transaction to our Paypal client's state.
-Things to check for: 
-
-* Valid signature on the transaction
-* If the address we're sending to is not already in the state, create a new entry in the state.
-
-For `"spend"` transactions,
-
-* If sender doesn't have enough money, throw an `Error`
-
-For `"mint"` transactions,
-
-* Doesn't decrease balance of sender
-* If the sender is not Paypal, throw an `Error`
-
-
-## Updating The Client To Generate Transactions
-
-### Transaction Format 
-
-Unsigned Transaction: 
-```
-// a javascript oject
-{
-    type: either 'send' or ‘mint’,
-    amount: amount to send
-    from: address of sender,
-    to: address of receiver,
+// Checks if a transaction is valid, adds it to the transaction history, and updates the state of accounts and balances
+stateTransitionFunction(transaction) {
+  // TODO: 
+  // check that the transaction signature is valid
+  // check that the transaction sender and receiver are in the state
+  // check that the transaction type is valid
+  // process the transaction and add it to the transaction history
 }
 ```
 
-Transaction Signature:
-```
-// a hash
-0x123456789abcdefghijklmnopqrstuvwxyz12345
-```
+We're going to break each of these components into their own function so that they are easier to read, test, and use. This will also make it easier to add or remove functionality later if we want. 
 
-Transaction:
+#### Check Transaction Signature
 ```
-// a javascript object with both the unsigned tx and the tx signature
-{
-    contents: unsignedTx,
-    sig: signature
+// Checks if the user's address is already in the state, and if not, adds the user's address to the state
+checkTxSignature(tx) {
+	// TODO
+	// check the signature of a transaction
+	// return an error if the signature is invalid
+	// return true if the check passes
 }
 ```
 
-### Generating Transactions
-
-We need to add a function to our client that allows it to generate transactions in the format described above.
+#### Check User Address
 ```
-generateTx(to, amount, type) {
-		// TODO:
-		// - create an unsigned transaction
-		// - create a signature of the transaction
-		// - return a Javascript object with the unsigned transaction and transaction signature
+// Checks if the user's address is already in the state, and if not, adds the user's address to the state
+verifyUserAddress(tx) {
+  // TODO:
+  // check if the sender is in the state
+  // check if the receiver is in the state
+  // if either the sender or the receiver is not in the state, add their address to the state, initialize the balance at 0, and loop back through the function
+  // if the checks on both accounts pass (they're both in the state), return true
 }
 ```
+
+#### Check TX Type
+```
+// Checks the transaction type and ensures that the transaction is valid based on that type
+checkTxType(tx) {
+  // TODO:
+  // if mint, check that the sender is PayPal
+  // if check, print the user's balance to the console
+  // if send, check that the transaction amount is positive and the sender has an account balance greater than or equal to the transaction amount 
+  // if a check fails, return an error stating why
+  // if a check passes, return true
+}
+```
+
+#### Process Transaction
+```
+// Updates account balances according to a transaction and adds the transaction to the history
+processTransaction(tx) {
+  // TODO:
+  // decrease the balance of the transaction sender/signer
+  // increase the balance of the transaction receiver 
+  // add the transaction to the transaction history
+}
+```
+
+<br />
 
 ## Testing
 
-This is where testing instructions will go. 
+As with `1.1`, we recommend building the first function, then applying it in `demo.js`, then running the tests to make sure it passes (`mocha`). If you need help our wonderful community is just a [click](https://forum.cryptoeconomics.study) away :)
 
+If all your tests, pass.... congrats on building your own centralized payments processor! But...it's not quite done yet. In section 1.3, we'll cover how our current Paypal client is vulnerable to **replay attacks** and we'll add some code to protect against these attacks.
 
-## Completion
+<br />
 
-Congrats on building your own Paypal client! But...it's not quite done yet. In section 1.3, we'll cover how our current Paypal client is vulnerable to **replay attacks** and we'll add some code to protect against these attacks!

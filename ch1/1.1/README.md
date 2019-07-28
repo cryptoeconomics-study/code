@@ -22,7 +22,7 @@ We're going to start by creating a [client](https://en.wikipedia.org/wiki/Client
 
 ## Hashing
 
-Complete the `toHash` function.
+Complete the `hash` function.
 
 You should be able to pass in some data to the function and it should return the `keccak256` hash of that data. Use `EthCrypto.hash.keccak256`. 
 
@@ -41,7 +41,7 @@ Inside of our client's `constructor`, assign `this.wallet` to  [`EthCrypto.creat
 
 We use our private key in order to sign messages. Let's create a method function `sign(data)` in our Client class.
 
-This function should take in `data`, use `this.toHash` calculate the `hash` of that `data`, and then use [`EthCrypto.sign`](https://github.com/pubkey/eth-crypto#sign) and your wallet's private key to sign that hash. The function should return the resulting signature.
+This function should take in `data`, use `this.hash` calculate the hash of that data, and then use [`EthCrypto.sign`](https://github.com/pubkey/eth-crypto#sign) and your wallet's private key to sign that hash. The function should return the resulting signature.
 
 > *Hint*: `console.log(this.wallet)` to figure out how to access your private key. 
 > [relevant documentation](https://github.com/pubkey/eth-crypto#sign)
@@ -51,7 +51,6 @@ This function should take in `data`, use `this.toHash` calculate the `hash` of t
 Digital Signatures allow anyone to use someone's address to verify that that used their private key to sign a message. If someone sends us a signed message, we'd like our client to be able to verify that their signature is valid.
 
 Write a `verify` method that takes in 3 parameters (in this order):
-
 1. `signature` - Sender's signature
 2. `message` - Hash of the sender's message
 3. `sender` - Sender's Ethereum address 
@@ -63,9 +62,13 @@ This function should return true if the signature is valid and false if it is no
 
 ## Testing
 
-Testing is a very important part of programming. Good testing will make us better, checking that our code actually does what we think it does. Bad testing will make us sloppy. Don't be sloppy. Run the tests. Make sure your code actually works. To ease this burden, we've already written the tests for you. All you have to do is run `mocha test` in this directory (`1.1`). 
+Testing is a very important part of programming. Good testing will make you better. 
 
-`$ mocha test`
+To make sure that your code actually does what you think it does, try going through `demo.js` and filling out the story with the functions you just created. Doing so will not only allow you to check that your code is working correctly, but also let you see exactly what's happening via the console. 
+
+When you think you have it work, all you have to do is run `mocha` in this directory (`1.1`) and you'll see if the tests pass. 
+
+`$ mocha`
 
 If all the tests don't pass, it's ok. That's what tests are for! Test exist to show you where your code breaks so that you can improve it. If all your tests are always passing it means you're probably not writing very good tests. Keep trying until the tests pass. If you really need help, reach out to other students on the [forum](https://forum.cryptoeconomics.study).
 
