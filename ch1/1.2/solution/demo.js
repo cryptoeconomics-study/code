@@ -15,7 +15,7 @@ console.log('The hash of that message is: ', messageHash)
 // Creating Public/Private Keys
 console.log('\nCreating public/private key pairs to sign and verify messages.')
 
-// Init Alice 
+// Init Alice
 const alice = new Client()
 console.log('Init Alice\'s Client\n', alice)
 
@@ -60,16 +60,16 @@ const Paypal = require('./Paypal.js')
 const paypal = new Paypal()
 console.log(paypal)
 
-// Generate transaction 
+// Generate transaction
 const aliceTx = alice.generateTx(bob.wallet.address, 10, 'send')
 console.log('\nAlice sends a TX to Bob via the Paypal network\n', aliceTx)
 
-// Check transaction signature 
+// Check transaction signature
 const checkAliceTx = paypal.checkTxSignature(aliceTx)
 console.log('\nPaypal checks Alice\'s transaction to Bob. Is it valid?')
 console.log(checkAliceTx)
 
-// Check user address 
+// Check user address
 paypal.checkUserAddress(aliceTx)
 console.log('\nPaypal checks if Alice and Bob have already opened accounts with Paypal. They have not, so Paypal adds their addresses to it\'s state\n', paypal)
 
@@ -84,7 +84,7 @@ const mintAlice100Tokens = paypal.generateTx(alice.wallet.address, 100, 'mint')
 paypal.processTransaction(mintAlice100Tokens)
 console.log(paypal)
 
-// Check user balance 
+// Check user balance
 console.log('\nAlice checks her balance with Paypal')
 const checkAliceAccountBalance = alice.generateTx(paypal.wallet.address, 0, 'check')
 paypal.checkTxType(checkAliceAccountBalance)
