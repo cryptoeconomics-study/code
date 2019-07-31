@@ -7,7 +7,7 @@ class Client {
         this.wallet = EthCrypto.createIdentity()
     }
 
-	// Creates a keccak256/SHA3 hash of some data 
+	// Creates a keccak256/SHA3 hash of some data
     Hash(data) {
         const dataStr = JSON.stringify(data)
         return EthCrypto.hash.keccak256(data)
@@ -27,7 +27,7 @@ class Client {
         const signer = EthCrypto.recover(signature, messageHash)
         return signer === address
     }
-	
+
 	// Buys tokens from Paypal
 	buy(amount) {
 		// Let the user know that they just exchanged off-network goods for network tokens
@@ -35,7 +35,7 @@ class Client {
 	}
 
     // Generates new transactions
-    function generateTx(to, amount, type) {
+    generateTx(to, amount, type) {
         // TODO:
         // create an unsigned transaction
         // create a signature of the transaction

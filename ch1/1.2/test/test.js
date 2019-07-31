@@ -1,7 +1,7 @@
-//const Client = require('../Client.js')
-const Client = require('../solution/Client.js')
-//const Paypal = require('../Paypal.js');
-const Paypal = require('../solution/Paypal.js');
+const Client = require('../Client.js')
+//const Client = require('../solution/Client.js')
+const Paypal = require('../Paypal.js');
+//const Paypal = require('../solution/Paypal.js');
 const EthCrypto = require('eth-crypto')
 const assert = require('assert')
 
@@ -36,7 +36,7 @@ describe('Client Tests', function() {
 
 // Test Paypal
 describe('Paypal Tests', function() {
-	// Test Contructor 
+	// Test Contructor
 	describe('Constructor', function () {
 		// init params
 		const paypal = new Paypal()
@@ -117,7 +117,7 @@ describe('Paypal Tests', function() {
 			assert.equal(false, paypal.checkTxType(aliceBalanceCheck))
 		})
 		it('should return true because this is a test to test the tests', function() {
-			assert.equal(true, true)	
+			assert.equal(true, true)
 		})
 		it('should return false because Alice is not authorized to mint tokens on the Paypal network', function() {
 			const invalidMint = alice.generateTx(alice.wallet.address, 1000, 'mint')
