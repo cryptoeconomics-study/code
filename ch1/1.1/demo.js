@@ -1,19 +1,19 @@
-console.log('/////////////////////////////////////')
-console.log('// Hashing and Public/Private Keys //')
-console.log('/////////////////////////////////////')
+console.log("/////////////////////////////////////");
+console.log("// Hashing and Public/Private Keys //");
+console.log("/////////////////////////////////////");
 
 // Hashing A Message
-console.log('\nLet\'s hash a message!')
-const message = 'Hello World'
-console.log('The message is: ', message)
-//const messageHash = TODO 
+console.log("\nLet's hash a message!");
+const message = "Hello World";
+console.log("The message is: ", message);
+//const messageHash = TODO
 //console.log('The hash of that message is: ', messageHash)
 
 // Creating Public/Private Keys
 //console.log('\nCreating public/private key pairs to sign and verify messages.')
 
-// Init Alice 
-//const alice = TODO 
+// Init Alice
+//const alice = TODO
 //console.log('Init Alice\'s Client\n', alice)
 
 // Init Bob
@@ -34,7 +34,7 @@ console.log('The message is: ', message)
 //console.log('Alice\'s message: ', messageFromAlice)
 //const hashedMessageFromAlice = TODO
 //console.log('Now Alice has hashed her message:', hashedMessageFromAlice)
-//const signedMessageFromAlice = TODO 
+//const signedMessageFromAlice = TODO
 //console.log('Alice\'s message signature: ', signedMessageFromAlice)
 
 // Verifying Messages
@@ -46,5 +46,3 @@ console.log('The message is: ', message)
 
 // Note
 //console.log('\nWhile this may seem like a silly example, message signing and verification allows us to securely connect to websites, download files from servers, and run any public blockchain network!\n')
-
-
