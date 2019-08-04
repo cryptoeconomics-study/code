@@ -6,7 +6,6 @@ console.log('/////////////////////////////////')
 console.log('// Paypal Network Demo w Nonces//')
 console.log('/////////////////////////////////')
 
-const Paypal = require('./Paypal.js')
 
 // Setup Paypal network
 const paypal = new Paypal()
@@ -24,7 +23,7 @@ console.log(checkAliceTx)
 // Check the transaction's nonce
 const checkAliceTxNonce = paypal.checkAliceTxNonce(aliceTx)
 console.log('\nWhat about the nonce?');
-console.log(checkAliceTxNonce);'
+console.log(checkAliceTxNonce);
 
 // Check user address
 paypal.checkUserAddress(aliceTx)

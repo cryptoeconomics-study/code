@@ -55,8 +55,6 @@ console.log('/////////////////////////////////')
 console.log('// Initial Paypal Network Demo //')
 console.log('/////////////////////////////////')
 
-const Paypal = require('./Paypal.js')
-
 // Setup Paypal network
 const paypal = new Paypal()
 console.log(paypal)
