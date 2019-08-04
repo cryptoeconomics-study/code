@@ -3,6 +3,7 @@ const Client = require("./Client.js");
 
 // Our naive implementation of a centralized payment processor
 class Paypal extends Client {
+	// initialize Paypal's state
   constructor(genesis) {
     super();
     // the state of the network (accounts and balances)
@@ -15,10 +16,10 @@ class Paypal extends Client {
 				nonce: 0,
       }
     };
-    // the history of transactions
-    this.txHistory = [];
 		// pending transaciton bool
 		this.pendingTX = [];
+    // the history of transactions
+    this.txHistory = [];
   }
 
   // Checks that the sender of a transaction is the same as the signer
@@ -34,6 +35,31 @@ class Paypal extends Client {
       return true;
     }
   }
+
+	// Checks that the transaction nonce matches the nonce that Paypal has for the sender's account
+	checkTxNonce(tx) {
+		// if the transaction nonce is greater than the nonce Paypal has for that account
+    if (tx.contents.nonce > this.state[tx.contents.from].nonce) {
+			// and if the transaction is not already in the pendingTX pool
+      if (!(tx.contents.from in this.pendingTx)) {
+				// add the transaction to the pendingTX pool
+        this.pendingTX[tx.contents.from] = tx
+      }
+			// return false to signal that nothing more needs to be done and the transaction does not need to be processed
+      return false
+		}
+		// if the transaction nonce is the same as the nonce Paypal has for that account
+		if (tx.contentx.nonce === this.state[tx.contentx.from].nonce) {
+			// return true to signal that it is ok to proceed to the nex operation
+			return true
+		}
+		// if the transaction nonce is less than the nonce Paypal has for that account
+		if (tx.contents.nonce < this.state[tx.contents.from].nonce) {
+			// return false to signal that the transaction is invalid and the transaction should not be processed
+      return false
+    }
+
+	}
 
   // Checks if the user's address is already in the state, and if not, adds the user's address to the state
   checkUserAddress(tx) {
@@ -86,14 +112,36 @@ class Paypal extends Client {
 
   // Updates account balances according to a transaction and adds the transaction to the history
   processTransaction(tx) {
-    // decrease the balance of the transaction sender/signer
+    // first decrease the balance of the transaction sender/signer
     this.state[tx.contents.from].balance -= tx.contents.amount;
-    // increase the balance of the transaction receiver
+    // then increase the balance of the transaction receiver
     this.state[tx.contents.to].balance += tx.contents.amount;
-    // add the transaction to the transaction history
+		// then incriment the nonce of the transaction sender
+		this.state[tx.contents.from].nonce += 1;
+    // then add the transaction to the transaction history
     this.txHistory.push(tx);
     // return true once the transaction is processed
     return true;
+  }
+
+	// Processes pending TX
+  processPendingTx() {
+		// for every transaction in the pendingTx pool
+		for tx in this.pendingTx {
+			// get the sender address
+			let sender = this.pendingTx[tx].contents.from
+			// get the nonce Paypal has for that account
+			let paypalSenderNonce = this.accounts.sender.nonce
+			// get the nonce on the transaction
+			let txNonce = tx.contents.nonce
+			// if the nonce Paypal has for an account matches the nonce that is on the transaction
+			if	(paypalSenderNonce === txNonce) {
+				// delete the transaction from the pendingTx pool
+				delete this.pendingTx[tx];
+				// process the transaction
+				stateTransitionFunction(tx);
+			}
+		}
   }
 
   // Checks if a transaction is valid, adds it to the transaction history, and updates the state of accounts and balances
@@ -106,12 +154,14 @@ class Paypal extends Client {
         if (this.checkTxType(tx)) {
           // if all checks pass process the transaction and add it to the transaction history
           this.processTransaction(tx);
-          // return true if the state transition function is successful
+					// then process all the transactions in the pendingTx to see if any of them are valid now that the sender's nonce has been incrimented
+					processPendingTx()
+          // when everything is done return true if the state transition function is successful
           return true;
         }
       }
     }
-    // return false if one of the state transition checks fails
+    // return false if one of the state transition checks fail
     return false;
   }
 }

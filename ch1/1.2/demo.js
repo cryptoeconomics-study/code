@@ -1,5 +1,6 @@
 const EthCrypto = require("eth-crypto");
 const Client = require("./Client.js");
+const Paypal = require('./Paypal.js');
 
 console.log("/////////////////////////////////////");
 console.log("// Hashing and Public/Private Keys //");
