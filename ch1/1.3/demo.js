@@ -2,59 +2,72 @@ const EthCrypto = require('eth-crypto')
 const Client = require('./Client.js')
 const Paypal = require('./Paypal.js')
 
+
+// Paypal Network Demo
 console.log('/////////////////////////////////')
 console.log('// Paypal Network Demo w Nonces//')
 console.log('/////////////////////////////////')
 
-
 // Setup Paypal network
 const paypal = new Paypal()
+console.log('\nInitial Paypal network:')
+console.log(paypal)
+
+// Mint tokens for our users
+console.log('\nToday Paypal has a promotion that new users get 100 free tokens for signing up')
+
+// Alice signs up for Paypal
+const alice = new Client()
+const newUserAlice = paypal.generateTx(alice.wallet.address, 100, 'mint')
+paypal.processTx(newUserAlice)
+
+// Bob signs up for Paypal
+const bob = new Client()
+const newUserBob = paypal.generateTx(bob.wallet.address, 100, 'mint')
+paypal.processTx(newUserBob)
+
+// Carol signs up for Paypal
+const carol = new Client()
+const newUserCarol = paypal.generateTx(carol.wallet.address, 100, 'mint')
+paypal.processTx(newUserCarol)
+
+// Paypal's first users
+console.log('\nLet\'s look at the state of Paypal\'s network now that there are a few users:')
 console.log(paypal)
 
 // Generate transaction
 const aliceTx = alice.generateTx(bob.wallet.address, 10, 'send')
-console.log('\nAlice sends a TX to Bob via the Paypal network\n', aliceTx)
+console.log('\nAlice generates a transaction to send 10 tokens to Bob.')
+console.log(aliceTx)
 
-// Check the transaction's signature
-const checkAliceTx = paypal.checkTxSignature(aliceTx)
-console.log('\nPaypal checks Alice\'s transaction to Bob. Is it valid?')
-console.log(checkAliceTx)
+// Mandatory waiting period, because... YOLO
+console.log('\nPaypal does not process the transaction right away...')
 
-// Check the transaction's nonce
-const checkAliceTxNonce = paypal.checkAliceTxNonce(aliceTx)
-console.log('\nWhat about the nonce?');
-console.log(checkAliceTxNonce);
+// Generating another transaction
+console.log('\nAlice gets impatient and submits the transaction again, because clicking things is more satisfying than waiting.')
+const aliceTx2 = alice.generateTx(bob.wallet.address, 10, 'send')
+console.log(aliceTx2)
 
-// Check user address
-paypal.checkUserAddress(aliceTx)
-console.log('\nPaypal checks if Alice and Bob have already opened accounts with Paypal. They have not, so Paypal adds their addresses to it\'s state\n', paypal)
-
-// Check transaction type
-console.log('\nNow that Alice and Bob\'s addresses are in the Paypal network, Paypal checks to make sure that the transaction is valid. ')
-console.log('Is it? ')
-const checkAliceTxType = paypal.checkTxType(aliceTx)
-console.log('Alice has a balance of 0, but the transaction is trying to spend 10. In order to send tokens on the Paypal network Alice is going to have to have to buy them from Paypal Inc.')
-console.log('Alice really wants to use Paypal\'s network so she sells her right kidney and gets enough money to buy 100 of Paypal\'s magic tokens. Now Alice can finally participate in the network!')
-alice.buy(100)
-const mintAlice100Tokens = paypal.generateTx(alice.wallet.address, 100, 'mint')
-paypal.processTransaction(mintAlice100Tokens)
+// Paypal gets the transactions
+paypal.processTx(aliceTx2)
+console.log('\nDue to a network error, Paypal gets Alice\'s second transaction first and it goes in the pendingTx pool')
+console.log(paypal)
+paypal.processTx(aliceTx)
+console.log('\nPaypal then gets Alice\'s first transaction, processes it, and then processes any transactions in the pendingTx pool')
 console.log(paypal)
 
-// Check user balance
-console.log('\nAlice checks her balance with Paypal')
-const checkAliceAccountBalance = alice.generateTx(paypal.wallet.address, 0, 'check')
-paypal.checkTxType(checkAliceAccountBalance)
+// SNAFU
+console.log('\nOh no! Alice has actually sent Bob 20 tokens instead of the 10 she intended. What to do...')
+console.log('Lucky for Alice, Paypal has a cancel transaction feature. Yes that\'s right! Alice can cancel her transaction, for a small fee of course...')
+console.log('Since the fee is smaller than the extra 10 tokens Alice sent, she sends a cancelation transaction to Paypal and gets her tokens back')
+// note: nonces are zero indexed, so they start at 0, then 1, then 2, etc...
+const aliceTx2Cancellation = alice.generateTx(paypal.wallet.address, 0, 'cancel')
+paypal.processTx(aliceTx2Cancellation)
 
-// Note
-console.log('\n// Notice that all Alice can do is send a message to the network and ask what her balance is. With a central operator Alice is trusting that the balance that she is told (and the balance in the database) is accurate. With a public blockchain like Bitcoin or Ethereum Alice can see the entire history of the network and verify transactions herself to make sure that everything is accurate.')
-
-// Sending Tokens
-console.log('\nNow that Alice has verified that she has some tokens she wants to pay Bob back for the gallon of Ketchup he gave her. To do this Alice sends a transaction on the Paypal network')
-const payBobBackForKetchup = alice.generateTx(bob.wallet.address, 55, 'send')
-console.log(payBobBackForKetchup)
-console.log('\nPaypal sees this transaction and processes it.')
-paypal.stateTransitionFunction(payBobBackForKetchup)
+// All's well that ends well
+console.log('\nNow let\'s look at Paypal\'s state to see everyone\'s accounts and balances')
 console.log(paypal)
 
-console.log('\nYay! Now Bob has been made whole, Paypal sold some of their magic tokens, and Alice gets to live life on the edge with only one kidney. Everyone wins :)')
-console.log('')
+// Feature or bug? You decide!
+console.log('note that when you\'re using a centralized payment processor\'s database, they set the rules and can manipulate the state arbitrarily. This can be good if you\'re worried about regulatory compliance or the abilty to revert errors, but it also means that there are no gaurantees that your account, funds, or transactions are valid. With decentralized networks like Bitcoin and Ethereum transactions are immutable and no one can stop them, not even you. Feature or bug? You decide!')
+

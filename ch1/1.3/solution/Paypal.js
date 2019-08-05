@@ -12,7 +12,7 @@ class Paypal extends Client {
       }
     }
     this.transactions = []
-    this.invalidNonceTxs = {}
+    this.invalidNonceTxs = []
   }
   onReceive(tx) {
     this.applyTransaction(tx)
