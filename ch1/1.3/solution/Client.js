@@ -43,13 +43,13 @@ class Client {
       // add wallet nonce to tx
       nonce: this.nonce
     };
-    // increment the wallet's nonce parameter
-    this.nonce++;
     // create a signature of the transaction
     const tx = {
       contents: unsignedTx,
       sig: this.sign(unsignedTx)
     };
+    // increment the wallet's nonce parameter AFTER the tx object is created
+    this.nonce++;
     // return a Javascript object with the unsigned transaction and transaction signature
     return tx;
   }

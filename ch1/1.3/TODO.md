@@ -7,6 +7,9 @@ make sure all TX are Tx
 
 make sure that every single branch of every function is run in demo.js and/or run as a mocha test
 
+
+
+
 move Client.js, Paypal.js, and demo.js to the `solution` folder
 
 rewrite the files in the `1.3` folder to just have code comments and todo items
