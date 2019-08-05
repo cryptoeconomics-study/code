@@ -5,38 +5,21 @@ get ALE and prettier/eslint working so that it's easy to catch errors and format
 make sure all TX are Tx
 - figure out how to run a case sensitive search and replace in VIM
 
-make sure that every single branch of every function is run in demo.js and run as a mocha test
+make sure that every single branch of every function is run in demo.js and/or run as a mocha test
 
+move Client.js, Paypal.js, and demo.js to the `solution` folder
 
-make generateTx add a transaction to Paypal's pendingTx pool
-then make it up to Paypal to process transactions if/when they're ready
+rewrite the files in the `1.3` folder to just have code comments and todo items
 
+write mocha tests for everything (yes I know... should've done that as I was going, but I didn't know what the architecture needed to look like until I was done anyways)
 
-
-add BUY as a transaction type
-
-
-
+make sure that 1.2 flows into 1.3
 
 
 
 
+NOTE
+- the readme is not done yet, but I think it makes sense to get all the code for the chapter written FIRST, then write the readmes explaining the code
 
-
-
-
-rewrite stateTransitionFunction() so that it loops through all pendingTx and processes those that match the nonce that Paypal has for the sender
-then loops back through to check if any tx match the nonce that Paypal has for the sender
-and continues doing so until there are no more valid pending tx
-
-
-es6 (for i in X) search
-- for (let i in X) {}
-- https://www.tutorialspoint.com/es6/es6_arrays
-
-
-
-
-
-
-
+Question: why are the files titled with an upper-case letter?
+- lowercase seems easier
