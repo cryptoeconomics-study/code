@@ -170,7 +170,6 @@ class Paypal extends Client {
 					}
         }
       }
-    }
     // if any checks fail return false
     return false;
   }

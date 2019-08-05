@@ -13,11 +13,11 @@ class Paypal extends Client {
 				// Paypal's initial balance
 				balance: 1000000,
 				// Paypal's initial nonce
-				nonce: 0
+				// TODO
       }
     };
 		// pending transaciton bool
-		this.pendingTx = [];
+		// TODO
     // the history of transactions
     this.txHistory = [];
   }
@@ -62,26 +62,21 @@ class Paypal extends Client {
 	// note: we first have to make sure that the account is in Paypal's state before we can check it's nonce
 	checkTxNonce(tx) {
 		// if the transaction nonce is greater than the nonce Paypal has for that account
-    if (tx.contents.nonce > this.state[tx.contents.from].nonce) {
+		// TODO
 			// and if the transaction is not already in the pendingTX pool
-      if (!(tx.contents.from in this.pendingTx)) {
+			// TODO
 				// add the transaction to the pendingTx pool
-        this.pendingTx.push(tx)
-      }
+				// TODO
 			// return false to signal that nothing more needs to be done and the transaction does not need to be processed
-      return false
-		}
+			// TODO
 		// if the transaction nonce is the same as the nonce Paypal has for that account
-		if (tx.contents.nonce === this.state[tx.contents.from].nonce) {
+		// TODO
 			// return true to signal that it is ok to proceed to the nex operation
-			return true
-		}
+			// TODO
 		// if the transaction nonce is less than the nonce Paypal has for that account
-		if (tx.contents.nonce < this.state[tx.contents.from].nonce) {
+			// TODO
 			// return false to signal that the transaction is invalid and the transaction should not be processed
-      return false
-    }
-
+				// TODO
 	}
 
   // Check that the transaction is valid based on the type
@@ -118,40 +113,31 @@ class Paypal extends Client {
 		// if cancel
 		if (tx.contents.type === 'cancel') {
 			// get the nonce of the transaction to be cancelled
-			const cancelNonce = tx.contents.amount;
+			// TODO
 			// check pending transactions
-			for (let i in this.pendingTx) {
-				const pendingTx = this.pendingTx[i]
+				// TODO
 				// if the nonce of the transaction to be cancelled matches a pending transaction
-				if (pendingTx.contents.nonce === cancelNonce) {
+					// TODO
 					// make sure that the user who is cancelling the transaction is the same user who signed the transaction to be cancelled
-					if (pendingTx.contents.sender === tx.contents.sender) {
+					// TODO
 						// delete the old transaction
-						delete this.state.pendingTx[pendingTx]
-					}
-				}
-			}
+						// TODO
 			// check already processed transactions
-			for (let i in this.txHistory) {
-				const oldTx = this.txHistory[i]
+			// TODO
 				// if the nonce matches delete the transaction and reverse the old transaction
-				if (oldTx.contents.nonce === cancelNonce) {
+				// TODO
 					// make sure that the user who is cancelling the transaction is the same user who signed the transaction to be cancelled
-					if (oldTx.contents.from === tx.contents.from) {
+					// TODO
 						// take money back from the receiver
-						this.state[oldTx.contents.to].balance -= oldTx.contents.amount
+						// TODO
 						// give the sender back their money
-						this.state[oldTx.contents.from].balance += oldTx.contents.amount
-					}
-				}
-			}
+						// TODO
 			// add the cancelation transaction to the txHistory
-			this.txHistory.push(tx)
+			// TODO
 			// charge a fee to the user for cancelling a transaction
-			this.state[tx.contents.from].balance -= 1;
+			// TODO
 			// add that fee to Paypal's wallet balance
-			const paypalWallet = this.wallet.address
-			this.state[paypalWallet].balance += 1;
+			// TODO
 		}
   }
 
@@ -164,16 +150,15 @@ class Paypal extends Client {
         // check that the type is valid
         if (this.checkTxType(tx)) {
 					// check that the nonce is valid
-					if (this.checkTxNonce(tx)) {
+					// TODO
 						// if all checks pass return true
 						return true;
 					}
         }
       }
-    }
     // if any checks fail return false
     return false;
-  }
+    }
 
   // Updates account balances according to the transaction, then adds the transaction to the history
   applyTransaction(tx) {
@@ -192,25 +177,23 @@ class Paypal extends Client {
 	// Processes pending TX
   processPendingTx() {
 		// for every transaction in the pendingTx pool
-		for (let tx in this.pendingTx) {
+		// TODO
 			// get the sender address
-			let sender = this.pendingTx[tx].contents.from
+			// TODO
 			// get the nonce Paypal has for that account
-			let paypalSenderNonce = this.state[sender].nonce
+			// TODO
 			// get the nonce on the transaction
-			let txNonce = this.pendingTx[tx].contents.nonce
+			// TODO
 			// if the nonce Paypal has for an account matches the nonce that is on the transaction
-			if (paypalSenderNonce === txNonce) {
+			// TODO
 				// copy the pending transaction into memory
-				let txToProcess = this.pendingTx[tx]
+				// TODO
 				// delete the transaction from the pendingTx pool
-				delete this.pendingTx[tx];
+				// TODO
 				// process the transaction
-				this.processTx(txToProcess);
+				// TODO
 				// note: it is important to delete the transaction form the pendingTx pool BEFORE processing the transaction, otherwise we could get stuck in an infinite loop processing transactions and never deleting them
-			}
-		}
-  }
+	}
 
 	// Checks if a transaction is valid, then processes it, then checks if there are any valid transactions in the pending transaction pool and processes those too
 	processTx(tx) {
@@ -222,7 +205,6 @@ class Paypal extends Client {
 			this.processPendingTx()
 		}
 	}
-
 }
 
 // export the Paypal module so that other files can use it
