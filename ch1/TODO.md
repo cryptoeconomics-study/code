@@ -13,7 +13,6 @@ Would it make sense to rewrite 1.4 as explaining Plasma Cash rather than Bitcoin
 # Ch1 TODO List
 
 READMEs
-- update 1.2 README
 - write 1.3 README
 - update 1.5 README
 
@@ -36,6 +35,9 @@ Formatting
 
 
 # Ch1 DONE List
+
+READMEs
+- update 1.2 README
 
 1.2 Refactor
 - refactor Paypal.js to separate functions to check code, apply tx, and process tx (check, apply, check pending) so that it flows better into 1.3
