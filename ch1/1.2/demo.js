@@ -29,12 +29,8 @@ const carol = new Client();
 console.log("Init Carol's Client\n", carol);
 
 // Note
-console.log(
-  "Notice that on their own Alice, Bob, and Carol just have keys. In order to have accounts that can hold tokens they need to connect to a network. The Paypal network is one such network, but Bitcoin and Ethereum are also networks. The state of the network is what determines account balances, so how the network operates is very important to users."
-);
-console.log(
-  "Btw, you might notice that the public key is different than the address. This is because Ethereum addresses are generated from public, but are not exactly the same thing. Here's more info on that process: https://ethereum.stackexchange.com/questions/3542/how-are-ethereum-addresses-generated/3619#3619"
-);
+console.log("Notice that on their own Alice, Bob, and Carol just have keys. In order to have accounts that can hold tokens they need to connect to a network. The Paypal network is one such network, but Bitcoin and Ethereum are also networks. The state of the network is what determines account balances, so how the network operates is very important to users.");
+console.log("Btw, you might notice that the public key is different than the address. This is because Ethereum addresses are generated from public, but are not exactly the same thing. Here's more info on that process: https://ethereum.stackexchange.com/questions/3542/how-are-ethereum-addresses-generated/3619#3619");
 
 // Signing Messages
 console.log("\nSigning Messages");
@@ -47,9 +43,7 @@ console.log("Alice's message signature: ", signedMessageFromAlice);
 
 // Verifying Messages
 console.log("\nLet's help Bob verify Alice's message");
-console.log(
-  "To do this we need to verify the message signature and the message hash to see if they return Alice's address"
-);
+console.log("To do this we need to verify the message signature and the message hash to see if they return Alice's address");
 const isMessageFromAliceAuthentic = bob.verify(
   signedMessageFromAlice,
   hashedMessageFromAlice,
@@ -59,15 +53,11 @@ console.log("Is the message authentic?");
 console.log(isMessageFromAliceAuthentic);
 
 // Note
-console.log(
-  "\nWhile this may seem like a silly example, message signing and verification allows us to securely connect to websites, download files from servers, and run any public blockchain network!\n"
-);
+console.log("\nWhile this may seem like a silly example, message signing and verification allows us to securely connect to websites, download files from servers, and run any public blockchain network!\n");
 
 console.log("/////////////////////////////////");
 console.log("// Initial Paypal Network Demo //");
 console.log("/////////////////////////////////");
-
-const Paypal = require("./Paypal.js");
 
 // Setup Paypal network
 //const paypal = TODO
@@ -94,7 +84,7 @@ const Paypal = require("./Paypal.js");
 //console.log('Alice really wants to use Paypal\'s network so she sells her right kidney and gets enough money to buy 100 of Paypal\'s magic tokens. Now Alice can finally participate in the network!')
 //alice.buy(100)
 //const mintAlice100Tokens = TODO
-//paypal.processTransaction(mintAlice100Tokens)
+//paypal.processTx(mintAlice100Tokens)
 //console.log(paypal)
 //
 //// Check user balance
@@ -110,7 +100,7 @@ const Paypal = require("./Paypal.js");
 //const payBobBackForKetchup = TODO
 //console.log(payBobBackForKetchup)
 //console.log('\nPaypal sees this transaction and processes it.')
-//paypal.stateTransitionFunction(payBobBackForKetchup)
+//paypal.processTx(payBobBackForKetchup)
 //console.log(paypal)
 //
 //console.log('\nYay! Now Bob has been made whole, Paypal sold some of their magic tokens, and Alice gets to live life on the edge with only one kidney. Everyone wins :)')

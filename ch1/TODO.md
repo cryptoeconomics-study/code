@@ -19,9 +19,6 @@ Is the README format in 1.1 better where there's hints under each code section, 
 # Ch1 TODO List
 
 Demos
-- for the demos, it actually might make more sense to NOT have it commented out, that way the student is guided by an idea of what/how the program is supposed to work
-- this would make the main purpose of demo.js to guide the student and help them visualize the code vs being another challenge (which I think is the right way to go since we're introducing a lot more complexity into the code challenges now)
-- update 1.2 demo
 - write 1.3 demo
 
 Tests
@@ -37,6 +34,9 @@ Formatting
 
 
 # Ch1 DONE List
+
+DEMOS
+- update 1.2 demo
 
 READMEs
 - update 1.1 README

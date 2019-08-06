@@ -118,6 +118,7 @@ class Paypal extends Client {
 		if (this.checkTx(tx)) {
 			// apply the transaction to Paypal's state
 			this.applyTx(tx);
+		}
 	}
 }
 

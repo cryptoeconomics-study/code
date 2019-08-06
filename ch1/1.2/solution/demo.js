@@ -80,7 +80,7 @@ console.log('Alice has a balance of 0, but the transaction is trying to spend 10
 console.log('Alice really wants to use Paypal\'s network so she sells her right kidney and gets enough money to buy 100 of Paypal\'s magic tokens. Now Alice can finally participate in the network!')
 alice.buy(100)
 const mintAlice100Tokens = paypal.generateTx(alice.wallet.address, 100, 'mint')
-paypal.processTransaction(mintAlice100Tokens)
+paypal.processTx(mintAlice100Tokens)
 console.log(paypal)
 
 // Check user balance
@@ -96,7 +96,7 @@ console.log('\nNow that Alice has verified that she has some tokens she wants to
 const payBobBackForKetchup = alice.generateTx(bob.wallet.address, 55, 'send')
 console.log(payBobBackForKetchup)
 console.log('\nPaypal sees this transaction and processes it.')
-paypal.stateTransitionFunction(payBobBackForKetchup)
+paypal.processTx(payBobBackForKetchup)
 console.log(paypal)
 
 console.log('\nYay! Now Bob has been made whole, Paypal sold some of their magic tokens, and Alice gets to live life on the edge with only one kidney. Everyone wins :)')
