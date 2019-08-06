@@ -25,6 +25,9 @@ Essentially, once a company has a monopoly or something close to one, they can e
 </p>
 
 To get your feet wet in the wild world of business consulting, you're going to add a fee to your centralized payments operator. From now on all users need to pay a 1 token fee to use the network. Sound familiar? Yup, every crypto exchange does this. When there's healthy competition, this is fine. When a handful (or one) company has a monopoly, then things get weird...
+
+> TODO: Add a network fee to the state of the Paypal class and create a function that charges the sender of each transaction.
+
 ```
 // the history of transactions
 this.txHistory = [];
@@ -53,8 +56,6 @@ processTx(tx) {
 }
 ```
 
-> TODO: Add a network fee to the state of the Paypal class and create a function that charges the sender of each transaction.
-
 <br />
 
 ## Censorship
@@ -62,6 +63,9 @@ processTx(tx) {
 Censorship is one aspect that is inherent to centralized systems.
 
 Most blockchain protocols are designed to be censorship resistant, but most exchanges are not. While Bitcoin, Ethereum, and other blockchains might not be able to censor transactions, but regulated exchanges can stop users from buying or selling cryptocurrencies with fiat money.
+
+> TODO: Initialize an empty array `this.blacklist` in your constructor that stores blacklisted addresses. If we see a transaction that is sending money from a blacklisted address, we should throw an error.
+
 ```
 // pending transaciton bool
 this.pendingTx = [];
@@ -80,8 +84,6 @@ checkUserAddress(tx) {
 		// TODO
 ```
 
-> TODO: Initialize an empty array `this.blacklist` in your constructor that stores blacklisted addresses. If we see a transaction that is sending money from a blacklisted address, we should throw an error.
-
 <br />
 
 ## Fraud
@@ -92,6 +94,9 @@ To simulate fraudulent activity, let's write a method, `stealAllFunds()` in `Pay
 - this happens _a lot_ in blacknet markets, the most recent of which being [Nightmare](https://twitter.com/Patrick_Shortis/status/1156354524459802624) (btw that was name of the market, not the attack).
 
 But what if the central payments operator wanted to steal funds, but continue to operate. Turns out they can have their cake and eat it too! All they have to do is mint more tokens ;) This is far easier for a central operator because they can look like a legit operation on the outside, but really just print money for themselves whenever they wanted. Then they would never be accused of stealing, but they could [steal as much as they wanted](https://medium.com/@bitfinexed) #tether #Bitfinex. Yay magic internet money!
+
+> TODO: add functions to secretly mint tokens or steal funds
+
 ```
 // Removes funds from user accounts and adds them to Paypal's balance
 // - In reality, it would be far easier for Paypal to mint themselves extra cash so they could look like a legit operation on the outside, but really just print money for themselves whenever they wanted. Then they would never be accussed of stealing, but they could steal as much as they wanted. Yay magic internet money!
@@ -111,8 +116,6 @@ mintSecretFunds(amount) {
 	// TODO
 }
 ```
-
-> TODO: add functions to secretly mint tokens or steal funds
 
 <br />
 
