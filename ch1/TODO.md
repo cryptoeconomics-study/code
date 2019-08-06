@@ -10,6 +10,12 @@ Would it make sense to rewrite 1.4 as explaining Plasma Cash rather than Bitcoin
 
 
 
+# Questions
+
+Is the README format in 1.1 better where there's hints under each code section, or 1.5 where there's an explicit TODO over each code section?
+
+
+
 # Ch1 TODO List
 
 Demos

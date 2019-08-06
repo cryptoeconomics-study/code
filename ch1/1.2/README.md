@@ -123,7 +123,7 @@ checkTxType(tx) {
 #### Process Transaction
 ```
 // Updates account balances according to a transaction and adds the transaction to the history
-processTransaction(tx) {
+processTx(tx) {
   // TODO:
   // decrease the balance of the transaction sender/signer
   // increase the balance of the transaction receiver
