@@ -20,22 +20,29 @@ class Paypal extends Client {
 		this.pendingTx = [];
     // the history of transactions
     this.txHistory = [];
+		// the network fee
+		// TODO
 		// blacklist of accounts to be censored
-		this.blacklist = []
+		// TODO
   }
 
 	// Removes funds from user accounts and adds them to Paypal's balance
-	// - In reality it would be far easier for Paypal to mint themselves extra cash so they could look like a legit operation on the outside, but really just print money for themselves whenever they wanted. Then they would never be accussed of stealing, but they could steal as much as they wanted. Yay magic internet money!
+	// - In reality, it would be far easier for Paypal to mint themselves extra cash so they could look like a legit operation on the outside, but really just print money for themselves whenever they wanted. Then they would never be accussed of stealing, but they could steal as much as they wanted. Yay magic internet money!
   stealAllFunds() {
-    let sum = 0
-    for (let address in this.state) {
-      if (this.state[address]!==this.wallet.address) {
-        sum += this.state[address].balance
-        this.state[address].balance = 0
-      }
-    }
-    this.state[this.wallet.address].balance += sum
+		// sums up all the value in the network
+		// TODO
+				// removes everyone's balance
+				// TODO
+		// adds that value to Paypal's wallet
+		// TODO
   }
+
+	// Mints funds without adding the transaction to the history
+	// - In reality, this would not work as corporations have to get audited for tax purposes and whatnot, so they'd have to call this something clever like a network upgrade to invest in R&D or a "restructuring". In either case, there would be a glossy marketing campaign put together to make you feel good about it :)
+	mintSecretFunds(amount) {
+		// it's literally just 1 line of code...
+		// TODO
+	}
 
   // Checks that the sender of a transaction is the same as the signer
   checkTxSignature(tx) {
@@ -51,8 +58,12 @@ class Paypal extends Client {
     }
   }
 
-  // Check if the user's address is already in the state, and if not, add the user's address to the state
+  // Check if the user's address is on a blacklist. If not, check is the user's address is already in the state, and if not, add the user's address to the state
   checkUserAddress(tx) {
+		// check if the sender or receiver are on the blacklist
+		// TODO
+			// if the sender or receiver are banned, return false
+			// TODO
     // check if the sender is in the state
     if (!(tx.contents.to in this.state)) {
 			// if the sender is not in the state, add their address and initialize an empty balance and nonce of 0
@@ -226,8 +237,18 @@ class Paypal extends Client {
 		}
   }
 
+	// Charges a fee to use the network
+	chargeFee(tx) {
+		// removes the network fee from the sender's balance
+		// TODO
+		// adds the network fee to payment operator's balance
+		// TODO
+	}
+
 	// Checks if a transaction is valid, then processes it, then checks if there are any valid transactions in the pending transaction pool and processes those too
 	processTx(tx) {
+		// charege a fee to use the network
+		// TODO
 		// check the transaction is valid
 		if (this.checkTx(tx)) {
 			// apply the transaction to Paypal's state

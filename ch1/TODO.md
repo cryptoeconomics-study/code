@@ -21,6 +21,8 @@ Refactor 1.2
 - separate functions to check code, apply tx, and process tx (check, apply, check pending) so that it flows better into 1.3
 - rewrite TODO sections so that they have a consistent formatting (1.2 and 1.3 are not the same)
 
+1.5 FTPaypal doesn't really seem legit... I think this is better as a README item than a piece of code that doesn't really do anything. Code should do stuff. FTPaypal doesn't actually do anything because it can't receive transactions
+
 Test.js
 - make sure that every single branch of every function is run in demo.js and/or run as a mocha test
 
