@@ -25,6 +25,33 @@ Essentially, once a company has a monopoly or something close to one, they can e
 </p>
 
 To get your feet wet in the wild world of business consulting, you're going to add a fee to your centralized payments operator. From now on all users need to pay a 1 token fee to use the network. Sound familiar? Yup, every crypto exchange does this. When there's healthy competition, this is fine. When a handful (or one) company has a monopoly, then things get weird...
+```
+// the history of transactions
+this.txHistory = [];
+// the network fee
+// TODO
+
+// Charges a fee to use the network
+chargeFee(tx) {
+	// removes the network fee from the sender's balance
+	// TODO
+	// adds the network fee to payment operator's balance
+	// TODO
+}
+
+// Checks if a transaction is valid, then processes it, then checks if there are any valid transactions in the pending transaction pool and processes those too
+processTx(tx) {
+	// charege a fee to use the network
+	// TODO
+	// check the transaction is valid
+	if (this.checkTx(tx)) {
+		// apply the transaction to Paypal's state
+		this.applyTransaction(tx);
+		// check if any pending transactions are now valid, and if so process them too
+		this.processPendingTx()
+	}
+}
+```
 
 > TODO: Add a network fee to the state of the Paypal class and create a function that charges the sender of each transaction.
 
@@ -35,6 +62,23 @@ To get your feet wet in the wild world of business consulting, you're going to a
 Censorship is one aspect that is inherent to centralized systems.
 
 Most blockchain protocols are designed to be censorship resistant, but most exchanges are not. While Bitcoin, Ethereum, and other blockchains might not be able to censor transactions, but regulated exchanges can stop users from buying or selling cryptocurrencies with fiat money.
+```
+// pending transaciton bool
+this.pendingTx = [];
+// the history of transactions
+this.txHistory = [];
+// the network fee
+// TODO
+// blacklist of accounts to be censored
+// TODO
+
+// Check if the user's address is on a blacklist. If not, check is the user's address is already in the state, and if not, add the user's address to the state
+checkUserAddress(tx) {
+	// check if the sender or receiver are on the blacklist
+	// TODO
+		// if the sender or receiver are banned, return false
+		// TODO
+```
 
 > TODO: Initialize an empty array `this.blacklist` in your constructor that stores blacklisted addresses. If we see a transaction that is sending money from a blacklisted address, we should throw an error.
 
@@ -48,6 +92,25 @@ To simulate fraudulent activity, let's write a method, `stealAllFunds()` in `Pay
 - this happens _a lot_ in blacknet markets, the most recent of which being [Nightmare](https://twitter.com/Patrick_Shortis/status/1156354524459802624) (btw that was name of the market, not the attack).
 
 But what if the central payments operator wanted to steal funds, but continue to operate. Turns out they can have their cake and eat it too! All they have to do is mint more tokens ;) This is far easier for a central operator because they can look like a legit operation on the outside, but really just print money for themselves whenever they wanted. Then they would never be accused of stealing, but they could [steal as much as they wanted](https://medium.com/@bitfinexed) #tether #Bitfinex. Yay magic internet money!
+```
+// Removes funds from user accounts and adds them to Paypal's balance
+// - In reality, it would be far easier for Paypal to mint themselves extra cash so they could look like a legit operation on the outside, but really just print money for themselves whenever they wanted. Then they would never be accussed of stealing, but they could steal as much as they wanted. Yay magic internet money!
+stealAllFunds() {
+	// sums up all the value in the network
+	// TODO
+			// removes everyone's balance
+			// TODO
+	// adds that value to Paypal's wallet
+	// TODO
+}
+
+// Mints funds without adding the transaction to the history
+// - In reality, this would not work as corporations have to get audited for tax purposes and whatnot, so they'd have to call this something clever like a network upgrade to invest in R&D or a "restructuring". In either case, there would be a glossy marketing campaign put together to make you feel good about it :)
+mintSecretFunds(amount) {
+	// it's literally just 1 line of code...
+	// TODO
+}
+```
 
 > TODO: add functions to secretly mint tokens or steal funds
 

@@ -33,6 +33,7 @@ Formatting
 # Ch1 DONE List
 
 READMEs
+- update 1.1 README
 - update 1.2 README
 - write 1.3 README
 - update 1.5 README
