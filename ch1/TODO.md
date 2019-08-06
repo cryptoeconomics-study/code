@@ -12,10 +12,6 @@ Would it make sense to rewrite 1.4 as explaining Plasma Cash rather than Bitcoin
 
 # Ch1 TODO List
 
-READMEs
-- write 1.3 README
-- update 1.5 README
-
 Demos
 - for the demos, it actually might make more sense to NOT have it commented out, that way the student is guided by an idea of what/how the program is supposed to work
 - this would make the main purpose of demo.js to guide the student and help them visualize the code vs being another challenge (which I think is the right way to go since we're introducing a lot more complexity into the code challenges now)
@@ -38,6 +34,8 @@ Formatting
 
 READMEs
 - update 1.2 README
+- write 1.3 README
+- update 1.5 README
 
 1.2 Refactor
 - refactor Paypal.js to separate functions to check code, apply tx, and process tx (check, apply, check pending) so that it flows better into 1.3
