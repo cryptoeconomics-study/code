@@ -8,7 +8,7 @@ class Paypal extends Client {
     // the state of the network (accounts and balances)
     this.state = {
       [this.wallet.address]: {
-        balance: 0
+        balance: 1000000
       }
     };
     // the history of transactions
@@ -17,50 +17,86 @@ class Paypal extends Client {
 
   // Checks that the sender of a transaction is the same as the signer
   checkTxSignature(tx) {
-    // TODO
-    // check the signature of a transaction
-    // return an error if the signature is invalid
-    // return true if the check passes
+		// get the signature from the transaction
+		// TODO
+    // if the signature is invalid print an error to the console and return false
+		// TODO
+		// return true if the transaction is valid
+		// TODO
   }
 
   // Checks if the user's address is already in the state, and if not, adds the user's address to the state
   checkUserAddress(tx) {
-    // TODO
     // check if the sender is in the state
+		// TODO
+			// if the sender is not in the state, create an account for them
+			// TODO
     // check if the receiver is in the state
-    // if either the sender or the receiver is not in the state, add their address to the state, initialize the balance at 0
-    // if the checks on both accounts pass (they're both in the state), return true
+		// TODO
+			// if the receiver is not in the state, create an account for them
+			// TODO
+    // once the checks on both accounts pass (they're both in the state), return true
+		// TODO
   }
 
   // Checks the transaction type and ensures that the transaction is valid based on that type
   checkTxType(tx) {
-    // TODO
-    // if mint, check that the sender is PayPal
-    // if check, print the user's account balance to the console then return false so that the stateTransitionFunction does not process the tx
-    // if send, check that the transaction amount is positive and the sender has an account balance greater than or equal to the transaction amount
-    // if a check fails, return an error stating why
-    // if a check passes, return true
-  }
-
-  // Updates account balances according to the transaction and adds the transaction to the history
-  processTx(tx) {
-    // TODO:
-    // decrease the balance of the transaction sender/signer
-    // increase the balance of the transaction receiver
-    // add the transaction to the transaction history
+    // if the transaction type is 'mint'
+		// TODO
+			// check that the sender is PayPal
+			// TODO
+        // if the check fails, print an error to the concole stating why and return false so that the transaction is not processed
+				// TODO
+      // if the check passes, return true
+			// TODO
+    // if the transaction type is 'check'
+		// TODO
+			// print the balance of the sender to the console
+			// TODO
+      // return false so that the stateTransitionFunction does not process the tx
+			// TODO
+    // if the transaction type is 'send'
+		// TODO
+			// check that the transaction amount is positive and the sender has an account balance greater than or equal to the transaction amount
+        // if a check fails, print an error to the console stating why and return false
+				// TODO
+      // if the check passes, return true
+			// TODO
   }
 
   // Checks if a transaction is valid, adds it to the transaction history, and updates the state of accounts and balances
-  stateTransitionFunction(tx) {
-    // TODO:
+  checkTx(tx) {
     // check that the transaction signature is valid
-    // check that the transaction sender and receiver are in the state
-    // check that the transaction amount is valid
-    // if all checks pass process the transaction and add it to the transaction history
-    // return true if the state transition function is successful
-    // return false if one of the checks fail
+		// TODO
+      // check that the transaction sender and receiver are in the state
+			// TODO
+        // check that the transaction type is valid
+				// TODO
+          // if all checks pass return true
+					// TODO
+    // if any checks fail return false
+		// TODO
   }
+
+  // Updates account balances according to a transaction and adds the transaction to the history
+  applyTx(tx) {
+    // decrease the balance of the transaction sender/signer
+		// TODO
+    // increase the balance of the transaction receiver
+		// TODO
+    // add the transaction to the transaction history
+		// TODO
+    // return true once the transaction is processed
+		// TODO
+  }
+
+	// Process a transaction
+	processTx(tx) {
+		// check the transaction is valid
+		// TODO
+			// apply the transaction to Paypal's state
+			// TODO
+	}
 }
 
-// Export the module
 module.exports = Paypal;

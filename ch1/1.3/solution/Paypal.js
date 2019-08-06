@@ -175,7 +175,7 @@ class Paypal extends Client {
   }
 
   // Updates account balances according to the transaction, then adds the transaction to the history
-  applyTransaction(tx) {
+  applyTx(tx) {
     // first decrease the balance of the transaction sender/signer
     this.state[tx.contents.from].balance -= tx.contents.amount;
     // then increase the balance of the transaction receiver
@@ -216,7 +216,7 @@ class Paypal extends Client {
 		// check the transaction is valid
 		if (this.checkTx(tx)) {
 			// apply the transaction to Paypal's state
-			this.applyTransaction(tx);
+			this.applyTx(tx);
 			// check if any pending transactions are now valid, and if so process them too
 			this.processPendingTx()
 		}
