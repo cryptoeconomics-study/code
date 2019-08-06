@@ -1,22 +1,19 @@
-> The code challenges in this course build upon each other. It's highly recommended that you start from the beginning. If you haven't already, get started with our [Installation Instructions](https://www.burrrata.ch/ces-website/docs/en/sync/dev-env-setup).  
+> The code challenges in this course build upon each other. It's highly recommended that you start from the beginning. If you haven't already, get started with our [Installation Instructions](https://www.burrrata.ch/ces-website/docs/en/sync/dev-env-setup).
 
 <br />
 
 ## Payment Processor Overview
 
-Now we’re going to create a centralized server for our centralized payment processor (PayPal). The PayPal server will have a database (`state`) and a function to process transactions (`stateTransitionFunction`). We're also going to extend our client (`client.js`) from Section 1.1 to allow users to create transactions. 
+Now we’re going to create a centralized server for our centralized payment processor (PayPal). The PayPal server will have a database (`state`) and a function to process transactions (`processTx`). We're also going to extend our client (`client.js`) from Section 1.1 to allow users to create transactions.
 
 <br />
 
 ## Updating The Client To Generate Transactions
 
-### Transaction Format 
+To allow users to create transactions, we're going to give them a `generateTx()` function.
 
-Transactions for our payment processor will be in this format.
-
-#### Unsigned Transaction
+This will allow them to create a Javascript object with the transaction type, amount, sender (from), and receiver (to).
 ```
-// a javascript oject
 {
   type: either 'send' or ‘mint’,
   amount: amount to send
@@ -25,13 +22,13 @@ Transactions for our payment processor will be in this format.
 }
 ```
 
-#### Transaction Signature
+We'll then use our `sign()` function to hash and sign that Javascript object
 ```
 // a hash
 0x123456789abcdefghijklmnopqrstuvwxyz12345
 ```
 
-#### Transaction
+Then we'll put both of those into a Javascript object and that will be our transaction.
 ```
 // a javascript object with both the unsigned tx and the tx signature
 {
@@ -40,17 +37,7 @@ Transactions for our payment processor will be in this format.
 }
 ```
 
-### Generating Transactions
-
-We need to add a function to our client that allows it to generate transactions in the format described above.
-```
-generateTx(to, amount, type) {
-  // TODO:
-  // - create an unsigned transaction
-  // - create a signature of the transaction
-  // - return a Javascript object with the unsigned transaction and transaction signature
-}
-```
+Note: because our demo does not have networking capabilities we can't actually "send" the transaction from the user's client to Paypal's servers, so in the demo we just manually initialize that process.
 
 <br />
 
@@ -61,9 +48,11 @@ Our centralized payments processor has three main goals:
 - processing transactions
 - recording a history of transactions
 
+We're calling it Paypal, but the name is arbitrary. The goal is really just to show you how to create and manage a ledger of accounts and balances.
+
 ### State
 
-The payment processor's state will be an object mapping addresses (client public keys) to balances (an integer in a javascript object). It might look something like this: 
+The payment processor's state will be an object mapping addresses (client public keys) to balances (an integer in a javascript object). It might look something like this:
 ```
 {
     0x129a2BF4B76f3e715E57b4B6CCE78cAf04C87465: {
@@ -78,38 +67,22 @@ The payment processor's state will be an object mapping addresses (client public
 }
 ```
 
-### History
-
-The history will keep track of all the transactions that the payments processor has ever processed. It might look something like this:
-```
-transactionHistory:
- [ { contents: [Object],
-     sig:
-      '0xe6273560f0c3a7b9832d1ddb3caf9c18bdc2b2a4d97ea6d384557ec52b64ba5c2e86be63d2e57a3432aec6f269b1f36f93c12042c54f9321a80b27cccce81d6e1b' },
-   { contents: [Object],
-     sig:
-      '0xe113e2b71f810641ebb574df70fd4dfdfc3d5275cbc3d7659958f9fce0f846b22a31a821c38e8573ea7681d71e5dd091c7566a0fd982b2d8da235590a37ca6d51c' } ] 
-```
-
 ### State Transition Function
 
-The state transition function determines how the system operates. It is the rules that define the system. In other contexts this is sometimes called the protocol or runtime. Here we are going to create a state transition function that allows our centralized payments processor to:
-- check that the transaction signature is valid
-- check that the transaction sender and receiver are in the state
-- check that the transaction type is valid
+The state transition function determines how the system operates. It is the rules that define the system. In other contexts this is sometimes called the protocol or runtime. Here we are going to create a state transition function called `processTx()` that allows our centralized payments processor to:
+- check that the transaction is valid
 - process the transaction and add it to the transaction history
 ```
-// Checks if a transaction is valid, adds it to the transaction history, and updates the state of accounts and balances
-stateTransitionFunction(transaction) {
-  // TODO: 
-  // check that the transaction signature is valid
-  // check that the transaction sender and receiver are in the state
-  // check that the transaction type is valid
-  // process the transaction and add it to the transaction history
+// Process a transaction
+processTx(tx) {
+	// check the transaction is valid
+	// TODO
+		// apply the transaction to Paypal's state
+		// TODO
 }
 ```
 
-We're going to break each of these components into their own function so that they are easier to read, test, and use. This will also make it easier to add or remove functionality later if we want. 
+The rules as to what is and is not a "valid" transaction are up to you, so as the chapter develops we'll add more and more rules to check. To make this easier to build, test, and modify we're going to break each of these components into their own function.
 
 #### Check Transaction Signature
 ```
@@ -141,7 +114,7 @@ checkTxType(tx) {
   // TODO:
   // if mint, check that the sender is PayPal
   // if check, print the user's balance to the console
-  // if send, check that the transaction amount is positive and the sender has an account balance greater than or equal to the transaction amount 
+  // if send, check that the transaction amount is positive and the sender has an account balance greater than or equal to the transaction amount
   // if a check fails, return an error stating why
   // if a check passes, return true
 }
@@ -153,7 +126,7 @@ checkTxType(tx) {
 processTransaction(tx) {
   // TODO:
   // decrease the balance of the transaction sender/signer
-  // increase the balance of the transaction receiver 
+  // increase the balance of the transaction receiver
   // add the transaction to the transaction history
 }
 ```

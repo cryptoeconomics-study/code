@@ -12,10 +12,6 @@ Would it make sense to rewrite 1.4 as explaining Plasma Cash rather than Bitcoin
 
 # Ch1 TODO List
 
-1.2 Refactor
-- refactor Paypal.js to separate functions to check code, apply tx, and process tx (check, apply, check pending) so that it flows better into 1.3
-- rewrite TODO sections so that they have a consistent formatting (1.2 and 1.3 are not the same)
-
 READMEs
 - update 1.2 README
 - write 1.3 README
@@ -40,6 +36,10 @@ Formatting
 
 
 # Ch1 DONE List
+
+1.2 Refactor
+- refactor Paypal.js to separate functions to check code, apply tx, and process tx (check, apply, check pending) so that it flows better into 1.3
+- rewrite TODO sections so that they have a consistent formatting (1.2 and 1.3 are not the same)
 
 1.3, 1.4, and 1.5 code challenges
 
