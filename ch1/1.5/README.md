@@ -1,9 +1,9 @@
-> The code challenges in this course build upon each other. It's highly recommended that you start from the beginning. If you haven't already, get started with our [Installation Instructions](https://www.burrrata.ch/ces-website/docs/en/sync/dev-env-setup).  
+> The code challenges in this course build upon each other. It's highly recommended that you start from the beginning. If you haven't already, get started with our [Installation Instructions](https://www.burrrata.ch/ces-website/docs/en/sync/dev-env-setup).
 
 ## Fault Tolerance
 
-Fault Tolerance is a worry for architecturally centralized systems (e.g. a system with a single database and server). However, it's important to note that many of the systems that we might call "centralized" are architecturally decentralized (e.g. they have multiple databases and servers around the world) and are thus fault tolerant. 
-Here, we've implemented `FT_Paypal.js` an example of how we could make or central payment processor fault tolerant. 
+Fault Tolerance is a worry for architecturally centralized systems (e.g. a system with a single database and server). However, it's important to note that many of the systems that we might call "centralized" are architecturally decentralized (e.g. they have multiple databases and servers around the world) and are thus fault tolerant.
+Here, we've implemented `FT_Paypal.js` an example of how we could make or central payment processor fault tolerant.
 
 ## Rent Extraction
 
@@ -17,7 +17,7 @@ To demonstrate rent extraction, let's add a $1 processing fee on every transacti
 
 ## Censorship
 
-Censorship is one aspect that is inherent to centralized systems. 
+Censorship is one aspect that is inherent to centralized systems.
 
 Most blockchain protocols are designed to be censorship resistant.
 
@@ -29,5 +29,7 @@ When a central payment operator has control over everyone's assets, it can act m
 
 To simulate fraudulent activity, let's write a method, `stealAllFunds()` in `Paypal.js` which will iterate through every address in `this.state`, and sum up everyone else's balances, also setting all of their balance to 0. It will then take the sum of all of that money and add it to Paypal's balance, effectively stealing everyone's funds.
 
+NOTE: this happens _a lot_ in blacknet markets, the most recent of which being [Nightmare](https://twitter.com/Patrick_Shortis/status/1156354524459802624) (btw that was name of the market, not the attack).
 
+NOTE2: In reality it would be far easier for a central operator to mint themselves extra cash so they could look like a legit operation on the outside, but really just print money for themselves whenever they wanted. Then they would never be accussed of stealing, but they could [steal as much as they wanted](https://medium.com/@bitfinexed) #tether #Bitfinex. Yay magic internet money!
 

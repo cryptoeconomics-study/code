@@ -12,9 +12,11 @@ class Paypal extends Client {
     }
     this.transactions = []
     this.invalidNonceTxs = {}
+		// BLACKLIST
     this.blacklist = []
   }
 
+	// STEAL ALL FUNDS
   stealAllFunds() {
     let sum = 0
     for (let address in this.state) {
@@ -42,6 +44,7 @@ class Paypal extends Client {
   }
 
   applyTransaction(tx) {
+		// CENSOR TRANSACTIONS
     if(this.blacklist.includes(tx.contents.from)) {
       throw new Error('Blacklisted Address')
     }
