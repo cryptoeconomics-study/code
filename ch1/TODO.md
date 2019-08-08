@@ -19,7 +19,7 @@ Is the README format in 1.1 better where there's hints under each code section, 
 # Ch1 TODO List
 
 Demos
-- write 1.3 demo
+- write 1.5 demo
 
 Tests
 - update 1.2 tests
@@ -37,6 +37,7 @@ Formatting
 
 DEMOS
 - update 1.2 demo
+- write 1.3 demo
 
 READMEs
 - update 1.1 README
