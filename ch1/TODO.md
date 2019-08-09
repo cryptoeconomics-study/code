@@ -14,9 +14,6 @@ We want to use the airbnb javascript syntax right?
 - link to a simple Javascript UTXO model example on the internet
 - create a README that introduces the student to the tutorial, then let them know it's optional as a "bonus" item, but not critical to understanding the rest of the course
 
-Tests
-- refactor 1.5 tests
-
 Formatting
 - make sure there are no references to TX (only Tx to keep consistency and camel-case-ability)
 - make all javascript file names lowercase
@@ -34,6 +31,7 @@ Wrapping up
 Tests
 - refactor 1.2 tests
 - refactor 1.3 tests
+- refactor 1.5 tests
 
 DEMOS
 - update 1.2 demo
