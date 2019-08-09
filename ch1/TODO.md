@@ -11,12 +11,11 @@ We want to use the airbnb javascript syntax right?
 # Ch1 TODO List
 
 1.4
-- refactor UTXO coding challenge
-- update 1.4 README to reflect refactor
-- create demo
+- link to a simple Javascript UTXO model example on the internet
+- create a README that introduces the student to the tutorial, then let them know it's optional as a "bonus" item, but not critical to understanding the rest of the course
 
 Tests
-- update 1.2 tests
+- clean up 1.2 tests to be more DRY
 - write 1.3 tests
 - write 1.4 tests
 - write 1.5 tests
@@ -26,9 +25,15 @@ Formatting
 - make all javascript file names lowercase
 - add a formatting/syntax guide to the initial dev setup README
 
+Wrapping up
+- make sure that all tests are set to test the student code vs the solutions
+
 
 
 # Ch1 DONE List
+
+Tests
+- update 1.2 tests
 
 DEMOS
 - update 1.2 demo
