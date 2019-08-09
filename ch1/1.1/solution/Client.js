@@ -1,4 +1,4 @@
-const EthCrypto = require("eth-crypto");
+const EthCrypto = require('eth-crypto');
 
 // The client that end-users will use to interact with our central payment processor
 class Client {
