@@ -143,5 +143,5 @@ financialAttrition(
 );
 
 console.log(
-  "\nLooks like most of Paypal's users are now too broke or are outlawed from using the network... Hmmm if only there was a way for everyone to transact without a central operator. Oh wait, there is! Bitcoin, Ethereum, and other crypto-currencies allow users to send and receive value with (relatively) low fees. Best of all, anyone can participate! In the next chapter we'll explore what some of these networks look like :)",
+  "\nLooks like most of Paypal's users are now too broke or too outlawed to use the network... Hmmm if only there was a way for everyone to transact without a central operator. Oh wait, there is! Bitcoin, Ethereum, and other crypto-currencies allow users to send and receive value with (relatively) low fees. Best of all, anyone can participate! In the next chapter we'll explore what some of these networks look like :)",
 );
