@@ -24,6 +24,7 @@ Tests
 Formatting
 - make sure there are no references to TX (only Tx to keep consistency and camel-case-ability)
 - make all javascript file names lowercase
+- add a formatting/syntax guide to the initial dev setup README
 
 
 
