@@ -1,35 +1,27 @@
-# 1.4 UTXO Model
-
-Would it make sense to rewrite 1.4 as explaining Plasma Cash rather than Bitcoin?
-- easy metaphor: spend cash => get change
-- easier to implement in a ~ realistic way: keep track of who's keys control which pieces of cash in a state
-	- opportunity to revisit merkle trees
-- real world use case: become a central operator that runs a plasma cash node
-- make more sense in the context of extending our current central payments operator
-- makes sense in the context of 1.5 because the potential for an exit scam shows the need for a cryptoeconomic exit mechanism
-
-
-
 # Questions
 
 Is the README format in 1.1 better where there's hints under each code section, or 1.5 where there's an explicit TODO over each code section?
 
 Should we use es6 syntax?
 
+We want to use the airbnb javascript syntax right?
+
 
 
 # Ch1 TODO List
 
-Demos
-- write 1.5 demo
+1.4
+- refactor UTXO coding challenge
+- update 1.4 README to reflect refactor
+- create demo
 
 Tests
 - update 1.2 tests
 - write 1.3 tests
+- write 1.4 tests
 - write 1.5 tests
 
 Formatting
-- get ALE and prettier/eslint working so that it's easy to catch errors and format the code
 - make sure there are no references to TX (only Tx to keep consistency and camel-case-ability)
 - make all javascript file names lowercase
 
@@ -40,12 +32,16 @@ Formatting
 DEMOS
 - update 1.2 demo
 - write 1.3 demo
+- write 1.5 demo
 
 READMEs
 - update 1.1 README
 - update 1.2 README
 - write 1.3 README
 - update 1.5 README
+
+Formatting
+- get ALE and prettier/eslint working so that it's easy to catch errors and format the code
 
 1.2 Refactor
 - refactor Paypal.js to separate functions to check code, apply tx, and process tx (check, apply, check pending) so that it flows better into 1.3
