@@ -38,9 +38,9 @@ const newUserDave = paypal.generateTx(dave.wallet.address, 1000, 'mint');
 paypal.processTx(newUserDave);
 
 // Earl signs up for Paypal
-const earl = new Client();
-const newUserEarl = paypal.generateTx(earl.wallet.address, 1000, 'mint');
-paypal.processTx(newUserEarl);
+const eve = new Client();
+const newUserEve = paypal.generateTx(eve.wallet.address, 1000, 'mint');
+paypal.processTx(newUserEve);
 
 // Frank signs up for Paypal
 const frank = new Client();
@@ -109,7 +109,7 @@ financialAttrition(
   bob,
   carol,
   dave,
-  earl,
+  eve,
   frank,
   george,
   harry,
@@ -119,5 +119,29 @@ financialAttrition(
 
 // The truth will set you free
 console.log(
-  "Wow! Shocking... Paypal made money while everyone else's balance went down. One could argue that this is because Paypal provides a valuable service and is compensated for that, which is a fair and reasonable this to say. IF, however, Paypal gained a monopoly and started raising the fees... well then that would be a different story. Try playing with the model to see what happens with different fees.",
+  "\nWow! Shocking... Paypal made money while everyone else's balance went down. One could argue that this is because Paypal provides a valuable service and is compensated for that, which is a fair and reasonable this to say. IF, however, Paypal gained a monopoly and started raising the fees... well then that would be a different story. Try playing with the model to see what happens with different fees.",
+);
+
+// The plot thickens...
+console.log(
+  "\nWell that was fun. But wait! There's more. It turns out that Eve was actually a space pirate, and Paypal is forbidden from serving space pirates. Upon hearing this news, Paypal adds Eve's address to the blacklist (duhn duhn duhn...). Eve is now banned from using Paypal or their services.",
+);
+paypal.blacklist.push(eve.wallet.address);
+
+console.log("Let's see what happens now...");
+financialAttrition(
+  alice,
+  bob,
+  carol,
+  dave,
+  eve,
+  frank,
+  george,
+  harry,
+  ian,
+  jill,
+);
+
+console.log(
+  "\nLooks like most of Paypal's users are now too broke or are outlawed from using the network... Hmmm if only there was a way for everyone to transact without a central operator. Oh wait, there is! Bitcoin, Ethereum, and other crypto-currencies allow users to send and receive value with (relatively) low fees. Best of all, anyone can participate! In the next chapter we'll explore what some of these networks look like :)",
 );
