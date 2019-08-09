@@ -65,7 +65,10 @@ class Paypal extends Client {
   // Check if the user's address is on a blacklist. If not, check is the user's address is already in the state, and if not, add the user's address to the state
   checkUserAddress(tx) {
     // check if the sender or receiver are on the blacklist
-    if (this.blacklist.includes(tx.contents.from || tx.contents.to)) {
+    if (
+      this.blacklist.includes(tx.contents.from)
+      || this.blacklist.includes(tx.contents.to)
+    ) {
       console.log('BLACKLIST ERROR');
       console.log(this.blacklist);
       console.log(tx.contents);
@@ -267,7 +270,11 @@ class Paypal extends Client {
       this.applyTx(tx);
       // check if any pending transactions are now valid, and if so process them too
       this.processPendingTx();
+      // return true if the transaction is successfully processed
+      return true;
     }
+    // return false if the transaction failed for any reason
+    return false;
   }
 }
 

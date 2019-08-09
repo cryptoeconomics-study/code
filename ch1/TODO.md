@@ -15,10 +15,7 @@ We want to use the airbnb javascript syntax right?
 - create a README that introduces the student to the tutorial, then let them know it's optional as a "bonus" item, but not critical to understanding the rest of the course
 
 Tests
-- clean up 1.2 tests to be more DRY
-- write 1.3 tests
-- write 1.4 tests
-- write 1.5 tests
+- refactor 1.5 tests
 
 Formatting
 - make sure there are no references to TX (only Tx to keep consistency and camel-case-ability)
@@ -27,13 +24,16 @@ Formatting
 
 Wrapping up
 - make sure that all tests are set to test the student code vs the solutions
+- make sure all READMEs, tests, and coding challenges follow the same format
+- publish to website and merge my fork of the code repo to the main code repo
 
 
 
 # Ch1 DONE List
 
 Tests
-- update 1.2 tests
+- refactor 1.2 tests
+- refactor 1.3 tests
 
 DEMOS
 - update 1.2 demo
