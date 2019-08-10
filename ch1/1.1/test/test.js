@@ -1,47 +1,51 @@
-const Client = require("../Client.js");
-const EthCrypto = require("eth-crypto");
-const assert = require("assert");
+const EthCrypto = require('eth-crypto');
+const assert = require('assert');
+const Client = require('../client.js');
 
 // Test The Client
-describe("Client Tests", function() {
+describe('Client Tests', () => {
   // Testing hash() function to hash random data
-  describe("Hash", function() {
+  describe('Hash', () => {
     const data = Math.random();
     const client = new Client();
     const output = client.hash(data);
-    it("should return the hash of data", function() {
+    it('should return the hash of data', () => {
       assert.equal(EthCrypto.hash.keccak256(data), output);
     });
   });
 
   // Testing constructor() to initialize this.wallet with EthCrypto.createIdentity()
-  describe("Wallet", function() {
+  describe('Wallet', () => {
     const client = new Client();
-    const wallet = client.wallet;
-    it("should set this.wallet", function() {
+    const { wallet } = client;
+    it('should set this.wallet', () => {
       assert(wallet);
     });
-    it("should set this.wallet using createIdentity()", function() {
+    it('should set this.wallet using createIdentity()', () => {
       assert(wallet.address && wallet.publicKey && wallet.privateKey);
     });
   });
 
   // Testing sign() function to use this.wallet to sign random data
-  describe("Digital Signatures", function() {
+  describe('Digital Signatures', () => {
     const client = new Client();
     const message = Math.random();
     const signature = EthCrypto.sign(
       client.wallet.privateKey,
-      EthCrypto.hash.keccak256(message)
+      EthCrypto.hash.keccak256(message),
     );
-    it("should set successfully sign messages", function() {
+    it('should set successfully sign messages', () => {
       assert.equal(client.sign(message), signature);
     });
   });
 
   // Testing verify() to check signatures from randomly initialized  wallets
-  describe("Verify Signatures", function() {
-    let Alice, Bob, Kevin, message, signature;
+  describe('Verify Signatures', () => {
+    let Alice;
+    let Bob;
+    let Kevin;
+    let message;
+    let signature;
     beforeEach(() => {
       message = Math.random();
       Alice = new Client();
@@ -49,23 +53,22 @@ describe("Client Tests", function() {
       Kevin = new Client();
       signature = Alice.sign(message);
     });
-
-    it("should be considered valid", function() {
+    it('should be considered valid', () => {
       assert(
         Kevin.verify(
           signature,
           EthCrypto.hash.keccak256(message),
-          Alice.wallet.address
-        )
+          Alice.wallet.address,
+        ),
       );
     });
-    it("should be considered invalid", function() {
+    it('should be considered invalid', () => {
       assert(
         !Kevin.verify(
           signature,
           EthCrypto.hash.keccak256(message),
-          Bob.wallet.address
-        )
+          Bob.wallet.address,
+        ),
       );
     });
   });
