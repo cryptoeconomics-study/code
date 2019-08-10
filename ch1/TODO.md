@@ -17,6 +17,12 @@ Formatting
 - make all javascript file names lowercase
 - add a formatting/syntax guide to the initial dev setup README
 
+Formatting TODO
+- 1.2 (renamed, but still needs to be formatted)
+- 1.3
+- 1.4
+- 1.5
+
 Wrapping up
 - make sure that all tests are set to test the student code vs the solutions
 - make sure all READMEs, tests, and coding challenges follow the same format
