@@ -10,11 +10,9 @@ We want to use the airbnb javascript syntax right?
 
 # Ch1 TODO List
 
-1.4
-- link to a simple Javascript UTXO model example on the internet
-- create a README that introduces the student to the tutorial, then let them know it's optional as a "bonus" item, but not critical to understanding the rest of the course
-
 Formatting
+- make sure there are no english language typos
+- make sure that the english grammar is concise and readable (READMEs, code comments, etc...)
 - make sure there are no references to TX (only Tx to keep consistency and camel-case-ability)
 - make all javascript file names lowercase
 - add a formatting/syntax guide to the initial dev setup README
@@ -27,6 +25,9 @@ Wrapping up
 
 
 # Ch1 DONE List
+
+1.4
+- create a README that introduces the student to the tutorial, then let them know it's optional as a "bonus" item, but not critical to understanding the rest of the course
 
 Tests
 - refactor 1.2 tests
