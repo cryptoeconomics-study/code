@@ -1,4 +1,4 @@
-> This code challenge is a bonus round. It does not build on the prior course work and is not neccessary to understand future course work. That being said, UTXOs are a common thing in the world of cryptoeconomics and blockchains, so we recommend recommend that you explore them.
+> This code challenge is a bonus round. It does not build on the prior course work and is not necessary to understand future course work. That being said, UTXOs are a common thing in the world of cryptoeconomics and blockchains, so we recommend recommend that you explore them.
 
 ## UTXOs
 
@@ -14,5 +14,5 @@ A simple [UTXO example](https://github.com/bitcoinjs/utxo) in Javascript. Their 
 
 ### [How To Code A Bitcoin Blockchain In Javascript](https://blockgeeks.com/guides/code-a-bitcoin-blockchain-in-javascript/)
 
-As advertised, a tutorial on how to code a bitcoin blockchain in javascript. [Blockgeeks](https://blockgeeks.com/) has more great content, so we recommend you check them out if you want a different perspective on many of the concepts explored in this course.
+As advertised, a tutorial on how to code a bitcoin blockchain in Javascript. [Blockgeeks](https://blockgeeks.com/) has more great content, so we recommend you check them out if you want a different perspective on many of the concepts explored in this course.
 
