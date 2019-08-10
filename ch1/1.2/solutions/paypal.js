@@ -66,7 +66,7 @@ class Paypal extends Client {
       // print the balance of the sender to the console
       const user = tx.contents.from;
       console.log(`Your balance is: ${this.state[user].balance}`);
-      // return false so that the stateTransitionFunction does not process the tx
+      // return false so that Paypal's processTx function does not process the tx
       return false;
     }
     // if the transaction type is 'send'

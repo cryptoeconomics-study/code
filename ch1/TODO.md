@@ -11,14 +11,13 @@ We want to use the airbnb javascript syntax right?
 # Ch1 TODO List
 
 Formatting
+- make sure there are no swap files that are lingering in the section folders
 - make sure there are no english language typos
 - make sure that the english grammar is concise and readable (READMEs, code comments, etc...)
 - make sure there are no references to TX (only Tx to keep consistency and camel-case-ability)
-- make all javascript file names lowercase
 - add a formatting/syntax guide to the initial dev setup README
 
 Formatting TODO
-- 1.2 (renamed, but still needs to be formatted)
 - 1.3
 - 1.4
 - 1.5
@@ -33,7 +32,11 @@ Wrapping up
 # Ch1 DONE List
 
 Formatting
+- make all javascript file names lowercase
+
+Formatting
 - 1.1
+- 1.2
 
 1.4
 - create a README that introduces the student to the tutorial, then let them know it's optional as a "bonus" item, but not critical to understanding the rest of the course

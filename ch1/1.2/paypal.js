@@ -3,7 +3,7 @@ const Client = require('./client.js');
 
 // Our naive implementation of a centralized payment processor
 class Paypal extends Client {
-  constructor(genesis) {
+  constructor() {
     super();
     // the state of the network (accounts and balances)
     this.state = {
