@@ -1,4 +1,4 @@
-const EthCrypto = require("eth-crypto");
+const EthCrypto = require('eth-crypto');
 
 // The client that end-users will use to interact with our central payment processor
 class Client {
@@ -36,17 +36,17 @@ class Client {
   generateTx(to, amount, type) {
     // create an unsigned transaction
     const unsignedTx = {
-      type: type,
-      amount: amount,
+      type,
+      amount,
       from: this.wallet.address,
-      to: to,
+      to,
       // add wallet nonce to tx
-      nonce: this.nonce
+      nonce: this.nonce,
     };
     // create a signature of the transaction
     const tx = {
       contents: unsignedTx,
-      sig: this.sign(unsignedTx)
+      sig: this.sign(unsignedTx),
     };
     // increment the wallet's nonce parameter AFTER the tx object is created
     this.nonce++;

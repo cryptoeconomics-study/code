@@ -39,25 +39,31 @@ console.log(
 console.log(paypal);
 
 // Generate transaction
-const aliceTx = 'TODO';
-// console.log("\nAlice generates a transaction to send 10 tokens to Bob.");
-// console.log(aliceTx);
+const aliceTx = alice.generateTx(bob.wallet.address, 10, 'send');
+console.log('\nAlice generates a transaction to send 10 tokens to Bob.');
+console.log(aliceTx);
 
 // Mandatory waiting period, because... YOLO
-// console.log("\nPaypal does not process the transaction right away...");
+console.log('\nPaypal does not process the transaction right away...');
 
 // Generating another transaction
-// console.log("\nAlice gets impatient and submits the transaction again, because clicking things is more satisfying than waiting.");
-const aliceTx2 = 'TODO';
-// console.log(aliceTx2);
+console.log(
+  '\nAlice gets impatient and submits the transaction again, because clicking things is more satisfying than waiting.',
+);
+const aliceTx2 = alice.generateTx(bob.wallet.address, 10, 'send');
+console.log(aliceTx2);
 
 // Paypal gets the transactions
-// TODO: make paypal process aliceTx2
-// console.log("\nDue to a network error, Paypal gets Alice's second transaction first and it goes in the pendingTx pool");
-// console.log(paypal);
-// TODO: make paypal process aliceTx
-// console.log("\nPaypal then gets Alice's first transaction, processes it, and then processes any transactions in the pendingTx pool");
-// console.log(paypal);
+paypal.processTx(aliceTx2);
+console.log(
+  "\nDue to a network error, Paypal gets Alice's second transaction first and it goes in the pendingTx pool",
+);
+console.log(paypal);
+paypal.processTx(aliceTx);
+console.log(
+  "\nPaypal then gets Alice's first transaction, processes it, and then processes any transactions in the pendingTx pool",
+);
+console.log(paypal);
 
 // SNAFU
 console.log(
@@ -70,12 +76,20 @@ console.log(
   'Since the fee is smaller than the extra 10 tokens Alice sent, she sends a cancellation transaction to Paypal and gets her tokens back',
 );
 // note: nonces are zero indexed, so they start at 0, then 1, then 2, etc...
-const aliceTx2Cancellation = 'TODO';
-// TODO: make Paypal process aliceTx2Cancellation
+const aliceTx2Cancellation = alice.generateTx(
+  paypal.wallet.address,
+  0,
+  'cancel',
+);
+paypal.processTx(aliceTx2Cancellation);
 
 // All's well that ends well
-// console.log("\nNow let's look at Paypal's state to see everyone's accounts and balances");
-// console.log(paypal);
+console.log(
+  "\nNow let's look at Paypal's state to see everyone's accounts and balances",
+);
+console.log(paypal);
 
 // Feature or bug? You decide!
-// console.log("note that when you're using a centralized payment processor's database, they set the rules and can manipulate the state arbitrarily. This can be good if you're worried about regulatory compliance or the ability to revert errors, but it also means that there are no guarantees that your account, funds, or transactions are valid. With decentralized networks like Bitcoin and Ethereum transactions are immutable and no one can stop them, not even you. Feature or bug? You decide!");
+console.log(
+  "note that when you're using a centralized payment processor's database, they set the rules and can manipulate the state arbitrarily. This can be good if you're worried about regulatory compliance or the ability to revert errors, but it also means that there are no guarantees that your account, funds, or transactions are valid. With decentralized networks like Bitcoin and Ethereum transactions are immutable and no one can stop them, not even you. Feature or bug? You decide!",
+);
