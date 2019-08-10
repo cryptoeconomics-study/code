@@ -1,5 +1,5 @@
 const EthCrypto = require('eth-crypto');
-const Client = require('./Client.js');
+const Client = require('./client.js');
 
 // Our naive implementation of a centralized payment processor
 class Paypal extends Client {

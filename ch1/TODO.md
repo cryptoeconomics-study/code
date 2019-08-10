@@ -26,6 +26,9 @@ Wrapping up
 
 # Ch1 DONE List
 
+Formatting
+- 1.1
+
 1.4
 - create a README that introduces the student to the tutorial, then let them know it's optional as a "bonus" item, but not critical to understanding the rest of the course
 

@@ -1,4 +1,4 @@
-const EthCrypto = require("eth-crypto");
+const EthCrypto = require('eth-crypto');
 
 // The client that end-users will use to interact with our central payment processor
 class Client {
@@ -28,7 +28,7 @@ class Client {
   // Buys tokens from Paypal
   buy(amount) {
     // Let the user know that they just exchanged off-network goods for network tokens
-    console.log("AN INTERESTING MESSAGE");
+    console.log('AN INTERESTING MESSAGE');
   }
 
   // Generates new transactions

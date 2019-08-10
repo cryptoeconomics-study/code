@@ -1,9 +1,7 @@
 const EthCrypto = require('eth-crypto');
 const assert = require('assert');
-// const Client = require('../Client.js');
-const Client = require('../solution/Client.js');
-// const Paypal = require('../Paypal.js');
-const Paypal = require('../solution/Paypal.js');
+const Client = require('../client.js');
+const Paypal = require('../paypal.js');
 
 // Test The Client
 describe('Client Tests', () => {
