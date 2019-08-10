@@ -19,10 +19,9 @@ Formatting
 - add a formatting/syntax guide to the initial dev setup README
 
 Formatting TODO
-- 1.4
 - 1.5
 
-Wrapping up (somewhat subjective stuff)
+Wrapping up (somewhat subjective stuff that might have to wait until the chapters 1-3 are drafted)
 - make sure that the english grammar is concise and readable (READMEs, code comments, etc...)
 - make sure all READMEs, tests, and coding challenges follow the same format
 - publish to website and merge my fork of the code repo to the main code repo
@@ -39,6 +38,7 @@ Formatting Section Checklist
 - 1.1
 - 1.2
 - 1.3
+- 1.4
 
 1.4
 - create a README that introduces the student to the tutorial, then let them know it's optional as a "bonus" item, but not critical to understanding the rest of the course

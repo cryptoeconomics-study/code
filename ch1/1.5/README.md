@@ -91,7 +91,7 @@ checkUserAddress(tx) {
 When a central payment operator has control over everyone's assets, it can act maliciously.
 
 To simulate fraudulent activity, let's write a method, `stealAllFunds()` in `Paypal.js` which will iterate through every address in `this.state`, and sum up everyone else's balances, also setting all of their balance to 0. It will then take the sum of all of that money and add it to Paypal's balance, effectively stealing everyone's funds.
-- this happens _a lot_ in blacknet markets, the most recent of which being [Nightmare](https://twitter.com/Patrick_Shortis/status/1156354524459802624) (btw that was name of the market, not the attack).
+- this happens _a lot_ in darknet markets, the most recent of which being [Nightmare](https://twitter.com/Patrick_Shortis/status/1156354524459802624) (btw that was name of the market, not the attack).
 
 But what if the central payments operator wanted to steal funds, but continue to operate. Turns out they can have their cake and eat it too! All they have to do is mint more tokens ;) This is far easier for a central operator because they can look like a legit operation on the outside, but really just print money for themselves whenever they wanted. Then they would never be accused of stealing, but they could [steal as much as they wanted](https://medium.com/@bitfinexed) #tether #Bitfinex. Yay magic internet money!
 

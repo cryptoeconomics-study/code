@@ -1,5 +1,5 @@
 const EthCrypto = require('eth-crypto');
-const Client = require('./Client.js');
+const Client = require('./client.js');
 
 // Our naive implementation of a centralized payment processor
 class Paypal extends Client {
@@ -27,7 +27,7 @@ class Paypal extends Client {
   }
 
   // Removes funds from user accounts and adds them to Paypal's balance
-  // - In reality, it would be far easier for Paypal to mint themselves extra cash so they could look like a legit operation on the outside, but really just print money for themselves whenever they wanted. Then they would never be accussed of stealing, but they could steal as much as they wanted. Yay magic internet money!
+  // - In reality, it would be far easier for Paypal to mint themselves extra cash so they could look like a legit operation on the outside, but really just print money for themselves whenever they wanted. Then they would never be accused of stealing, but they could steal as much as they wanted. Yay magic internet money!
   stealAllFunds() {
     // sums up all the value in the network
     let sum = 0;
@@ -85,7 +85,7 @@ class Paypal extends Client {
     }
     // check if the receiver is in the state
     if (!(tx.contents.from in this.state)) {
-      // if the receiveer is not in the state, add their address and initialize an empty balance and nonce of 0
+      // if the receiver is not in the state, add their address and initialize an empty balance and nonce of 0
       this.state[tx.contents.from] = {
         balance: 0,
         nonce: 0,
@@ -110,7 +110,7 @@ class Paypal extends Client {
     }
     // if the transaction nonce is the same as the nonce Paypal has for that account
     if (tx.contents.nonce === this.state[tx.contents.from].nonce) {
-      // return true to signal that it is ok to proceed to the nex operation
+      // return true to signal that it is ok to proceed to the next operation
       return true;
     }
     // if the transaction nonce is less than the nonce Paypal has for that account
@@ -139,7 +139,7 @@ class Paypal extends Client {
     if (tx.contents.type === 'check') {
       const user = tx.contents.from;
       console.log(`Your balance is: ${this.state[user].balance}`);
-      // return false so that the stateTransitionFunction does not process the tx
+      // return false so that Paypal does not process the tx
       return false;
     }
     // if send
@@ -183,7 +183,7 @@ class Paypal extends Client {
           }
         }
       }
-      // add the cancelation transaction to the txHistory
+      // add the cancellation transaction to the txHistory
       this.txHistory.push(tx);
       // charge a fee to the user for cancelling a transaction
       this.state[tx.contents.from].balance -= 1;
@@ -221,7 +221,7 @@ class Paypal extends Client {
     this.state[tx.contents.from].balance -= tx.contents.amount;
     // then increase the balance of the transaction receiver
     this.state[tx.contents.to].balance += tx.contents.amount;
-    // then incriment the nonce of the transaction sender
+    // then increment the nonce of the transaction sender
     this.state[tx.contents.from].nonce += 1;
     // then add the transaction to the transaction history
     this.txHistory.push(tx);
@@ -262,7 +262,7 @@ class Paypal extends Client {
 
   // Checks if a transaction is valid, then processes it, then checks if there are any valid transactions in the pending transaction pool and processes those too
   processTx(tx) {
-    // charege a fee to use the network
+    // charge a fee to use the network
     this.chargeFee(tx);
     // check the transaction is valid
     if (this.checkTx(tx)) {
