@@ -11,7 +11,6 @@ We want to use the airbnb javascript syntax right?
 # Ch1 TODO List
 
 Formatting
-- make sure there are no swap files that are lingering in the section folders
 - make sure there are no english language typos
 - make sure that the english grammar is concise and readable (READMEs, code comments, etc...)
 - make sure there are no references to TX (only Tx to keep consistency and camel-case-ability)
@@ -31,10 +30,11 @@ Wrapping up
 
 # Ch1 DONE List
 
-Formatting
+Formatting General
 - make all javascript file names lowercase
+- make sure there are no swap files that are lingering in the section folders
 
-Formatting
+Formatting Section Checklist
 - 1.1
 - 1.2
 
