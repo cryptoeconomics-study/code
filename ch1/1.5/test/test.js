@@ -1,104 +1,65 @@
-const Client = require('../Client.js')
-const Paypal = require('../Paypal.js');
-const EthCrypto = require('eth-crypto')
-const assert = require('assert')
+const EthCrypto = require('eth-crypto');
+const assert = require('assert');
+const Client = require('../client.js');
+const Paypal = require('../paypal.js');
 
+// Testing Paypal's fee feature
+describe('Rent Extraction', () => {
+  // init params
+  const paypal = new Paypal();
+  const alice = new Client();
+  const bob = new Client();
+  const carol = new Client();
+  const mintAliceTokens = paypal.generateTx(alice.wallet.address, 100, 'mint');
+  paypal.processTx(mintAliceTokens);
+  const tx1 = alice.generateTx(bob.wallet.address, 10, 'send');
+  paypal.processTx(tx1);
+  const tx2 = bob.generateTx(carol.wallet.address, 5, 'send');
+  paypal.processTx(tx2);
 
-describe('Rent Extraction', function () {
-    let paypal = new Paypal()
-    let alice = new Client()
-    let bob = new Client()
-    const tx1 = paypal.generateTx(alice.wallet.address, 100, 'mint'),
-        tx2 = alice.generateTx(bob.wallet.address, 10, 'send'),
-        tx3 = alice.generateTx(bob.wallet.address, 10, 'send')
-    it('should not extract rent under 100 users', function () {
-        paypal.onReceive(tx1)
-        paypal.onReceive(tx2)
-        assert.deepEqual(paypal.state, {
-            [alice.wallet.address]: {
-                balance: 90,
-                nonce: 1
-            },
-            [paypal.wallet.address]: {
-                balance: 0,
-                nonce: 1
-            },
-            [bob.wallet.address]: {
-                balance: 10,
-                nonce: 0
-            }
-        })
-    })
-    it('should extract $1 fees when over 100 users', function () {
-        for (let i = 0; i <= 100; i++) {
-             paypal.state['0x' + i] = { balance: 0, nonce: 0 }
-        }
-        paypal.onReceive(tx3)
-        assert.deepEqual(
-            paypal.state[alice.wallet.address],
-            {balance: 79, nonce: 2}
-        )
-        assert.deepEqual(
-            paypal.state[paypal.wallet.address],
-            {balance: 1, nonce: 1}
-        )
-    })
-})
+  it('should extract $1 fees from users', () => {
+    assert.equal(89, paypal.state[alice.wallet.address].balance);
+    assert.equal(4, paypal.state[bob.wallet.address].balance);
+  });
+});
 
-describe('Censorship', function () {
-    let paypal = new Paypal()
-    let alice = new Client()
-    let bob = new Client()
-    const tx1 = paypal.generateTx(alice.wallet.address, 100, 'mint'),
-        tx2 = alice.generateTx(bob.wallet.address, 10, 'send'),
-        tx3 = alice.generateTx(bob.wallet.address, 10, 'send')
-    it('should allow transactions from non-blacklisted addresses', function () {
-        paypal.onReceive(tx1)
-        paypal.onReceive(tx2)
-        assert.deepEqual(paypal.state, {
-            [alice.wallet.address]: {
-                balance: 90,
-                nonce: 1
-            },
-            [paypal.wallet.address]: {
-                balance: 0,
-                nonce: 1
-            },
-            [bob.wallet.address]: {
-                balance: 10,
-                nonce: 0
-            }
-        })
-    })
-    it('should throw Error if tx is from blacklisted address', function () {
-        paypal.blacklist.push(alice.wallet.address)
-        assert.throws(() => { paypal.onReceive(tx3) }, Error)
-    })
-})
+// Testing Paypal's blacklist feature
+describe('Censorship', () => {
+  // init params
+  const paypal = new Paypal();
+  const alice = new Client();
+  const bob = new Client();
+  const eve = new Client();
+  paypal.blacklist.push(eve.wallet.address);
+  const mintAliceTokens = paypal.generateTx(alice.wallet.address, 100, 'mint');
+  paypal.processTx(mintAliceTokens);
+  const aliceTx2Bob = alice.generateTx(bob.wallet.address, 10, 'send');
+  const aliceTx2Eve = alice.generateTx(eve.wallet.address, 10, 'send');
+  console.log(paypal);
+  // send a transaction to and from non-blacklisted accounts
+  it('should allow transactions from non-blacklisted addresses', () => {
+    assert.equal(true, paypal.processTx(aliceTx2Bob));
+  });
+  // try to send transaction to a blacklisted account
+  it('should return false and not process the transaction if the tx is to or from blacklisted address', () => {
+    assert.equal(false, paypal.processTx(aliceTx2Eve));
+  });
+});
 
-describe('Steal All Funds Fraud', function () {
-    let paypal = new Paypal()
-    let alice = new Client()
-    let bob = new Client()
-    const tx1 = paypal.generateTx(alice.wallet.address, 100, 'mint'),
-        tx2 = alice.generateTx(bob.wallet.address, 30, 'send')
-    it('should steal all funds', function () {
-        paypal.onReceive(tx1)
-        paypal.onReceive(tx2)
-        paypal.stealAllFunds()
-        assert.deepEqual(paypal.state, {
-            [alice.wallet.address]: {
-                balance: 0,
-                nonce: 1
-            },
-            [paypal.wallet.address]: {
-                balance: 100,
-                nonce: 1
-            },
-            [bob.wallet.address]: {
-                balance: 0,
-                nonce: 0
-            }
-        })
-    })
-})
+// Testing Paypal's theft feature
+describe('Steal All Funds Fraud', () => {
+  // init params
+  const paypal = new Paypal();
+  const alice = new Client();
+  const bob = new Client();
+  const tx1 = paypal.generateTx(alice.wallet.address, 100, 'mint');
+  const tx2 = alice.generateTx(bob.wallet.address, 30, 'send');
+  // steal all funds
+  it('should steal all funds', () => {
+    paypal.processTx(tx1);
+    paypal.processTx(tx2);
+    paypal.stealAllFunds();
+    assert.equal(0, paypal.state[alice.wallet.address].balance);
+    assert.equal(0, paypal.state[bob.wallet.address].balance);
+  });
+});

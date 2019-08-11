@@ -1,171 +1,90 @@
-const Client = require('../Client.js')
-const Paypal = require('../Paypal.js');
-const EthCrypto = require('eth-crypto')
-const assert = require('assert')
+const EthCrypto = require('eth-crypto');
+const assert = require('assert');
+const Client = require('../client.js');
+const Paypal = require('../paypal.js');
 
+describe('Functioning Nonces', () => {
+  // init params
+  const paypal = new Paypal();
+  const alice = new Client();
+  const bob = new Client();
+  const tx1 = paypal.generateTx(alice.wallet.address, 100, 'mint');
+  const tx2 = alice.generateTx(bob.wallet.address, 10, 'send');
+  const tx3 = alice.generateTx(bob.wallet.address, 10, 'send');
 
-describe('Functioning Nonces', function () {
-    let paypal = new Paypal()
-    let alice = new Client()
-    let bob = new Client()
-    const tx1 = paypal.generateTx(alice.wallet.address, 100, 'mint'),
-          tx2 = alice.generateTx(bob.wallet.address, 10, 'send'),
-          tx3 = alice.generateTx(bob.wallet.address, 10, 'send')
-      //  tx3
-    describe('generateTx in Client.js', function () {
-        it('should properly set the first nonce with generateTx', function () {
-            const unsignedTx = {
-                type: 'send',
-                amount: 10,
-                from: alice.wallet.address,
-                to: bob.wallet.address,
-                nonce: 0
-            }
-            assert.deepEqual(tx2.contents, unsignedTx)
-            const sig = alice.sign(unsignedTx)
-            assert.equal(tx2.sig, sig)
-        });
+  //  Generating Tx
+  describe('generateTx in Client.js', () => {
+    it('should properly set the first nonce with generateTx', () => {
+      const unsignedTx = {
+        type: 'send',
+        amount: 10,
+        from: alice.wallet.address,
+        to: bob.wallet.address,
+        nonce: 0,
+      };
+      assert.deepEqual(tx2.contents, unsignedTx);
+      const sig = alice.sign(unsignedTx);
+      assert.equal(tx2.sig, sig);
+    });
 
-        it('should properly increment the nonce with generateTx', function () {
-            const unsignedTx = {
-                type: 'send',
-                amount: 10,
-                from: alice.wallet.address,
-                to: bob.wallet.address,
-                nonce: 1
-            }
-            assert.deepEqual(tx3.contents, unsignedTx)
-            const sig = alice.sign(unsignedTx)
-            assert.equal(tx3.sig, sig)
-        });
-    })
-    describe('applyTransaction in Paypal.js', function () {
-        it('should correctly set nonce of a new sender', function () {
-            paypal.applyTransaction(tx1)
-            assert.deepEqual(paypal.state[paypal.wallet.address],
-                {
-                    balance: 0,
-                    nonce: 1
-                })
-        })
-        it('should correctly set nonce of a new receiver', function () {
-            assert.deepEqual(paypal.state[alice.wallet.address],
-                {
-                    balance: 100,
-                    nonce: 0
-                })
-        })
+    it('should properly increment the nonce with generateTx', () => {
+      const unsignedTx = {
+        type: 'send',
+        amount: 10,
+        from: alice.wallet.address,
+        to: bob.wallet.address,
+        nonce: 1,
+      };
+      assert.deepEqual(tx3.contents, unsignedTx);
+      const sig = alice.sign(unsignedTx);
+      assert.equal(tx3.sig, sig);
+    });
+  });
 
-        it('should not apply future nonce transactions', function () {
-            paypal.applyTransaction(tx3)
-            assert.deepEqual(paypal.state, {
-                [alice.wallet.address]: {
-                    balance: 100,
-                    nonce: 0
-                },
-                [paypal.wallet.address]: {
-                    balance: 0,
-                    nonce: 1
-                }
-            })
-        })
+  // Processing Tx
+  describe('processTx in Paypal.js', () => {
+    it('should correctly set nonce of a new sender', () => {
+      paypal.processTx(tx1);
+      assert.deepEqual(paypal.state[paypal.wallet.address], {
+        balance: 1000000 - tx1.contents.amount,
+        nonce: 1,
+      });
+    });
 
-        it('should apply valid nonce transactions', function () {
-            paypal.applyTransaction(tx2)
-            paypal.applyTransaction(tx3)
-            assert.deepEqual(paypal.state, {
-                [alice.wallet.address]: {
-                    balance: 80,
-                    nonce: 2
-                },
-                [paypal.wallet.address]: {
-                    balance: 0,
-                    nonce: 1
-                },
-                [bob.wallet.address]: {
-                    balance: 20,
-                    nonce: 0
-                }
-            })
-        })
+    it('should correctly set nonce of a new receiver', () => {
+      assert.deepEqual(paypal.state[alice.wallet.address], {
+        balance: 100,
+        nonce: 0,
+      });
+    });
 
-        it('should not apply past nonce transactions', function () {
-            paypal.applyTransaction(tx2)
-            paypal.applyTransaction(tx3)
-            assert.deepEqual(paypal.state, {
-                [alice.wallet.address]: {
-                    balance: 80,
-                    nonce: 2
-                },
-                [paypal.wallet.address]: {
-                    balance: 0,
-                    nonce: 1
-                },
-                [bob.wallet.address]: {
-                    balance: 20,
-                    nonce: 0
-                }
-            })
-        })
-    })
-})
+    it('Paypal should not apply transactions with a nonce greater than the nonce Paypal has for that user', () => {
+      paypal.processTx(tx3);
+      assert.equal(false, paypal.processTx(tx3));
+    });
 
-// **Uncomment these tests after passing the previous tests**
+    it('should apply valid nonce transactions', () => {
+      const paypal = new Paypal();
+      const alice = new Client();
+      const bob = new Client();
+      const tx1 = paypal.generateTx(alice.wallet.address, 100, 'mint');
+      const tx2 = alice.generateTx(bob.wallet.address, 10, 'send');
+      const tx3 = alice.generateTx(bob.wallet.address, 10, 'send');
+      paypal.processTx(tx1);
+      paypal.processTx(tx2);
+      assert.equal(true, paypal.processTx(tx3));
+    });
 
-// describe('Invalid Nonce Handling', function () {
-//     let paypal = new Paypal()
-//     let alice = new Client()
-//     let bob = new Client()
-//     const tx1 = paypal.generateTx(alice.wallet.address, 100, 'mint'),
-//         tx2 = alice.generateTx(bob.wallet.address, 10, 'send'),
-//         tx3 = alice.generateTx(bob.wallet.address, 10, 'send')
-//     it('should call applyTransaction in onReceive', function () {
-//         paypal.onReceive(tx1)
-//         assert.deepEqual(paypal.state, {
-//             [alice.wallet.address]: {
-//                 balance: 100,
-//                 nonce: 0
-//             },
-//             [paypal.wallet.address]: {
-//                 balance: 0,
-//                 nonce: 1
-//             }
-//         })
-//     })
-//     it('should correctly set nonce of a new receiver', function () {
-//         paypal.onReceive(tx3)
-//         assert.deepEqual(paypal.state, {
-//             [alice.wallet.address]: {
-//                 balance: 100,
-//                 nonce: 0
-//             },
-//             [paypal.wallet.address]: {
-//                 balance: 0,
-//                 nonce: 1
-//             }
-//         })
-//         assert.deepEqual(paypal.invalidNonceTxs, {
-//             [alice.wallet.address]: {
-//                 1: tx3
-//             }
-//         })
-//     })
-
-//     it('should fill pending transactions', function () {
-//         paypal.onReceive(tx2)
-//         assert.deepEqual(paypal.state, {
-//             [alice.wallet.address]: {
-//                 balance: 80,
-//                 nonce: 2
-//             },
-//             [paypal.wallet.address]: {
-//                 balance: 0,
-//                 nonce: 1
-//             },
-//             [bob.wallet.address]: {
-//                 balance: 20,
-//                 nonce: 0
-//             }
-//         })
-//     })
-// })
+    it('should apply pending transactions when they are ready', () => {
+      const paypal = new Paypal();
+      const alice = new Client();
+      const bob = new Client();
+      const tx1 = paypal.generateTx(alice.wallet.address, 100, 'mint');
+      const tx2 = alice.generateTx(bob.wallet.address, 10, 'send');
+      const tx3 = alice.generateTx(bob.wallet.address, 10, 'send');
+      paypal.processTx(tx3);
+      paypal.processTx(tx2);
+      assert.equal(true, paypal.processTx(tx1));
+    });
+  });
+});

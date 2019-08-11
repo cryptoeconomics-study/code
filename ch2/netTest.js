@@ -1,41 +1,54 @@
-const NetworkSimulator = require('./networksim')
+const NetworkSimulator = require('./networksim');
+
 const testAgents = [
   {
     pid: 'karl',
-    onReceive: function (message) { console.log(this.pid, 'got', message) },
-    tick: function () {}
+    onReceive(message) {
+      console.log(this.pid, 'got', message);
+    },
+    tick() {},
   },
   {
     pid: 'aparna',
-    onReceive: function (message) { console.log(this.pid, 'got', message) },
-    tick: function () {}
+    onReceive(message) {
+      console.log(this.pid, 'got', message);
+    },
+    tick() {},
   },
   {
     pid: 'jing',
-    onReceive: function (message) { console.log(this.pid, 'got', message) },
-    tick: function () {}
+    onReceive(message) {
+      console.log(this.pid, 'got', message);
+    },
+    tick() {},
   },
   {
     pid: 'bob',
-    onReceive: function (message) { console.log(this.pid, 'got', message) },
-    tick: function () {}
+    onReceive(message) {
+      console.log(this.pid, 'got', message);
+    },
+    tick() {},
   },
   {
     pid: 'phil',
-    onReceive: function (message) { console.log(this.pid, 'got', message) },
-    tick: function () {}
+    onReceive(message) {
+      console.log(this.pid, 'got', message);
+    },
+    tick() {},
   },
   {
     pid: 'vitalik',
-    onReceive: function (message) { console.log(this.pid, 'got', message) },
-    tick: function () {}
-  }
-]
-const network = new NetworkSimulator(latency = 5, packetLoss = 0);
-for (let a of testAgents) {
-  network.connectPeer(a, 1)
+    onReceive(message) {
+      console.log(this.pid, 'got', message);
+    },
+    tick() {},
+  },
+];
+const network = new NetworkSimulator((latency = 5), (packetLoss = 0));
+for (const a of testAgents) {
+  network.connectPeer(a, 1);
 }
-network.broadcast('karl', 'testing!')
-network.broadcast('aparna', 'besting!')
-console.log(network)
-network.run(100)
+network.broadcast('karl', 'testing!');
+network.broadcast('aparna', 'besting!');
+console.log(network);
+network.run(100);

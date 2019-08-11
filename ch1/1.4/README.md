@@ -1,75 +1,18 @@
-> The code challenges in this course build upon each other. It's highly recommended that you start from the beginning. If you haven't already, get started with our [Installation Instructions](https://www.burrrata.ch/ces-website/docs/en/sync/dev-env-setup).  
+> This code challenge is a bonus round. It does not build on the prior course work and is not necessary to understand future course work. That being said, UTXOs are a common thing in the world of cryptoeconomics and blockchains, so we recommend recommend that you explore them.
 
-## Paypal with UTXOs
+## UTXOs
 
-We’re not going to write a function to generate TXOs, since it’s not actually too easy. If we want a transaction spending two inputs from Alice and Bob to one output, we will need signatures from both Alice and Bob, which will require some communication between clients. To make things easier, we’ll be generating transactions outputs for you. 
+Since UTXOs have been around since Bitcoin was first created (2008), there are many great resources on the internet that explain them. There's even Javascript code tutorials and examples that will walk you through how to roll your own. Rather than reinventing the wheel, we're just going to link to a few that we recommend:
 
-Re-write the `applyTransaction` method accepting the state of `Paypal.js` so that it will:
+### [Blockchain in JS](https://blockchain.nambrot.com/)
 
-* Throw an error if the transaction does not include valid signatures in `sigs` for every owner of the `inputs` 
-* Throw an error if the total value of `outputs` is not equal to the total value of `inputs`
-* Throw an error if any of the `inputs` are already spent.
-* All outputs are added to the state as `unspent` and all inputs are set to `spent`
+A Bitcoin style interactive blockchain demo by [nambrot](https://github.com/nambrot). There's even a [tutorial to build your own](https://github.com/nambrot/blockchain-in-js) so you can recreate the demo.
 
-## Format Guide
+### [BitcoinJS](https://github.com/bitcoinjs/bitcoinjs-lib)
 
-### Example state
+A simple [UTXO example](https://github.com/bitcoinjs/utxo) in Javascript. Their [other repos](https://github.com/bitcoinjs) have lots of great examples as well.
 
-```
-{  
-    txOutputs: [
-        {
-            value: 1000,
-            owner: 0x123,
-        },
-        {
-            value: 500,
-            owner: 0xabc,
-        },
-        {
-            value: 500,
-            owner: 0xdef,
-        }
-    ], 
-    isSpent: [1, 0, 0]
-}
-```
-The values of the isSpent array correspond to each TX in the txOutputs array. 1 = spent, 0 = unspent.
+### [How To Code A Bitcoin Blockchain In Javascript](https://blockgeeks.com/guides/code-a-bitcoin-blockchain-in-javascript/)
 
-### Transaction format
-```
-{
-  contents: {
-    list of inputs,
-    list of outputs
-  },
-  list of input signatures
-}
-
-```
-
-**Example TX**
-
-```
-{  
-    contents: {
-        inputs: [1, 2],
-        outputs: [
-            {value: 250, owner: 0xabc},
-            {value: 250, owner: 0x123},
-            {value: 500, owner: 0x456}
-        ]
-    }, 
-    sigs: [
-        signature1,
-        signature2
-    ]
-}
-```
-The elements in the `inputs` array correspond to the index in the `txOutputs` array of the `state`. In this example, inputs 1 and 2 correspond to `txOutputs[1]` and `txOutputs[2]`
-
-## Completion
-
-Our UTXO experiment is complete! It's important to understand the UTXO model even though it's a bit less intuitive - it's used by **Bitcoin**, currently the most valuable cryptocurrency by market capitalization. However, for the rest of the course we'll be using the account model, which is used by other blockchains like Ethereum. 
-
+As advertised, a tutorial on how to code a bitcoin blockchain in Javascript. [Blockgeeks](https://blockgeeks.com/) has more great content, so we recommend you check them out if you want a different perspective on many of the concepts explored in this course.
 
