@@ -2,85 +2,59 @@ var EthCrypto = require('eth-crypto')
 var Client = require('./PoWClient')
 var {getTxHash} = require('../nodeAgent')
 
+var difficulty = 4
+
 class Miner extends Client {
-  onReceive (message) {
-    if (message.contents.type === 'send') {
-      if (this.transactions.includes(message)) {
+
+  constructor (wallet, genesis, network) {
+    super(wallet, genesis, network)
+    this.blockAttempt = this.createBlock()
+    this.hashRate = 5   // hashRate = # hashes miner can try at each tick
+  }
+  tick() {
+    //Mining
+    for (let i = 0; i < this.hashRate; i++) {
+      let blockHash = getTxHash(this.blockAttempt)
+      // console.log(blockHash.substring(0, 2 + difficulty))
+      // console.log(parseInt(blockHash.substring(0, 2 + difficulty)))
+      //Found block
+      if (parseInt(blockHash.substring(0, 2 + difficulty)) === 0) {
+        console.log(this.pid.substring(0, 6), 'found a block at height', this.blockAttempt.number)
+        const validBlock = this.blockAttempt
+        this.receiveBlock(validBlock)
         return
       }
-      this.transactions.push(message)      //add tx to mempool
-      this.applyTransaction(message)       //update state
-      this.applyInvalidNonceTxs(message.contents.from) //update state
-      this.getState() //check if blockchain is the longest sequence
-      let newBlock = this.mineBlock(message)
-      if (newBlock === 'FAIL') {
-        console.log("no valid block found, giving up")
-      } else {
-        this.blockNumber++ //increment
-        this.blockchain.push(newBlock) //add to own blockchain
-        this.allBlocks.push(newBlock) //add to allBlocks
-        this.network.broadcast(this.pid, newBlock) //broadcast new block to network
-      }
-
-    } else if (message.contents.type === 'block') {
-      if (message.parentHash === getTxHash(this.blockchain.slice(-1)[0])) {
-        this.blockNumber++ //increment
-        this.blockchain.push(message)      //add block to own blockchain
-        this.allBlocks.push(message)      //add block to all blocks received
-      } else {
-        this.allBlocks.push(message)
-        this.getState() //check if blockchain is the longest sequence
-      }
+      else this.blockAttempt.nonce++
     }
   }
+  receiveBlock(block){
+    const parentHash = this.blockAttempt.parentHash
+    super.receiveBlock(block)
+    const newHead = this.blockchain.slice(-1)[0]
+    //if the block head has changed, mine on top of the new head
+    if(getTxHash(newHead) !== parentHash) {
+      this.blockAttempt = this.createBlock() //Start mining new block
+    }
+  }
+  createBlock() {
+    const tx = this.transactions.shift()
+    let txList = []
+    if (tx) txList.push(tx)
 
-  mineBlock (tx) {
-    //returns an integer between 3 and 4 so we can have blocks with
-    //different difficulties for fork choice (MDN example)
-    // let difficulty = Math.floor(Math.random() * (4 - 3 + 1)) + 3
-    let difficulty = 3
-    let maxAttempts = 100000
     let timestamp = Math.round(new Date().getTime() / 1000)
-
-    // no mint tx for now :-)
-    // const unsignedTx = {
-    //     type: 'mint',
-    //     amount: 3,
-    //     from: 0,
-    //     to: this.wallet.address,
-    //     nonce: 0
-    // }
-    //
-    // const blockRewardTx = {
-    //   contents: unsignedTx,
-    //   sig: EthCrypto.sign(this.wallet.privateKey, getTxHash(unsignedTx))
-    // }
-
     const newBlock = {
-      number: this.blockNumber,
+      nonce: 0,
+      number: this.blockNumber+1,
       coinbase: this.wallet.address,
       difficulty: difficulty,
       parentHash: getTxHash(this.blockchain.slice(-1)[0]),
       timestamp: timestamp,
       contents: {
         type: 'block',
-        txList: [
-          // blockRewardTx,
-          tx
-        ]
+        txList
       }
     }
-
-    // Proof of work on the blocks
-    // Add anti-spam protection with proof of work on each block
-    for (let i = 0; i < maxAttempts; i++) {
-      let blockAttempt = Object.assign({'nonce': i}, newBlock)
-      let blockHash = getTxHash(blockAttempt)
-      if (parseInt(blockHash.substring(0, 2 + difficulty)) === 0) {
-        return blockAttempt
-      }
-    }
-    return 'FAIL'
+    return newBlock
   }
 }
 

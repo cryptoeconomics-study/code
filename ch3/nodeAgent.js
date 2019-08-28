@@ -15,6 +15,7 @@ class Node {
     this.state = genesis
     this.transactions = []
     this.invalidNonceTxs = {}
+    this.nonce = 0
   }
 
   onReceive (tx) {
@@ -44,12 +45,13 @@ class Node {
       amount: amount,
       from: this.wallet.address,
       to: to,
-      nonce: this.state[this.wallet.address].nonce
+      nonce: this.nonce
     }
     const tx = {
       contents: unsignedTx,
       sig: EthCrypto.sign(this.wallet.privateKey, getTxHash(unsignedTx))
     }
+    this.nonce++ //added so a node can send multiple txs before applying them (before they are included in a block)
     return tx
   }
 

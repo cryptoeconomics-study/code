@@ -25,16 +25,48 @@ class Client extends Node {
     this.allBlocks.push(genesisBlock)
   }
 
-  onReceive (message) {
-    if (message.contents.type === 'block') {
-      // this.blockchain.push(message)
-      this.allBlocks.push(message)
-      // this.getState()
-    } else {
-      //do nothing for now, not a miner
-      return
+  onReceive(message) {
+    switch(message.contents.type) {
+      case 'send':
+        this.receiveTx(message)
+        break
+      case 'block':
+        this.receiveBlock(message)
+        break
     }
   }
+
+  receiveTx(tx) {
+    if (this.transactions.includes(tx)) return
+    this.transactions.push(tx)      //add tx to mempool
+    this.network.broadcast(this.pid, tx)
+  }
+
+  receiveBlock(block) {
+    //TODO Check that block is valid
+    if (this.allBlocks.includes(block)) return
+    this.allBlocks.push(block) //add block to all blocks received
+    //if the block builds directly on the current head of the chain, append to chain
+    if (block.parentHash === getTxHash(this.blockchain.slice(-1)[0])) {
+      this.blockNumber++ //increment
+      this.blockchain.push(block) //add block to own blockchain
+      this.applyBlock(block)
+    } else {
+      //TODO Check block number to see that the block is even going to make a longer chain
+      //TODO Request missing blocks from peers
+      this.allBlocks.push(block)
+      this.getState() //check if blockchain is the longest sequence
+    }
+    this.network.broadcast(this.pid, block) //broadcast new block to network
+  }
+
+  // Send a request to peers for a missing block by blockHash
+  requestBlock(blockHash) {
+
+
+  }
+
+
 
   // Fork choice
   // Only apply transactions which are contained in the longest chain
@@ -67,15 +99,19 @@ class Client extends Node {
     this.blockchain = tempChain
     //apply all txs from ordered list of blocks
     for (let block of this.blockchain) {
-      const txList = block.contents.txList
-      for (let tx of txList) {
-        this.applyTransaction(tx)       //update state
-        if (tx.contents.from !== 0) { //mint tx is excluded
-          this.applyInvalidNonceTxs(tx.contents.from) //update state
-        }
-      }
+      this.applyBlock(block)
     }
     return this.state
+  }
+
+  applyBlock(block) {
+    const txList = block.contents.txList
+    for (let tx of txList) {
+      this.applyTransaction(tx)       //update state
+      if (tx.contents.from !== 0) { //mint tx is excluded
+        this.applyInvalidNonceTxs(tx.contents.from) //update state
+      }
+    }
   }
 }
 
