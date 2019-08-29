@@ -2,8 +2,6 @@ var EthCrypto = require('eth-crypto')
 var Client = require('./PoWClient')
 var {getTxHash} = require('../nodeAgent')
 
-var difficulty = 4
-
 class Miner extends Client {
 
   constructor (wallet, genesis, network) {
@@ -14,12 +12,9 @@ class Miner extends Client {
   tick() {
     //Mining
     for (let i = 0; i < this.hashRate; i++) {
-      let blockHash = getTxHash(this.blockAttempt)
-      // console.log(blockHash.substring(0, 2 + difficulty))
-      // console.log(parseInt(blockHash.substring(0, 2 + difficulty)))
-      //Found block
-      if (parseInt(blockHash.substring(0, 2 + difficulty)) === 0) {
-        console.log(this.pid.substring(0, 6), 'found a block at height', this.blockAttempt.number)
+      if (this.isValidBlockHash(this.blockAttempt)) {
+        const blockHash = getTxHash(this.blockAttempt)
+        console.log(this.pid.substring(0, 6), 'found a block:', blockHash.substring(0, 10),'at height', this.blockAttempt.number)
         const validBlock = this.blockAttempt
         this.receiveBlock(validBlock)
         return
@@ -46,7 +41,7 @@ class Miner extends Client {
       nonce: 0,
       number: this.blockNumber+1,
       coinbase: this.wallet.address,
-      difficulty: difficulty,
+      difficulty: this.difficulty,
       parentHash: getTxHash(this.blockchain.slice(-1)[0]),
       timestamp: timestamp,
       contents: {
