@@ -32,7 +32,7 @@ class Miner extends Client {
     }
   }
   createBlock() {
-    const tx = this.transactions.shift()
+    const tx = this.transactions[0]
     let txList = []
     if (tx) txList.push(tx)
 

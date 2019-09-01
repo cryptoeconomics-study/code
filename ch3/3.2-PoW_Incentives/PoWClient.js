@@ -12,10 +12,10 @@ class Client extends Node {
     this.blockNumber = 0 //keep track of blocks added to blockchain despite getState()
     this.difficulty = 12
     const genesisBlock = {
-      nonce: 0,
+      nonce: 82450,
       number: 0,
       coinbase: 0,
-      difficulty: 9000,
+      difficulty: 1337,
       parentHash: 0,
       timestamp: 0,
       contents: {
@@ -37,9 +37,9 @@ class Client extends Node {
         break
     }
   }
-
   receiveTx(tx) {
     if (this.transactions.includes(tx)) return
+    if (!this.isValidTxSig(tx)) return
     this.transactions.push(tx)      //add tx to mempool
     this.network.broadcast(this.pid, tx)
   }
@@ -73,12 +73,20 @@ class Client extends Node {
     }
     if (this.isValidBlock(block, state) &&
         block.number > this.blockNumber) {
+      const numtxs = this.transactions.length
+      this.removeTxs(block) //remove txs from tx pool
+      if (numtxs!==this.transactions.length)
       this.blockNumber++ //increment
       this.allBlocks.push(block) //add block to all blocks received
       this.blockchain.push(block) //add block to own blockchain
       this.applyBlock(block, this.state)
       this.network.broadcast(this.pid, block) //broadcast new block to network
     }
+  }
+  removeTxs(block) {
+    this.transactions = this.transactions.filter( function(tx) {
+      return !block.contents.txList.includes(tx);
+    })
   }
 
   // Send a request to peers for a missing block by blockHash
