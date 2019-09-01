@@ -1,7 +1,7 @@
 const EthCrypto = require('eth-crypto');
 const _ = require('lodash');
 const NetworkSimulator = require('../networkSim');
-const { Node, getTxHash } = require('../nodeAgent');
+const { Node, getTxHash } = require('../../nodeAgent');
 
 // Authority extends Node and provides functionality needed to receive, order, and broadcast transactions
 class Authority extends Node {
@@ -19,14 +19,18 @@ class Authority extends Node {
     this.applyInvalidNonceTxs(tx.contents.from);
   }
 
-	// TODO
   // Order transactions and broadcast that ordering to the network
   orderAndBroadcast(tx) {
     // give the transactiona the latest nonce in the Authority node's state
+    tx.contents.orderNonce = this.orderNonce;
     // increment the nonce
+    this.orderNonce++;
     // sign the transaction to give it "proof of authority"
+    const authSig = EthCrypto.sign(this.wallet.privateKey, getTxHash(tx));
     // add the signed transaction to the history
+    tx.sigs.push(authSig);
     // broadcast the transaction to the network
+    this.network.broadcast(this.pid, tx);
   }
 
   applyTransaction(tx) {
