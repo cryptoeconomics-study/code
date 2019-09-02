@@ -1,6 +1,6 @@
 const EthCrypto = require('eth-crypto');
-const NetworkSimulator = require('../networkSim');
-const { Node } = require('../nodeAgent');
+const NetworkSimulator = require('../../networkSim');
+const { Node } = require('../../nodeAgent');
 
 // Double Spending Network Simulation
 // this extends the NetworkSimulator class by logging important information related to double spending
@@ -79,10 +79,21 @@ for (let i = 0; i < numNodes; i++) {
 }
 
 // Attempting to double spend!
-// TODO: designate the node that will double spend
-// TODO: designate the nodes that we will perform the attack on
-// TODO: create 2 identical transactions that have different recipients
-// TODO: broadcast both transaction to the network at the same time
+// designate the node that will double spend
+const evilNode = nodes[0];
+// designate the nodes that we will perform the attack on
+const victims = [
+  network.peers[evilNode.pid][0],
+  network.peers[evilNode.pid][1],
+];
+// create 2 identical transactions that have different recipients
+const spends = [
+  evilNode.generateTx(victims[0].wallet.address, (amount = 100)),
+  evilNode.generateTx(victims[1].wallet.address, (amount = 100)),
+];
+// broadcast both transaction to the network at the same time
+network.broadcastTo(evilNode.pid, victims[0], spends[0]);
+network.broadcastTo(evilNode.pid, victims[1], spends[1]);
 
 // Running the simulation
 // due to network latency some nodes will receive one transaction before the other

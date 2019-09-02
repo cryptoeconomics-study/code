@@ -1,7 +1,7 @@
 const EthCrypto = require('eth-crypto');
 const _ = require('lodash');
-const NetworkSimulator = require('../networkSim');
-const { Node, getTxHash } = require('../nodeAgent');
+const NetworkSimulator = require('../../networkSim');
+const { Node, getTxHash } = require('../../nodeAgent');
 
 class PoA extends Node {
   constructor(wallet, genesis, network, authority) {
@@ -44,16 +44,42 @@ class PoA extends Node {
     }
   }
 
-	// TODO
   applyTransaction(tx) {
-    // get the transaction from before the authority node added ordering and make a copy of it
-    // delete the order nonce from the original transaction
-    // clear the transaction signatures
+    // get tx from before the authority node added ordering
+    const originalTx = _.cloneDeep(tx);
+    delete originalTx.contents.orderNonce;
+    originalTx.sigs = [];
     // get tx from before the auth node signed it
+    const slicedTx = {
+      contents: tx.contents,
+      sigs: tx.sigs.slice(0, 1),
+    };
     // check the signer of the transaction and throw an error if the signature cannot be verified
+    const signer = EthCrypto.recover(tx.sigs[0], getTxHash(originalTx));
+    if (signer !== tx.contents.from) {
+      throw new Error('Invalid signature!');
+    }
     // check the autority for the network and throw an error if the transaction does not
+    const authority = EthCrypto.recover(tx.sigs[1], getTxHash(slicedTx));
+    if (authority !== this.authority) {
+      throw new Error('Invalid signature!');
+    }
+    // If we don't have a record for this address, create one
+    if (!(tx.contents.to in this.state)) {
+      this.state[tx.contents.to] = {
+        balance: 0,
+        nonce: 0,
+      };
+    }
     // Check that this is the next transaction in the Authority node's ordering
-		// - hint: check if the nonce ordering is greater or less than it's supposed to be
+    if (tx.contents.orderNonce > this.orderNonce) {
+      this.invalidNonceTxs[tx.contents.orderNonce] = tx;
+      return;
+    }
+    if (tx.contents.nonce < this.orderNonce) {
+      console.log('passed nonce. tx rejected');
+      return;
+    }
     // if all checks pass...
     if (tx.contents.type === 'send') {
       // Send coins
