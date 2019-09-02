@@ -1,7 +1,7 @@
 const EthCrypto = require('eth-crypto');
 const NetworkSimulator = require('./networkSimPoA');
 const Authority = require('./Authority');
-const { getTxHash } = require('../nodeAgent');
+const { getTxHash } = require('../../nodeAgent');
 const PoAClient = require('./PoAClient');
 
 // ****** Test this out using a simulated network ****** //

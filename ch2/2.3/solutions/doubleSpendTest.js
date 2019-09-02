@@ -1,28 +1,13 @@
 const EthCrypto = require('eth-crypto');
-const NetworkSimulator = require('./networkSimFaultTolerant.js');
+const { getTxHash } = require('../../nodeAgent');
 const FaultTolerant = require('./faultTolerant');
-const { getTxHash } = require('../nodeAgent');
+const NetworkSimulator = require('./networkSimFaultTolerant');
 
-class TimestampSimulator extends NetworkSimulator {
-  constructor(latency, packetLoss) {
-    super(latency, packetLoss);
-  }
-
-  tick() {
-    // call NetworkSimulator tick()
-    super.tick();
-
-    // at the 5th timestep try faking an early spend
-    if (this.time === 5) {
-      network.broadcast(evilNode.pid, fakeEarlySpend);
-    }
-  }
-}
 // ****** Test this out using a simulated network ****** //
 const numNodes = 5;
 const wallets = [];
 const genesis = {};
-const network = new TimestampSimulator((latency = 5), (packetLoss = 0));
+const network = new NetworkSimulator((latency = 5), (packetLoss = 0));
 for (let i = 0; i < numNodes; i++) {
   // Create new identity
   wallets.push(EthCrypto.createIdentity());
@@ -37,12 +22,11 @@ genesis[wallets[0].address] = {
   balance: 100,
   nonce: 0,
 };
-// init nodes
 const nodes = [];
 // Create new nodes based on our wallets, and connect them to the network
 for (let i = 0; i < numNodes; i++) {
   nodes.push(
-    // push a new fault tolerant node to the network
+    // this time we're going to create fault tolerant nodes rather than altruistic spender nodes
     new FaultTolerant(
       wallets[i],
       JSON.parse(JSON.stringify(genesis)),
@@ -60,32 +44,20 @@ const victims = [
   network.peers[evilNode.pid][0],
   network.peers[evilNode.pid][1],
 ];
-const generateCustomTx = (to, amount, timestamp, node) => {
-  const unsignedTx = {
-    type: 'send',
-    amount,
-    from: node.wallet.address,
-    to,
-    nonce: node.state[node.wallet.address].nonce,
-    timestamp,
-  };
-  const tx = {
-    contents: unsignedTx,
-    sigs: [],
-  };
-  tx.sigs.push(EthCrypto.sign(node.wallet.privateKey, getTxHash(tx)));
-  return tx;
-};
-// TODO
-// create two transactions with the same amount, but with different timestamps
-// broadcast both transactions to the network at the same time
-
+const spends = [
+  evilNode.generateTx(victims[0].wallet.address, (amount = 100)),
+  evilNode.generateTx(victims[1].wallet.address, (amount = 100)),
+];
+console.log('transactions:', spends);
+network.broadcastTo(evilNode.pid, victims[0], spends[0]);
+network.broadcastTo(evilNode.pid, victims[1], spends[1]);
 // Now run the network until an invalid spend is detected.
-// We will also detect if the two victim nodes, for a short time, both believe they have been sent money by our evil node. That's our double spend!
+// We will also detect if the two victim nodes, for a short time, both believe they have been sent money
+// by our evil node. That's our double spend!
 try {
-  network.run((steps = 100));
+  network.run((steps = 70));
 } catch (e) {
-  console.log('err:', e);
+  console.err(e);
   for (let i = 0; i < numNodes; i++) {
     console.log('~~~~~~~~~~~ Node', i, '~~~~~~~~~~~');
     console.log(nodes[i].state);
