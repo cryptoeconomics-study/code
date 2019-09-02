@@ -1,6 +1,7 @@
 var EthCrypto = require('eth-crypto')
 var NetworkSimulator = require('../networksim')
 var Miner = require('./PoWMiner')
+var {getTxHash} = require('../nodeAgent')
 
 // ****** Test this out using a simulated network ****** //
 const numNodes = 5
@@ -56,20 +57,18 @@ for (let i = 0; i < 1500; i++) {
 
 
 for (let i = 0; i < numNodes; i++) {
-  console.log('xxxxxxxxxxxxxxxxxxxxx')
+  console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
   console.log('node: ', nodes[i].p2pNodeId.address)
   // console.log('my chain',nodes[i].blockchain)
   // console.log('all blocks',nodes[i].allBlocks)
   console.log('chain len', nodes[i].blockchain.length)
   for (let j = 0; j < nodes[i].blockchain.length; j++) {
-    console.log('block number', nodes[i].blockchain[j].number)
-    console.log('block parentHash', nodes[i].blockchain[j].parentHash)
-    console.log('txs:', nodes[i].blockchain[j].contents.txList)
+    const block = nodes[i].blockchain[j]
+    console.log('block ', block.number,':', getTxHash(block))
+    if(nodes[i].blockchain[j].contents.txList.length) {
+      console.log('tx:', nodes[i].blockchain[j].contents.txList[0].contents)
+    }
   }
   console.log('node state: ', nodes[i].state)
-  // console.log('invalidNonceTxs: ', nodes[i].invalidNonceTxs)
-
-  // nodes[i].getState()
-  // console.log('new node state: ', nodes[i].state)
 }
 

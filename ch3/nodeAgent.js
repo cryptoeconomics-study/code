@@ -14,7 +14,6 @@ class Node {
     this.network = network
     this.state = genesis
     this.transactions = []
-    this.invalidNonceTxs = {}
     this.nonce = 0
   }
 
@@ -23,18 +22,8 @@ class Node {
       return
     }
     this.transactions.push(tx)
-    this.applyTransaction(tx)
+    this.applyTransaction(tx, this.state)
     this.network.broadcast(this.pid, tx)
-    this.applyInvalidNonceTxs(tx.contents.from)
-  }
-
-  applyInvalidNonceTxs (address) {
-    const targetNonce = this.state[address].nonce
-    if (address in this.invalidNonceTxs && targetNonce in this.invalidNonceTxs[address]) {
-      this.applyTransaction(this.invalidNonceTxs[address][targetNonce])
-      delete this.invalidNonceTxs[address][targetNonce]
-      this.applyInvalidNonceTxs(address)
-    }
   }
 
   tick () {}
@@ -54,49 +43,51 @@ class Node {
     this.nonce++ //added so a node can send multiple txs before applying them (before they are included in a block)
     return tx
   }
-
-  applyTransaction (tx) {
-    // Check the from address matches the signature
+  isValidTxSig(tx) {
     const signer = EthCrypto.recover(tx.sig, getTxHash(tx.contents))
     if (signer !== tx.contents.from) {
-      throw new Error('Invalid signature!')
-    }
+      console.log('Invalid Signature on tx:', tx)
+      return false //Invalid Signature
+    } else return true
+  }
+
+  applyTransaction (tx, state) {
+    // Check the from address matches the signature
+    if(!this.isValidTxSig(tx)) return false
     // If we don't have a record for this address, create one
-    if (!(tx.contents.to in this.state)) {
-      this.state[[tx.contents.to]] = {
+    if (!(tx.contents.to in state)) {
+      state[[tx.contents.to]] = {
         balance: 0,
         nonce: 0
       }
     }
     // Check that the nonce is correct for replay protection
-    if (tx.contents.nonce !== this.state[[tx.contents.from]].nonce) {
-      // If it isn't correct, then we should add the transaction to invalidNonceTxs
-      if (!(tx.contents.from in this.invalidNonceTxs)) {
-        this.invalidNonceTxs[tx.contents.from] = {}
-      }
-      this.invalidNonceTxs[tx.contents.from][tx.contents.nonce] = tx
-      return
+    if (tx.contents.nonce !== state[[tx.contents.from]].nonce) {
+      console.log('Invalid nonce on tx:', tx)
+      return false
     }
     if (tx.contents.type === 'send') { // Send coins
-      if (this.state[[tx.contents.from]].balance - tx.contents.amount < 0) {
-        console.log('not enough money...yet')
-        return
-        // throw new Error('Not enough money!')
+      if (state[[tx.contents.from]].balance - tx.contents.amount < 0) {
+        console.log('Not enough money to spend tx:', tx)
+        return false
       }
-      this.state[[tx.contents.from]].balance -= tx.contents.amount
-      this.state[[tx.contents.to]].balance += tx.contents.amount
+      state[[tx.contents.from]].balance -= tx.contents.amount
+      state[[tx.contents.to]].balance += tx.contents.amount
     } else if (tx.contents.type === 'mint') { //Block reward
+      //TODO handle block reward
       // Check the from address matches the signature
-      const signer = EthCrypto.recover(tx.sig, getTxHash(tx.contents))
-      if (signer !== tx.contents.to) {
-        throw new Error('Invalid signature in mint tx!')
-      }
-      // Update state
-      this.state[[tx.contents.to]].balance += tx.contents.amount
+      // const signer = EthCrypto.recover(tx.sig, getTxHash(tx.contents))
+      // if (signer !== tx.contents.to) {
+      //   throw new Error('Invalid signature in mint tx!')
+      // }
+      // // Update state
+      // this.state[[tx.contents.to]].balance += tx.contents.amount
     } else {
-      throw new Error('Invalid transaction type!')
+      console.log('Invalid transaction type!')
+      return false
     }
-    this.state[[tx.contents.from]].nonce += 1
+    state[[tx.contents.from]].nonce += 1
+    return true
   }
 }
 

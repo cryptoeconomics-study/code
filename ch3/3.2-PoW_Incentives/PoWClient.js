@@ -6,11 +6,11 @@ var {Node, getTxHash} = require('../nodeAgent')
 class Client extends Node {
   constructor (wallet, genesis, network) {
     super(wallet, genesis, network)
-    this.genesis = genesis
     this.blockchain = [] //longest chain
     this.allBlocks = []  //all blocks
     this.blockNumber = 0 //keep track of blocks added to blockchain despite getState()
-    this.difficulty = 12
+    this.difficulty = 13
+
     const genesisBlock = {
       nonce: 0,
       number: 0,
@@ -43,11 +43,6 @@ class Client extends Node {
     this.transactions.push(tx)      //add tx to mempool
     this.network.broadcast(this.pid, tx)
   }
-  //Clones state, tries to apply the block to that state
-  isValidBlock(block, state) {
-    const tempState = JSON.parse(JSON.stringify(state))
-    return this.applyBlock(block, tempState)
-  }
 
   isValidBlockHash(block) {
     const blockHash = getTxHash(block)
@@ -62,78 +57,63 @@ class Client extends Node {
       return
     if (!this.isValidBlockHash(block))
       return
-    //TODO Check that block is valid
-    let state
+    this.allBlocks.push(block) //add block to all blocks received
     //if the block builds directly on the current head of the chain, append to chain
     if (block.parentHash === getTxHash(this.blockchain.slice(-1)[0])) {
-      state = this.state
-    } else {
-      //TODO Request missing blocks from peers
-      state = this.getState(block)
-    }
-    if (this.isValidBlock(block, state) &&
-        block.number > this.blockNumber) {
       this.blockNumber++ //increment
-      this.allBlocks.push(block) //add block to all blocks received
       this.blockchain.push(block) //add block to own blockchain
-      this.applyBlock(block, this.state)
-      this.network.broadcast(this.pid, block) //broadcast new block to network
+      this.applyBlock(block)
+    } else {
+      this.allBlocks.push(block)
+      this.updateState() //check if blockchain is the longest sequence
     }
+    this.network.broadcast(this.pid, block) //broadcast new block to network
   }
 
-  // Send a request to peers for a missing block by blockHash
-  requestBlock(blockHash) {
-
-  }
-
-
-  findBlock(blockHash) {
-    for (let block of this.allBlocks) {
-      if (getTxHash(block) === blockHash) {
-        return block
-      }
-    }
-    console.log('couldnt find block', blockHash.substring(0, 10))
-    return false
-  }
   // Fork choice
   // Only apply transactions which are contained in the longest chain
   // and returns the resulting state object.
-  getState(block) {
+  updateState() {
     //a temp chain
     let tempChain = []
     let allBlocks = this.allBlocks
-    let max = block.number
+    //return max blocknumber from allBlocks
+    let max = Math.max.apply(Math, allBlocks.map(function(block) { return block.number; }))
+    //add the highestBlockNumber to tempChain using blockNumber
+    for (let block of allBlocks) { //TODO optimize this...Once there are many blocks in allBlocks, this may be SLOW af
+      if (block.number === max) {
+        tempChain.push(block)
+        break;
+      }
+    }
     //add max number of blocks to tempChain using parentHash
     //i is the current block number
-    let prevHash = block.parentHash
-    while(prevHash !== 0) {
-      const prevBlock = this.findBlock(prevHash)
-      if(!prevBlock) {
-        console.log(this.pid.substring(0, 6),'all blocks:')
-        for (let allblock of this.allBlocks) {
-          console.log(getTxHash(allblock).substring(0, 10))
+    for (let i = max; i > 0; i--) {
+      const prevHash = tempChain[0].parentHash
+      for (let block of allBlocks) {
+        if (getTxHash(block) === prevHash) { //TODO verify blockhash before adding to allBlocks
+          tempChain.unshift(block) //add block to front of array
+          break;
         }
       }
-      tempChain.unshift(prevBlock)
-      prevHash = tempChain[0].parentHash
     }
+    //save the ordered sequence
+    this.blockchain = tempChain
     //apply all txs from ordered list of blocks
-    let newState = JSON.parse(JSON.stringify(this.genesis)) //clone the genesis state into newState
     for (let block of this.blockchain) {
-      this.applyBlock(block, newState)
+      this.applyBlock(block)
     }
-    return newState
+    return this.state
   }
 
-  applyBlock(block, state) {
+  applyBlock(block) {
     const txList = block.contents.txList
     for (let tx of txList) {
-      const successful = this.applyTransaction(tx, state)       //update state
-      if(!successful)
-        return false
+      this.applyTransaction(tx)       //update state
+      if (tx.contents.from !== 0) { //mint tx is excluded
+        this.applyInvalidNonceTxs(tx.contents.from) //update state
+      }
     }
-  return true
   }
 }
 
