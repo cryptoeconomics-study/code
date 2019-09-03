@@ -4,6 +4,14 @@
 
 <br />
 
+## Decentralized consensus and blockchains
+- Let's explore the fundamentals of decentralized consensus and the blockchain data structure
+
+TODO
+- pull the core/basic things from 3.2 and introduce them here.
+
+<br />
+
 ## Thing 1
 
 Blah Blah Blah
