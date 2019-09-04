@@ -52,6 +52,17 @@ class Client extends Node {
     return leadingZeros === 0;
   }
 
+  applyBlock(block) {
+    const { txList } = block.contents;
+    for (const tx of txList) {
+      this.applyTransaction(tx); // update state
+      if (tx.contents.from !== 0) {
+        // mint tx is excluded
+        this.applyInvalidNonceTxs(tx.contents.from); // update state
+      }
+    }
+  }
+
   receiveBlock(block) {
     if (this.allBlocks.includes(block)) return;
     if (!this.isValidBlockHash(block)) return;
@@ -104,17 +115,6 @@ class Client extends Node {
       this.applyBlock(block);
     }
     return this.state;
-  }
-
-  applyBlock(block) {
-    const { txList } = block.contents;
-    for (const tx of txList) {
-      this.applyTransaction(tx); // update state
-      if (tx.contents.from !== 0) {
-        // mint tx is excluded
-        this.applyInvalidNonceTxs(tx.contents.from); // update state
-      }
-    }
   }
 }
 
