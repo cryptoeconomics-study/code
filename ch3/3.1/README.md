@@ -70,17 +70,10 @@ Once we've checked that a block is valid, we then want to update our view of the
 // Processing the transactions in a block
 applyBlock(block) {
 	// get all the transactions in block.contents
-	const { txList } = block.contents;
 	// for every transaction in the transaction list
-	for (const tx of txList) {
 		// process the transaction to update our view of the state
-		this.applyTransaction(tx);
 		// if the transaction does not come from the 0 address (which is a mint transaction for miners and has no sender)
-		if (tx.contents.from !== 0) {
 			// check any pending transactions with invalid nonces to see if they are now valid
-			this.applyInvalidNonceTxs(tx.contents.from); // update state
-		}
-	}
 }
 ```
 
@@ -107,26 +100,14 @@ The functions we just created perform various functions needed to process an inc
 // Receiving a block, making sure it's valid, and then processing it
 receiveBlock(block) {
 	// if we've already seen the block return to do nothing
-	if (this.allBlocks.includes(block)) return;
 	// if the blockhash is not valid return to do nothing
-	if (!this.isValidBlockHash(block)) return;
 	// if checks pass, add block to all blocks received
-	this.allBlocks.push(block);
 	// if the block builds directly on the current head of the chain, append to chain
-	if (block.parentHash === getTxHash(this.blockchain.slice(-1)[0])) {
 		// incriment the block number
-		this.blockNumber++;
 		// add the block to our view of the blockchain
-		this.blockchain.push(block);
 		// process the block
-		this.applyBlock(block);
-	} else {
-		this.allBlocks.push(block);
 		// update our state with the new block
-		this.updateState();
-	}
 	// broadcast the block to the network
-	this.network.broadcast(this.pid, block);
 }
 ```
 
@@ -135,5 +116,7 @@ receiveBlock(block) {
 ## Testing
 
 To test your PoWClient, go into the `test` folder and run `node PoWAllMinerTest.js` or `node PoWSingleMinerTest.js`. These tests will simulate a network of miners mining blocks and creating transactions for your PoWClient to process.
+
+<br />
 
 > As always, if you have questions or get stuck please hit up the community on the [forum!](https://forum.cryptoeconomics.study)
