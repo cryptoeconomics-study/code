@@ -32,7 +32,8 @@
     "lodash": "^4.17.14",
     "mocha": "^6.1.4",
     "npm": "^6.10.1",
-    "seedrandom": "^2.4.4"
+    "seedrandom": "^2.4.4",
+    "hex-to-binary": "^1.0.1"
   },
   "devDependencies": {
     "eslint": "^5.16.0",
