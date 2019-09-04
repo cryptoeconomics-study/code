@@ -1,7 +1,7 @@
 const EthCrypto = require('eth-crypto');
-const NetworkSimulator = require('../networksim');
-const Miner = require('./PoWMiner');
-const { getTxHash } = require('../nodeAgent');
+const NetworkSimulator = require('../../networksim');
+const Miner = require('../PoWMiner');
+const Client = require('./PoWClient');
 
 // ****** Test this out using a simulated network ****** //
 const numNodes = 5;
@@ -25,12 +25,16 @@ genesis[wallets[0].address] = {
 
 const nodes = [];
 // Create new nodes based on our wallets, and connect them to the network
-for (let i = 0; i < numNodes; i++) {
+for (let i = 0; i < numNodes - 1; i++) {
   nodes.push(
-    new Miner(wallets[i], JSON.parse(JSON.stringify(genesis)), network),
+    new Client(wallets[i], JSON.parse(JSON.stringify(genesis)), network),
   );
   network.connectPeer(nodes[i], 3);
 }
+nodes.push(
+  new Miner(wallets[numNodes - 1], JSON.parse(JSON.stringify(genesis)), network),
+);
+network.connectPeer(nodes[numNodes - 1], 3);
 
 const tx0 = nodes[0].generateTx(nodes[1].wallet.address, 10);
 network.broadcast(nodes[0].pid, tx0);
@@ -58,19 +62,18 @@ for (let i = 0; i < 1500; i++) {
 }
 
 for (let i = 0; i < numNodes; i++) {
-  console.log(
-    'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-  );
   console.log('node: ', nodes[i].p2pNodeId.address);
   // console.log('my chain',nodes[i].blockchain)
   // console.log('all blocks',nodes[i].allBlocks)
   console.log('chain len', nodes[i].blockchain.length);
   for (let j = 0; j < nodes[i].blockchain.length; j++) {
-    const block = nodes[i].blockchain[j];
-    console.log('block ', block.number, ':', getTxHash(block));
-    if (nodes[i].blockchain[j].contents.txList.length) {
-      console.log('tx:', nodes[i].blockchain[j].contents.txList[0].contents);
-    }
+    console.log('block number', nodes[i].blockchain[j].number);
+    console.log('block parentHash', nodes[i].blockchain[j].parentHash);
+    console.log('txs:', nodes[i].blockchain[j].contents.txList);
   }
   console.log('node state: ', nodes[i].state);
+  // console.log('invalidNonceTxs: ', nodes[i].invalidNonceTxs)
+  console.log('xxxxxxxxx0xxxxxxxxx');
+  // nodes[i].getState()
+  // console.log('new node state: ', nodes[i].state)
 }

@@ -1,6 +1,6 @@
 const EthCrypto = require('eth-crypto');
 const hexToBinary = require('hex-to-binary');
-const { Node, getTxHash } = require('../nodeAgent');
+const { Node, getTxHash } = require('../../nodeAgent');
 
 // Add Client class which generates & sends transactions
 class Client extends Node {
