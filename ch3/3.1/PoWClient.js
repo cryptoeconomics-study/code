@@ -27,95 +27,60 @@ class Client extends Node {
     this.allBlocks.push(genesisBlock);
   }
 
+  // Check if a message is a transaction or a block
   onReceive(message) {
-    switch (message.contents.type) {
-      case 'send':
-        this.receiveTx(message);
-        break;
-      case 'block':
-        this.receiveBlock(message);
-        break;
-    }
+    // check the message.contents.type
+      // if it's 'send', receiveTx(message)
+      // if it's 'block', receiveBlock(message)
   }
 
+  // Process an incoming transaction
   receiveTx(tx) {
-    if (this.transactions.includes(tx)) return;
-    this.transactions.push(tx); // add tx to mempool
-    this.network.broadcast(this.pid, tx);
+    // if we already have the transaction in our state, return to do nothing
+    // add the transaction to the pending transaction pool (this is often called the mempool)
+    // broadcast the transaction to the res of the network
   }
 
+  // Check the hash of an incoming block
   isValidBlockHash(block) {
-    const blockHash = getTxHash(block);
-    // Found block
-    const binBlockHash = hexToBinary(blockHash.substr(2));
-    const leadingZeros = parseInt(binBlockHash.substring(0, this.difficulty));
-    return leadingZeros === 0;
+    // hash the block
+    // convert the hex string to binary
+    // check how many leading zeros the hash has
+    // compare the amount of leading zeros in the block hash to the network difficulty and return a boolean if they match
   }
 
+  // Processing the transactions in a block
   applyBlock(block) {
-    const { txList } = block.contents;
-    for (const tx of txList) {
-      this.applyTransaction(tx); // update state
-      if (tx.contents.from !== 0) {
-        // mint tx is excluded
-        this.applyInvalidNonceTxs(tx.contents.from); // update state
-      }
-    }
+    // get all the transactions in block.contents
+    // for every transaction in the transaction list
+      // process the transaction to update our view of the state
+      // if the transaction does not come from the 0 address (which is a mint transaction for miners and has no sender)
+        // check any pending transactions with invalid nonces to see if they are now valid
   }
 
-  receiveBlock(block) {
-    if (this.allBlocks.includes(block)) return;
-    if (!this.isValidBlockHash(block)) return;
-    this.allBlocks.push(block); // add block to all blocks received
-    // if the block builds directly on the current head of the chain, append to chain
-    if (block.parentHash === getTxHash(this.blockchain.slice(-1)[0])) {
-      this.blockNumber++; // increment
-      this.blockchain.push(block); // add block to own blockchain
-      this.applyBlock(block);
-    } else {
-      this.allBlocks.push(block);
-      this.updateState(); // check if blockchain is the longest sequence
-    }
-    this.network.broadcast(this.pid, block); // broadcast new block to network
-  }
-
-  // Fork choice
-  // Only apply transactions which are contained in the longest chain
-  // and returns the resulting state object.
+  // Update the state with transactions which are contained in the longest chain and return the resulting state object (this process is often referred to as the "fork choice" rule)
   updateState() {
-    // a temp chain
-    const tempChain = [];
-    const { allBlocks } = this;
-    // return max blocknumber from allBlocks
-    const max = Math.max.apply(Math, allBlocks.map(block => block.number));
+    // create an array to represent a temp chain
+    // create a variable to represent all the blocks that we have already processed
+    // find the highest block number in all the blocks
     // add the highestBlockNumber to tempChain using blockNumber
-    for (const block of allBlocks) {
-      // TODO optimize this...Once there are many blocks in allBlocks, this may be SLOW af
-      if (block.number === max) {
-        tempChain.push(block);
-        break;
-      }
-    }
     // add max number of blocks to tempChain using parentHash
-    // i is the current block number
-    for (let i = max; i > 0; i--) {
-      const prevHash = tempChain[0].parentHash;
-      for (const block of allBlocks) {
-        if (getTxHash(block) === prevHash) {
-          // TODO verify blockhash before adding to allBlocks
-          tempChain.unshift(block); // add block to front of array
-          break;
-        }
-      }
-    }
     // save the ordered sequence
-    this.blockchain = tempChain;
     // apply all txs from ordered list of blocks
-    for (const block of this.blockchain) {
-      this.applyBlock(block);
-    }
-    return this.state;
+    // return the new state
   }
+
+  // Receiving a block, making sure it's valid, and then processing it
+  receiveBlock(block) {
+    // if we've already seen the block return to do nothing
+    // if the blockhash is not valid return to do nothing
+    // if checks pass, add block to all blocks received
+    // if the block builds directly on the current head of the chain, append to chain
+      // incriment the block number
+      // add the block to our view of the blockchain
+      // process the block
+      // update our state with the new block
+    // broadcast the block to the network
 }
 
 module.exports = Client;
