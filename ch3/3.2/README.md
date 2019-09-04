@@ -4,6 +4,12 @@
 
 <br />
 
+# Bitcoin and Nakamoto Consensus
+
+While hashes and networking have existed for a long time, the core innovation of Bitcoin is that participants are incentivized to do the work to prove that they can submit new blocks, which creates a public good even though all participants are acting economically rationally.
+
+<br />
+
 ## Thing 1
 
 Blah Blah Blah
@@ -19,6 +25,12 @@ Blah Blah Blah
 ```
 // code
 ```
+
+<br />
+
+## Testing
+
+Blah Blah Blah
 
 <br />
 

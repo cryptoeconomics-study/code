@@ -4,8 +4,10 @@
 
 <br />
 
-## Decentralized consensus and blockchains
+# Decentralized Consensus and Blockchains
 - Let's explore the fundamentals of decentralized consensus and the blockchain data structure
+
+<br />
 
 In this chapter we're going to explore many of the core functions that a Proof of Work blockchain client would need. You'll build them out and then test them with a network simulation.
 
