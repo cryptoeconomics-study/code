@@ -35,27 +35,30 @@ network.connectPeer(nodes[numNodes-1], 3)
 
 const tx0 = nodes[0].generateTx(nodes[1].wallet.address,10)
 nodes[0].network.broadcast(nodes[0].pid, tx0)
-for (let i = 0; i < 800; i++) {
+for (let i = 0; i < 2000; i++) {
   network.tick()
 }
 const tx1 = nodes[0].generateTx(nodes[2].wallet.address, 5)
 nodes[0].network.broadcast(nodes[0].pid, tx1)
-for (let i = 0; i < 800; i++) {
+for (let i = 0; i < 2000; i++) {
   network.tick()
 }
 const tx2 = nodes[0].generateTx(nodes[3].wallet.address, 6)
 nodes[0].network.broadcast(nodes[0].pid, tx2)
-for (let i = 0; i < 800; i++) {
+for (let i = 0; i < 2000; i++) {
   network.tick()
 }
 const tx3 = nodes[1].generateTx(nodes[4].wallet.address, 3)
 nodes[1].network.broadcast(nodes[1].pid, tx3)
-for (let i = 0; i < 800; i++) {
+for (let i = 0; i < 2000; i++) {
   network.tick()
 }
 
-
+const selfishAddress = nodes[numNodes-1].wallet.address
+console.log(selfishAddress)
+let totalHashRate = 0
 for (let i = 0; i < numNodes; i++) {
+  totalHashRate += nodes[i].hashRate;
   console.log('node: ', nodes[i].p2pNodeId.address)
   // console.log('my chain',nodes[i].blockchain)
   // console.log('all blocks',nodes[i].allBlocks)
@@ -70,3 +73,11 @@ for (let i = 0; i < numNodes; i++) {
   // nodes[i].getState()
   // console.log('new node state: ', nodes[i].state)
 }
+const totalBlocks = nodes[0].blockchain.length
+let selfishBlocks = 0
+for (let block of nodes[0].blockchain) {
+  if (block.coinbase === selfishAddress)
+    selfishBlocks++;
+}
+console.log('Selfish % Hash rate:', 100 * nodes[numNodes-1].hashRate / totalHashRate)
+console.log('Selfish % Blocks mined:', 100 * selfishBlocks / totalBlocks)
