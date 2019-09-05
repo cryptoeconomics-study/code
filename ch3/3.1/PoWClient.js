@@ -81,6 +81,7 @@ class Client extends Node {
       // process the block
       // update our state with the new block
     // broadcast the block to the network
+  }
 }
 
 module.exports = Client;
