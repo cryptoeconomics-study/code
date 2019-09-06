@@ -40,7 +40,7 @@ class SelfishMiner extends Client {
     const publicForkLength = newHead.number - this.privateForkHeight
     const privateForkLength = this.privateFork.length
     if(getTxHash(newHead) !== parentHash) {
-      if( privateForkLength === 0) {
+      if(privateForkLength === 0) {
         //new block extends chain, and have no private fork
         this.blockAttempt = this.createBlock(); // Start mining new block
       } else if (privateForkLength === 1  && publicForkLength === privateForkLength) {
@@ -82,9 +82,9 @@ class SelfishMiner extends Client {
   }
 
   broadcastPrivateFork() {
+    console.log('Broadcasting private fork:', this.privateFork.length, 'blocks')
     this.blockchain = this.blockchain.slice(0, this.privateForkHeight)
     for(let block of this.privateFork) {
-      console.log('block', block)
       this.blockchain.push(block)
       this.allBlocks.push(block)
       this.network.broadcast(this.pid, block)

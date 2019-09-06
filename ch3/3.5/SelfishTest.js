@@ -7,7 +7,7 @@ var SelfishMiner = require('./SelfishMiner')
 const numNodes = 5
 const wallets = []
 const genesis = {}
-const latency = 15 //10-15 ticks per message
+const latency = 9 //6-9 ticks per message
 const packetLoss = 0
 const network = new NetworkSimulator(latency, packetLoss)
 for (let i = 0; i < numNodes; i++) {
@@ -50,7 +50,7 @@ for (let i = 0; i < 2000; i++) {
 }
 const tx3 = nodes[1].generateTx(nodes[4].wallet.address, 3)
 nodes[1].network.broadcast(nodes[1].pid, tx3)
-for (let i = 0; i < 2000; i++) {
+for (let i = 0; i <10000; i++) {
   network.tick()
 }
 
@@ -76,8 +76,12 @@ for (let i = 0; i < numNodes; i++) {
 const totalBlocks = nodes[0].blockchain.length
 let selfishBlocks = 0
 for (let block of nodes[0].blockchain) {
-  if (block.coinbase === selfishAddress)
+  if (block.coinbase === selfishAddress) {
     selfishBlocks++;
+    console.log('Block', block.number, 'SELFISH')
+  } else {
+    console.log('Block', block.number, 'honest')
+  }
 }
 console.log('Selfish % Hash rate:', 100 * nodes[numNodes-1].hashRate / totalHashRate)
 console.log('Selfish % Blocks mined:', 100 * selfishBlocks / totalBlocks)
