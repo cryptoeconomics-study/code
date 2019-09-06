@@ -6,6 +6,7 @@ const { Node, getTxHash } = require('../nodeAgent');
 class Client extends Node {
   constructor(wallet, genesis, network) {
     super(wallet, genesis, network);
+    this.genesisState = genesis;
     this.blockchain = []; // longest chain
     this.allBlocks = []; // all blocks
     this.blockNumber = 0; // keep track of blocks added to blockchain despite getState()
@@ -29,6 +30,7 @@ class Client extends Node {
 
   // Check if a message is a transaction or a block
   onReceive(message) {
+    if(!message.contents) console.log(message)
     // check the message.contents.type
     switch (message.contents.type) {
       // if it's 'send', receiveTx(message)
@@ -88,6 +90,10 @@ class Client extends Node {
     const { allBlocks } = this;
     // find the highest block number in all the blocks
     const max = Math.max.apply(Math, allBlocks.map(block => block.number));
+    //The current head already makes the longest chain, so don't update
+    if(this.blockchain.slice(-1)[0].number === max) {
+      return;
+    }
     // add the highestBlockNumber to tempChain using blockNumber
     for (const block of allBlocks) {
       if (block.number === max) {
@@ -105,12 +111,18 @@ class Client extends Node {
         }
       }
     }
+    //tempchain is missing blocks
+    if(tempChain.slice(-1)[0].number+1 !== tempChain.length)
+      return;
     // save the ordered sequence
     this.blockchain = tempChain;
+    //reset state
+    this.state = JSON.parse(JSON.stringify(this.genesisState))
     // apply all txs from ordered list of blocks
     for (const block of this.blockchain) {
       this.applyBlock(block);
     }
+    this.blockNumber = this.blockchain.slice(-1)[0].number
     // return the new state
     return this.state;
   }
@@ -122,6 +134,13 @@ class Client extends Node {
     // if the blockhash is not valid return to do nothing
     if (!this.isValidBlockHash(block)) return;
     // if checks pass, add block to all blocks received
+    console.log(
+      this.pid.substring(2, 6),
+      'received a block:',
+      getTxHash(block).substring(5, 10),
+      'at height',
+      block.number,
+    );
     this.allBlocks.push(block);
     // if the block builds directly on the current head of the chain, append to chain
     if (block.parentHash === getTxHash(this.blockchain.slice(-1)[0])) {
@@ -132,7 +151,6 @@ class Client extends Node {
       // process the block
       this.applyBlock(block);
     } else {
-      this.allBlocks.push(block);
       // update our state with the new block
       this.updateState();
     }
