@@ -75,7 +75,7 @@ We'll simply need to take our two leaf hashes and combine them using the `concat
 
 On the next stage we'll move onto some more in-depth scenarios.
 
-## Concat Function
+### Concat Function
 
 To simplify this merkle tree implementation and to make debugging easier, we'll pass a concatenation function from the tests into the MerkleTree constructor.
 
