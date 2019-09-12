@@ -27,12 +27,8 @@ class SelfishMiner extends Client {
         );
         const validBlock = this.blockAttempt;
         // record height of the miner's private fork
-        if (!this.privateFork.length) this.privateForkHeight = this.blockNumber;
         // add our latest valid block to our fork
-        this.privateFork.push(validBlock);
-        // start creating a new block
-        this.blockAttempt = this.createBlock();
-        return;
+        // start creating a new block and then return to exit the loop
       }
       this.blockAttempt.nonce++;
     }
@@ -43,35 +39,12 @@ class SelfishMiner extends Client {
     const { parentHash } = this.blockAttempt;
     super.receiveBlock(block);
     const newHead = this.blockchain.slice(-1)[0];
-    // if the block head has changed, mine on top of the new head
-    // check to see if the other miners have caught up
-    const publicForkLength = newHead.number - this.privateForkHeight;
-    const privateForkLength = this.privateFork.length;
-    if (getTxHash(newHead) !== parentHash) {
-      if (privateForkLength === 0) {
-        // new block extends chain, and have no private fork so start mining a new block
-        this.blockAttempt = this.createBlock();
-      } else if (
-        privateForkLength === 1
-        && publicForkLength === privateForkLength
-      ) {
-        // public Fork has length 1 and private Fork has length 1, so broadcast
-        this.broadcastPrivateFork();
-      } else if (
-        privateForkLength > 1
-        && publicForkLength === privateForkLength - 1
-      ) {
-        // e.g. public Fork has length 3 and private fork has just reached length 2, so broadcast
-        this.broadcastPrivateFork();
-      } else if (
-        privateForkLength > 0
-        && publicForkLength > privateForkLength
-      ) {
-        // public blockchain has grown longer than private fork. Discard private fork and start mining on the public chain (longest chain)
-        this.privateFork = [];
-        this.blockAttempt = this.createBlock();
-      }
-    }
+    // if the block head has changed due to a new block coming in, mine on top of the new head
+    // then check to see if the other miners have caught up
+    // - our new block extends our private chain start mining a new block
+    // - public Fork has length 1 and private Fork has length 1, so broadcast
+    // -  public Fork has length 3 and private fork has just reached length 2, so broadcast
+    // - public blockchain has grown longer than private fork. Discard private fork and start mining on the public chain (longest chain)
   }
 
   // Creating a new block
@@ -103,28 +76,15 @@ class SelfishMiner extends Client {
 
   // Broadcasting our private fork
   broadcastPrivateFork() {
-    console.log(
-      'Broadcasting private fork:',
-      this.privateFork.length,
-      'blocks',
-    );
+		// log the private fork to the console
     // resize our view of the blockchain to add the length of our private fork
-    this.blockchain = this.blockchain.slice(0, this.privateForkHeight);
     // broadcast all the blocks on our private fork to the network
-    for (const block of this.privateFork) {
-      // add the private block to our view of the blockchain
-      this.blockchain.push(block);
-      // add the private block to our list of all the blocks
-      this.allBlocks.push(block);
-      // broadcast the private block to the network
-      this.network.broadcast(this.pid, block);
-    }
+      // - add the private block to our view of the blockchain
+      // - add the private block to our list of all the blocks
+      // - broadcast the private block to the network
     // update block number
-    this.blockNumber = this.blockchain.slice(-1)[0].number;
     // reset private fork
-    this.privateFork = [];
     // start mining a new block
-    this.blockAttempt = this.createBlock();
   }
 }
 
