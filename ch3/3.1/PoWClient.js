@@ -30,8 +30,8 @@ class Client extends Node {
   // Check if a message is a transaction or a block
   onReceive(message) {
     // check the message.contents.type
-      // if it's 'send', receiveTx(message)
-      // if it's 'block', receiveBlock(message)
+    // if it's 'send', receiveTx(message)
+    // if it's 'block', receiveBlock(message)
   }
 
   // Process an incoming transaction
@@ -53,9 +53,9 @@ class Client extends Node {
   applyBlock(block) {
     // get all the transactions in block.contents
     // for every transaction in the transaction list
-      // process the transaction to update our view of the state
-      // if the transaction does not come from the 0 address (which is a mint transaction for miners and has no sender)
-        // check any pending transactions with invalid nonces to see if they are now valid
+    // process the transaction to update our view of the state
+    // if the transaction does not come from the 0 address (which is a mint transaction for miners and has no sender)
+    // check any pending transactions with invalid nonces to see if they are now valid
   }
 
   // Update the state with transactions which are contained in the longest chain and return the resulting state object (this process is often referred to as the "fork choice" rule)
@@ -76,10 +76,10 @@ class Client extends Node {
     // if the blockhash is not valid return to do nothing
     // if checks pass, add block to all blocks received
     // if the block builds directly on the current head of the chain, append to chain
-      // incriment the block number
-      // add the block to our view of the blockchain
-      // process the block
-      // update our state with the new block
+    // incriment the block number
+    // add the block to our view of the blockchain
+    // process the block
+    // update our state with the new block
     // broadcast the block to the network
   }
 }
