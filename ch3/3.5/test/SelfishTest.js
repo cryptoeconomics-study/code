@@ -1,7 +1,7 @@
 const EthCrypto = require('eth-crypto');
-const NetworkSimulator = require('../networksim');
-const Miner = require('./PoWMiner');
-const SelfishMiner = require('./SelfishMiner');
+const NetworkSimulator = require('../../networksim');
+const Miner = require('../PoWMiner');
+const SelfishMiner = require('../SelfishMiner');
 
 // ****** Test this out using a simulated network ****** //
 const numNodes = 5;

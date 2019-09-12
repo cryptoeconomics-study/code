@@ -1,6 +1,6 @@
 const EthCrypto = require('eth-crypto');
-const Client = require('./PoWClient');
-const { getTxHash } = require('../nodeAgent');
+const Client = require('../PoWClient');
+const { getTxHash } = require('../../nodeAgent');
 
 class SelfishMiner extends Client {
   constructor(wallet, genesis, network) {
