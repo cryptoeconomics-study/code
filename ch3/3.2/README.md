@@ -12,7 +12,7 @@ In this coding challenge we're going to extend the work we did in 3.1 to create 
 
 ## Creating Blocks
 
-Blah Blah Blah
+The reason miners are rewarded for creating valid proofs of work is that we want them to produce valid blocks for the network. The `createBlock()` function will aggregate all the valid transactions we have into a block.
 ```
 // Create a new block
 createBlock() {
@@ -34,7 +34,7 @@ createBlock() {
 
 ## Receiving and Processing Blocks
 
-Blah Blah Blah
+When we receive new blocks (or create them) we need to add them to our view of the state (blockchain). With `receiveBlock()` we will take in a block, check it, and if it's valid broadcast it to the rest of the network. Then we'll add it to our view of the blockchain and start mining on top of it to get another coinbase reward.
 ```
 // What we do when we get a new block (from ourselves or the network)
 receiveBlock(block) {
@@ -50,7 +50,7 @@ receiveBlock(block) {
 
 ## Mining
 
-Blah Blah Blah
+While the network wants miners to create new valid blocks, miners just want to get paid. As such, they are perpetually engaged in mining to find valid block hashes. `tick()` simulates that mining activity by trying to find a valid block hash on top of the most recent block.
 ```
 // Start mining
 tick() {
@@ -69,7 +69,7 @@ tick() {
 
 ## Testing
 
-Blah Blah Blah
+To test our proof of work miner we're going to use the `PoWSingleMinerTest.js` and `PoWAllMinerTest.js` network simulation in the `solutions` folder. These tests will simulate a network of miners mining blocks and creating transactions for your PoWClient to process.
 
 <br />
 
