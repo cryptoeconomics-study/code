@@ -2,61 +2,50 @@ const EthCrypto = require('eth-crypto');
 const Client = require('./PoWClient');
 const { getTxHash } = require('../nodeAgent');
 
+// This Miner class will extend the client we created in 3.1
 class Miner extends Client {
   constructor(wallet, genesis, network) {
     super(wallet, genesis, network);
+    // create a block in the constructor so that we have something to start mining on
     this.blockAttempt = this.createBlock();
-    this.hashRate = 5; // hashRate = # hashes miner can try at each tick
+    // hashRate = # hashes miner can try at each tick
+    this.hashRate = 5;
   }
 
-  tick() {
-    // Mining
-    for (let i = 0; i < this.hashRate; i++) {
-      if (this.isValidBlockHash(this.blockAttempt)) {
-        const blockHash = getTxHash(this.blockAttempt);
-        console.log(
-          this.pid.substring(0, 6),
-          'found a block:',
-          blockHash.substring(0, 10),
-          'at height',
-          this.blockAttempt.number,
-        );
-        const validBlock = this.blockAttempt;
-        this.receiveBlock(validBlock);
-        return;
-      } this.blockAttempt.nonce++;
-    }
-  }
-
-  receiveBlock(block) {
-    const { parentHash } = this.blockAttempt;
-    super.receiveBlock(block);
-    const newHead = this.blockchain.slice(-1)[0];
-    // if the block head has changed, mine on top of the new head
-    if (getTxHash(newHead) !== parentHash) {
-      this.blockAttempt = this.createBlock(); // Start mining new block
-    }
-  }
-
+  // Create a new block
   createBlock() {
-    const tx = this.transactions.shift();
-    const txList = [];
-    if (tx) txList.push(tx);
+    // get all the transactions for this block
+    // get the timestamp
+    // create a new block
+    // - nonce
+    // - block number
+    // - give ourselves the coinbase reward for finding the block
+    // - log the difficulty of the network
+    // - show the hash of the block that matches the network difficulty
+    // - timestamp
+    // - transactions
+    // return the block
+  }
 
-    const timestamp = Math.round(new Date().getTime() / 1000);
-    const newBlock = {
-      nonce: 0,
-      number: this.blockNumber + 1,
-      coinbase: this.wallet.address,
-      difficulty: this.difficulty,
-      parentHash: getTxHash(this.blockchain.slice(-1)[0]),
-      timestamp,
-      contents: {
-        type: 'block',
-        txList,
-      },
-    };
-    return newBlock;
+  // What we do when we get a new block (from ourselves or the network)
+  receiveBlock(block) {
+    // create a variable to hold the hash of the old block so that we can mine on top of it
+    // use the receiveBlock() function from the client to check the block and broadcast it to to the network
+    // update the head of the local state of our blockchain
+    // if the block head has changed, mine on top of the new head
+    // - start creating/mining a new block
+  }
+
+  // Start mining
+  tick() {
+    // for every instance we try to mine (where hashRate determines the amount of computations a GPU or ASIC could process in parrallel)
+    // - if we find a valid block
+    // -- get the valid blockhash
+    // -- log the results to the console
+    // -- create the valid block
+    // -- process the valid block
+    // -- end the loop and keep mining
+    // - if we did not find a block, incriment the nonce and try again
   }
 }
 
