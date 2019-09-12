@@ -4,32 +4,11 @@
 
 <br />
 
-# Section Title
+# Game Theory in Bitcoin
+
+This section is more of an academic exercise. As such, here's a paper to read!
+- [A brief introduction to the basics of game theory](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1968579)
 
 <br />
 
-## Thing 1
 
-Blah Blah Blah
-```
-// code
-```
-
-<br />
-
-## Thing 2
-
-Blah Blah Blah
-```
-// code
-```
-
-<br />
-
-## Testing
-
-Blah Blah Blah
-
-<br />
-
-> As always, if you have questions or get stuck please hit up the community on the [forum!](https://forum.cryptoeconomics.study)
