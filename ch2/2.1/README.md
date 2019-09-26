@@ -1,6 +1,6 @@
 > The code challenges in this course build upon each other. It's highly recommended that you start from the beginning. If you haven't already, get started with our [Installation Instructions](https://www.burrrata.ch/ces-website/docs/en/sync/dev-env-setup).
 
-> ! The chapter 2 coding challenges use a network simulation. This is created by nodeAgent.js, networkSim.js, and netTest.js in the `ch2` directory. You do not need to understand how this network simulation works to complete the chapter two coding challenges, but we highly recommend it. The README in the `ch2` directory will give you a high level overview of the network demo. Each file also has detailed code comments explaining how each function works.
+> The chapter 2 coding challenges use a network simulation. This is created by nodeAgent.js, networkSim.js, and netTest.js in the `ch2` directory. You do not need to understand how this network simulation works to complete the chapter two coding challenges, but we highly recommend it. The README in the `ch2` directory will give you a high level overview of the network demo. Each file also has detailed code comments explaining how each function works.
 
 <br />
 
@@ -51,6 +51,6 @@ class Spender extends Node {
 
 ## Testing The Spender Nodes
 
-To test our new Spender class we're going to try running it on our network simulation. Since the majority of the logic for the Node class (which Spender extends) has already been written, and what we really want to test is the latency, we're going to run the file itself. In the `invalidWithHonestNodesTest.js` file you'll see a demo at the end of the file. If you run `node invalidWithHonestNodesTest.js` in the `2.1` directory you'll see the network run for a bit, then... snafu! Due to the latency we introduced the system should fail and show us why. If you get stuck check the `solutions` directory or ask for help on the [forum](https://forum.cryptoeconomics.study/).`
+To test our new Spender class we're going to try running it on our network simulation. Since the majority of the logic for the Node class (which Spender extends) has already been written, and what we really want to test is the latency, we're going to run the file itself. In the `invalidWithHonestNodesTest.js` file you'll see a demo at the end of the file. If you run `node invalidWithHonestNodesTest.js` in the `2.1` directory you'll see the network run for a bit, then... snafu! Due to the latency we introduced the system should fail and show us why. If you get stuck check the `solutions` directory or ask for help on the [forum](https://forum.cryptoeconomics.study/).
 
 <br />

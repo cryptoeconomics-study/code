@@ -54,7 +54,7 @@ When we receive new blocks we want to check that they're legit. This is importan
 
 ### Checking the block hash
 
-The first thing we do (after double checking that we haven't already seen this block) is to check the block hash. The block hash _is_ the proof of work. It is literally proof that the miner spent the computational power to find a block hash that satisfies the network difficulty. While finding this hash is hard, checking it is as easy as counting the zeros in it. This will let us know if the block we're being sent actually has the proof of work, or if it's invalid.
+The first thing we do (after double checking that we haven't already seen this block) is to check the block hash. The block hash *is* the proof of work. It is literally proof that the miner spent the computational power to find a block hash that satisfies the network difficulty. While finding this hash is hard, checking it is as easy as counting the zeros in it. This will let us know if the block we're being sent actually has the proof of work, or if it's invalid.
 ```
 // Check the hash of an incoming block
 isValidBlockHash(block) {
