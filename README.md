@@ -48,9 +48,11 @@ We're going to be using [Mocha](https://mochajs.org/) in order to run tests, so 
 
 ### IDE / Text Editor
 
+Feel free to use any IDE (integrated development environment) or text editor of your choosing to complete the course. Here are a couple options we recommend:
+
 #### Atom
 
-We recommend [Atom](https://atom.io/) as your IDE (integrated development environment). Atom is free, open source, and works on every major operating system. Furthermore, it's easy to configure and set up. We recommend this setup by [Elad Ossadon](https://medium.com/productivity-freak/my-atom-editor-setup-for-js-react-9726cd69ad20).
+[Atom](https://atom.io/) is free, open source, and works on every major operating system. Furthermore, it's easy to configure and set up. We recommend this setup by [Elad Ossadon](https://medium.com/productivity-freak/my-atom-editor-setup-for-js-react-9726cd69ad20).
 
 TL;DR:
 - download [Atom](https://atom.io/)
@@ -66,12 +68,18 @@ Another free and open source text editor is [VIM](https://www.vim.org/). VIM sta
 - [/r/vim](https://www.reddit.com/r/vim/) - a friendly Reddit community that loves VIM (great place to learn and ask questions).
 - [burrrata's VIM setup (ubuntu)](https://github.com/burrrata/ubuntu-dev-env) - designed to be quick to install, lightweight, and work on any Ubuntu VM even without a graphical user interface (just follow the apt, vim, and javascript sections).
 
+#### Debugging
+Many users like to just debug Javascript programs by using `console.log` to print out different variables. When `console.log` isn't cutting it, we recommend using Google Chrome DevTools to debug ([guide](https://medium.com/@paul_irish/debugging-node-js-nightlies-with-chrome-devtools-7c4a1b95ae27)). It's an awesome tool that allows complete breakpoint debugging.
+
 ### Downloading the coding challenges
 
 Once you have the prerequisites installed without error, fork [this repository](https://github.com/cryptoeconomics-study/code) ([guide](https://help.github.com/en/articles/fork-a-repo)).
 Once you have your own fork at `github.com/YOUR_USERNAME/code`, create a local clone of your fork ([guide](https://help.github.com/en/articles/fork-a-repo#keep-your-fork-synced)).
 `cd` into your local clone and run `npm install` to install all of the required dependencies.
 
+### Staying up to date
+To make sure your version of the coding project is up to date, you're going to need to add the original repository as a remote repository ([guide](https://help.github.com/en/articles/configuring-a-remote-for-a-fork)). You will have to run 
+`git remote add upstream https://github.com/cryptoeconomics-study/code.git`. You can then merge the latest updates to the coding project into your fork by following this [guide](https://help.github.com/en/articles/syncing-a-fork). 
 <br />
 
 ## Technical Difficulties?
