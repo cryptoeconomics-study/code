@@ -1,4 +1,4 @@
-> Most of the code challenges in this course build upon each other. It's highly recommended that you start from the beginning. However, this challenge can be completed on its own! If you haven't already, get started with our [Installation Instructions](https://www.burrrata.ch/ces-website/docs/en/sync/dev-env-setup).
+> Most of the code challenges in this course build upon each other. It's highly recommended that you start from the beginning. However, this challenge can be completed on its own! If you haven't already, get started with our [Installation Instructions](https://cryptoeconomics.study/docs/en/sync/getting-started-development-setup).
 
 > This lesson has been forked from [Chainshot](https://www.chainshot.com/). We highly recommend you check out their [free coding lessons](https://www.chainshot.com/explore) and [affordable online classes](https://www.chainshot.com/classes)!
 <br />

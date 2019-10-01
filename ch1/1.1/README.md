@@ -1,4 +1,4 @@
-> The code challenges in this course build upon each other. It's highly recommended that you start from the beginning. If you haven't already, get started with our [Installation Instructions](https://www.burrrata.ch/ces-website/docs/en/sync/dev-env-setup).
+> The code challenges in this course build upon each other. It's highly recommended that you start from the beginning. If you haven't already, get started with our [Installation Instructions](https://cryptoeconomics.study/docs/en/sync/getting-started-development-setup).
 
 <br />
 
@@ -36,7 +36,7 @@ class Client {
 }
 ```
 
-> *Hint*: This assumes a knowledge of Javascript basics like classes and constructors. If this doesn't make sense yet, check out the Javascript section of our [Getting Started Guide](https://www.burrrata.ch/ces-website/docs/en/sync/dev-env-setup)
+> *Hint*: This assumes a knowledge of Javascript basics like classes and constructors. If this doesn't make sense yet, check out the Javascript section of our [Getting Started Guide](https://cryptoeconomics.study/docs/en/sync/getting-started-development-setup)
 > [relevant documentation](https://github.com/pubkey/eth-crypto#createidentity)
 
 > More info on clients

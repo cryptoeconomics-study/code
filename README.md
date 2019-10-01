@@ -94,9 +94,9 @@ Chromebooks are great because they're cheap and secure. Lots of people have them
 
 Now that you're good to go, let's start the course!
 
-We recommend starting at the beginning of the [Course](https://burrrata.ch/docs/en/getting-started/welcome) with the lecture videos and then trying the coding challenges, but you can also jump straight to the coding challenges [here](https://burrrata.ch/coding-challenges). Whichever path you choose, be aware that they progress sequentially so it's important that you start at the beginning of each chapter and go all the way through. Good luck! 🍀
+The course will alternate between lecture videos and coding challenges, which will have you implementing the concepts from the preceding lecture. but you can also jump straight to the coding challenges Be aware that each coding challenge build upon the previous one, so it's important that you start at the beginning of each chapter and go all the way through. Good luck! 🍀
 
-Don't forget to commit your progress to Github as you go. This will create checkpoints that allow you to go back if you made a mistake. It also creates a proof of work (get it... proof of work) that shows you actually went through the course :)
+Don't forget to commit your progress to Github as you go. This will create checkpoints that allow you to go back if you made a mistake. It will also help us track your progress and review your work at the end of the course in order to award you a certificate of completion.
 
 <br />
 
