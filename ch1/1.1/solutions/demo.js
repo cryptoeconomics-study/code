@@ -23,10 +23,6 @@ console.log("Init Alice's Client\n", alice);
 const bob = new Client();
 console.log("Init Bob's Client\n", bob);
 
-// Init Carol
-const carol = new Client();
-console.log("Init Carol's Client\n", carol);
-
 // Note
 console.log(
   'Notice that on their own Alice, Bob, and Carol just have keys. In order to have accounts that can hold tokens they need to connect to a network. The Paypal network is one such network, but Bitcoin and Ethereum are also networks. The state of the network is what determines account balances, so how the network operates is very important to users.',

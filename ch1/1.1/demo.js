@@ -23,10 +23,6 @@ console.log('The message is: ', message);
 // const bob = TODO
 // console.log('Init Bob\'s Client\n', bob)
 
-// Init Carol
-// const carol = TODO
-// console.log('Init Carol\'s Client\n', carol)
-
 // Notes
 // console.log('Notice that on their own Alice, Bob, and Carol just have keys. In order to have accounts that can hold tokens they need to connect to a network. The Paypal network is one such network, but Bitcoin and Ethereum are also networks. The state of the network is what determines account balances, so how the network operates is very important to users.')
 // console.log('Btw, you might notice that the public key is different than the address. This is because Ethereum addresses are generated from public, but are not exactly the same thing. Here\'s more info on that process: https://ethereum.stackexchange.com/questions/3542/how-are-ethereum-addresses-generated/3619#3619')
