@@ -1,4 +1,4 @@
-> This code challenge is a bonus round. It does not build on the prior course work and is not necessary to understand future course work. That being said, UTXOs are a common thing in the world of cryptoeconomics and blockchains, so we recommend recommend that you explore them.
+> This code challenge is a bonus round. It does not build on the prior course work and is not necessary to understand future course work. That being said, UTXOs are a common thing in the world of cryptoeconomics and blockchains, so we recommend that you explore them.
 
 ## UTXOs
 
