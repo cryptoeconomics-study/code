@@ -184,18 +184,16 @@ class Paypal extends Client {
   // Checks if a transaction is valid
   checkTx(tx) {
     // check that the signature is valid
-    if (this.checkTxSignature(tx)) {
-      // check that the sender and receiver are in the state
-      if (this.checkUserAddress(tx)) {
-        // check that the type is valid
-        if (this.checkTxType(tx)) {
-					// check that the nonce is valid
-					if (this.checkTxNonce(tx)) {
-						// if all checks pass return true
-						return true;
-					}
-        }
-      }
+    if (this.checkTxSignature(tx) &&
+    // check that the sender and receiver are in the state
+    this.checkUserAddress(tx) &&
+    // check that the type is valid
+    this.checkTxType(tx) &&
+		// check that the nonce is valid
+		this.checkTxNonce(tx)) {
+			// if all checks pass return true
+			return true;
+		}
     // if any checks fail return false
     return false;
   }
