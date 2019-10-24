@@ -35,7 +35,7 @@ describe('Client Tests', () => {
       EthCrypto.hash.keccak256(message),
     );
     it('should set successfully sign messages', () => {
-      assert.equal(client.sign(message), signature);
+      assert.equal(client.sign(EthCrypto.hash.keccak256(message)), signature);
     });
   });
 
@@ -51,7 +51,7 @@ describe('Client Tests', () => {
       Alice = new Client();
       Bob = new Client();
       Kevin = new Client();
-      signature = Alice.sign(message);
+      signature = Alice.sign(EthCrypto.hash.keccak256(message));
     });
     it('should be considered valid', () => {
       assert(
