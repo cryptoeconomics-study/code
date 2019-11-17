@@ -313,11 +313,8 @@ console.log(network);
 network.run(100);
 ```
 
-If you want to test out the network simulation navigate to the `ch2` directory and run `node networkSim.js` from the terminal. In the rest of the chapter we'll add more functionality to our test network, but for now just make sure that the basics are working! :)
+If you want to test out the network simulation navigate to the `ch2` directory and run `node netTest.js` from the terminal. In the rest of the chapter we'll add more functionality to our test network, but for now just make sure that the basics are working! :)
 
 > If you're having trouble getting the network simulation working [make sure you have your development environment setup correctly](getting-started/development-environment).
 
 <br />
-
-
-
