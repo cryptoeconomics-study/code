@@ -33,7 +33,7 @@
     "http-server": "^0.11.1",
     "lodash": "^4.17.14",
     "mocha": "^6.1.4",
-    "npm": "^6.10.1",
+    "npm": "^6.13.4",
     "seedrandom": "^2.4.4"
   },
   "devDependencies": {
