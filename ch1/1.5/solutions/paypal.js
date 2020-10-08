@@ -145,7 +145,7 @@ class Paypal extends Client {
     // if send
     if (tx.contents.type === 'send') {
       // check that the transaction amount is positive and the sender has an account balance greater than or equal to the transaction amount
-      if (this.state[tx.contents.from].balance - tx.contents.amount < 0) {
+      if (this.state[tx.contents.from].balance - (tx.contents.amount + this.fee) < 0) {
         // if a check fails, print an error to the console stating why and return false
         console.log('Not enough money!');
         return false;
@@ -217,7 +217,10 @@ class Paypal extends Client {
 
   // Updates account balances according to the transaction, then adds the transaction to the history
   applyTx(tx) {
-    // first decrease the balance of the transaction sender/signer
+
+	// first charge a fee to use the network
+    this.chargeFee(tx);
+    // then decrease the balance of the transaction sender/signer
     this.state[tx.contents.from].balance -= tx.contents.amount;
     // then increase the balance of the transaction receiver
     this.state[tx.contents.to].balance += tx.contents.amount;
@@ -262,8 +265,7 @@ class Paypal extends Client {
 
   // Checks if a transaction is valid, then processes it, then checks if there are any valid transactions in the pending transaction pool and processes those too
   processTx(tx) {
-    // charge a fee to use the network
-    this.chargeFee(tx);
+
     // check the transaction is valid
     if (this.checkTx(tx)) {
       // apply the transaction to Paypal's state
