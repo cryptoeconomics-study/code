@@ -31,7 +31,7 @@
     "eth-crypto": "^1.3.4",
     "hex-to-binary": "^1.0.1",
     "http-server": "^0.11.1",
-    "lodash": "^4.17.14",
+    "lodash": "^4.17.21",
     "mocha": "^6.1.4",
     "npm": "^6.10.1",
     "seedrandom": "^2.4.4"
