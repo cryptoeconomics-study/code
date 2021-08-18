@@ -15,14 +15,9 @@ describe('Client Tests', () => {
     // run the tests
     beforeEach(() => {
       tx = alice.generateTx(bob.wallet.address, 10, 'send');
+      unsigned = tx.contents;
     });
     it('should properly set contents', () => {
-      unsignedTx = {
-        type: 'send',
-        amount: 10,
-        from: alice.wallet.address,
-        to: bob.wallet.address,
-      };
       assert.deepEqual(tx.contents, unsignedTx);
     });
     it('should properly sign the contents', () => {
